@@ -1,0 +1,13 @@
+{
+  "name": "nexolia-web",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Nexolia company website — coming soon and privacy policy",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "dev": "node server.mjs",
+    "start": "node server.mjs"
+  }
+}
