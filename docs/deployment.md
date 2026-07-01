@@ -10,6 +10,8 @@ Deploy the static site to Railway as a **separate service** from the `baas-mvp` 
 
 ## Railway setup
 
+See [railway-setup.md](./railway-setup.md) for the full walkthrough.
+
 1. In your Railway project, click **New Service** → **GitHub Repo** → select `nexolia-web`.
 2. Railway detects `railway.json` and runs `node server.mjs`.
 3. Under **Settings → Networking**, generate a Railway domain for smoke testing.
