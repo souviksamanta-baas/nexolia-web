@@ -14,8 +14,8 @@ See [railway-setup.md](./railway-setup.md) for the full walkthrough.
 
 1. In your Railway project, click **New Service** → **GitHub Repo** → select `nexolia-web`.
 2. Railway detects `railway.json` and runs `node server.mjs`.
-3. Under **Settings → Networking**, generate a Railway domain for smoke testing.
-4. Under **Settings → Domains**, add custom domain `nexolia.com.ar` (and optionally `www.nexolia.com.ar`).
+3. Under **Networking → Public Networking**, confirm or generate a `*.up.railway.app` domain for smoke testing.
+4. Under **Networking → + Custom Domain**, add `nexolia.com.ar` (and optionally `www.nexolia.com.ar`).
 5. Copy the DNS records Railway provides into your `.com.ar` registrar.
 
 ## DNS (registrar)

@@ -15,15 +15,26 @@ Step-by-step to deploy `nexolia-web` as a **second service** in the existing Baa
 
 ## 2. Verify Railway URL
 
-1. Open the new service → **Settings** → **Networking** → **Generate Domain**.
-2. Open the `*.up.railway.app` URL — you should see the Nexolia coming soon page.
-3. Test `/privacidad` and `/privacy` on that URL.
+1. Open the **nexolia-web** service → **Networking** tab.
+2. Under **Public Networking**, confirm a `*.up.railway.app` domain exists (or click **Generate Domain** if missing).
+3. Open that URL — you should see the Nexolia coming soon page.
+4. Test `/privacidad` and `/privacy` on that URL.
+
+### If `/` or `/privacidad` fail
+
+1. Open **Deployments** → latest deploy → **View logs**. Look for `Nexolia Web listening on 0.0.0.0:…`.
+2. If the deploy crashed or health checks fail, confirm **Settings → Deploy** uses start command `node server.mjs`.
+3. Redeploy after pulling the latest `main` (health check timeout was increased from 100ms to 30s).
+4. Common Railway errors:
+   - **502 / Application failed to respond** — process not listening on `PORT` or crashed on boot.
+   - **404 from Railway edge** — domain exists but no healthy deployment is attached.
 
 ## 3. Custom domain (nexolia.com.ar)
 
-1. Service → **Settings** → **Domains** → **Custom Domain**.
-2. Add `nexolia.com.ar` (and optionally `www.nexolia.com.ar`).
-3. Copy the DNS records Railway shows.
+1. Open the **nexolia-web** service → **Networking** tab (same page as Public Networking).
+2. Under **Public Networking**, click **+ Custom Domain**.
+3. Enter `nexolia.com.ar` (and optionally add `www.nexolia.com.ar` as a second domain).
+4. Copy the DNS records Railway shows and add them at your `.com.ar` registrar.
 
 ### Registrar (`.com.ar`)
 
