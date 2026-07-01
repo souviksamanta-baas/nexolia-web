@@ -6,7 +6,7 @@ Deploy the static site to Railway as a **separate service** from the `baas-mvp` 
 
 - Railway account (same project as the BaaS API)
 - Domain `nexolia.com.ar` at your registrar
-- Git remote for this repository (GitHub recommended)
+- Git remote for this repository: https://github.com/souviksamanta-baas/nexolia-web
 
 ## Railway setup
 
