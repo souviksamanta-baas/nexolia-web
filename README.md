@@ -18,6 +18,8 @@ npm run dev
 
 Server runs at http://localhost:3000 (or `$PORT`).
 
+**Repository:** https://github.com/souviksamanta-baas/nexolia-web
+
 ## Documentation
 
 - [Deployment guide](docs/deployment.md)
