@@ -22,6 +22,8 @@ const ROUTES = {
   '/': 'index.html',
   '/privacidad': 'privacidad.html',
   '/privacy': 'privacidad.html',
+  '/eliminacion-de-cuenta': 'eliminacion-de-cuenta.html',
+  '/account-deletion': 'eliminacion-de-cuenta.html',
   '/styles.css': 'styles.css',
 };
 
