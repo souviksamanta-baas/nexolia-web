@@ -9,6 +9,8 @@ Company website for [nexolia.com.ar](https://nexolia.com.ar) — coming soon lan
 | `/` | Coming soon |
 | `/privacidad` | Privacy policy (Spanish) |
 | `/privacy` | Alias for `/privacidad` |
+| `/eliminacion-de-cuenta` | Account / data deletion instructions (Play Store) |
+| `/account-deletion` | Alias for `/eliminacion-de-cuenta` |
 
 ## Development
 

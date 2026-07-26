@@ -51,11 +51,13 @@ cd ~/Projects/nexolia-web
 npm run dev
 ```
 
-Open http://localhost:3000, http://localhost:3000/privacidad, and http://localhost:3000/privacy.
+Open http://localhost:3000, http://localhost:3000/privacidad, http://localhost:3000/privacy,
+and http://localhost:3000/eliminacion-de-cuenta.
 
 ## Verification checklist
 
 - [ ] `https://nexolia.com.ar` shows coming soon page
 - [ ] `https://nexolia.com.ar/privacidad` loads without auth
 - [ ] `https://nexolia.com.ar/privacy` serves privacy policy
+- [ ] `https://nexolia.com.ar/eliminacion-de-cuenta` loads without auth (Play Console account deletion URL)
 - [ ] Meta Developer Console updated with privacy URL
