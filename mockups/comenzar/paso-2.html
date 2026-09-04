@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="es-AR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Comenzar — Paso 2 | Nexolia</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Outfit:wght@500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../styles.css" />
+</head>
+<body class="onboard-body">
+  <header class="mkt-header">
+    <a href="../index.html"><img class="logo" src="../../public/nexolia-logo.svg" alt="Nexolia" /></a>
+    <nav class="mkt-nav" aria-label="Principal">
+      <a href="#">Producto</a>
+      <a href="paso-3.html">Planes</a>
+      <a href="#">Ayuda</a>
+    </nav>
+    <div class="mkt-actions">
+      <a class="btn btn-ghost btn-sm" href="../admin/login.html">Iniciar sesión</a>
+      <a class="btn btn-primary btn-sm" href="paso-1.html">Comenzar</a>
+    </div>
+  </header>
+
+  <main class="onboard-main">
+    <ol class="steps">
+      <li class="is-done">Tu negocio</li>
+      <li class="is-current">Servicios</li>
+      <li>Plan</li>
+      <li>Confirmación</li>
+    </ol>
+
+    <div class="onboard-layout">
+      <aside class="onboard-rail">
+        <h2>Tu información</h2>
+        <ul class="rail-list">
+          <li class="is-done">maria@ferreteria.com.ar</li>
+          <li class="is-done">Ferretería</li>
+          <li class="is-current">Servicios (feature flags)</li>
+          <li class="muted">Plan · pendiente</li>
+        </ul>
+      </aside>
+
+      <div class="onboard-main-inner">
+        <div class="onboard-card">
+          <h1>¿Qué módulos necesitás?</h1>
+          <p class="secondary">Paso 2 de 3 — cada opción es un <code>feature_flag</code> de la app Nexolia. Lo que marques se activa al convertir el lead.</p>
+
+          <form action="paso-3.html" method="get">
+            <!-- Keys match baas-mvp OrganizationFeatureFlags -->
+
+            <h3 class="service-group-title">Comercio</h3>
+            <div class="service-grid">
+              <label class="service-card is-selected">
+                <input type="checkbox" name="svc" value="commerce_pos" checked />
+                <div>
+                  <strong>Punto de venta</strong>
+                  <span>commerce_pos · Cobros y ventas en mostrador</span>
+                </div>
+              </label>
+              <label class="service-card is-selected">
+                <input type="checkbox" name="svc" value="commerce_inventory" checked />
+                <div>
+                  <strong>Inventario</strong>
+                  <span>commerce_inventory · Stock y depósitos</span>
+                </div>
+              </label>
+              <label class="service-card is-selected">
+                <input type="checkbox" name="svc" value="commerce_lots" checked />
+                <div>
+                  <strong>Lotes y movimientos</strong>
+                  <span>commerce_lots · Trazabilidad de lotes</span>
+                </div>
+              </label>
+              <label class="service-card is-selected">
+                <input type="checkbox" name="svc" value="commerce_purchases" checked />
+                <div>
+                  <strong>Compras</strong>
+                  <span>commerce_purchases · Órdenes de compra</span>
+                </div>
+              </label>
+              <label class="service-card is-selected">
+                <input type="checkbox" name="svc" value="commerce_suppliers" checked />
+                <div>
+                  <strong>Proveedores</strong>
+                  <span>commerce_suppliers · Agenda de proveedores</span>
+                </div>
+              </label>
+              <label class="service-card is-selected">
+                <input type="checkbox" name="svc" value="commerce_nav_shortcut" checked />
+                <div>
+                  <strong>Atajo Ventas en menú</strong>
+                  <span>commerce_nav_shortcut · Atajo en menú inferior</span>
+                </div>
+              </label>
+            </div>
+
+            <h3 class="service-group-title">Facturación</h3>
+            <div class="service-grid">
+              <label class="service-card is-selected">
+                <input type="checkbox" name="svc" value="billing_invoices" checked />
+                <div>
+                  <strong>Facturas</strong>
+                  <span>billing_invoices · Emisión de facturas</span>
+                </div>
+              </label>
+              <label class="service-card is-selected">
+                <input type="checkbox" name="svc" value="billing_quotes" checked />
+                <div>
+                  <strong>Presupuestos</strong>
+                  <span>billing_quotes · Cotizaciones</span>
+                </div>
+              </label>
+              <label class="service-card is-selected">
+                <input type="checkbox" name="svc" value="billing_arca" checked />
+                <div>
+                  <strong>ARCA (AFIP)</strong>
+                  <span>billing_arca · Facturación electrónica</span>
+                </div>
+              </label>
+              <label class="service-card">
+                <input type="checkbox" name="svc" value="billing_cash" />
+                <div>
+                  <strong>Caja</strong>
+                  <span>billing_cash · Arqueos y medios de pago</span>
+                </div>
+              </label>
+            </div>
+
+            <h3 class="service-group-title">Agenda</h3>
+            <div class="service-grid">
+              <label class="service-card">
+                <input type="checkbox" name="svc" value="appointments" />
+                <div>
+                  <strong>Turnos y agenda</strong>
+                  <span>appointments · Reservas y agenda</span>
+                </div>
+              </label>
+            </div>
+
+            <h3 class="service-group-title">Copi</h3>
+            <div class="service-grid">
+              <label class="service-card">
+                <input type="checkbox" name="svc" value="copi_pro_agent" />
+                <div>
+                  <strong>Copi Pro</strong>
+                  <span>copi_pro_agent · Acciones automáticas</span>
+                </div>
+              </label>
+              <label class="service-card">
+                <input type="checkbox" name="svc" value="copi_voice" />
+                <div>
+                  <strong>Copi con voz</strong>
+                  <span>copi_voice · Entrada por voz</span>
+                </div>
+              </label>
+              <label class="service-card">
+                <input type="checkbox" name="svc" value="copi_vision" />
+                <div>
+                  <strong>Copi con visión</strong>
+                  <span>copi_vision · Análisis de imágenes</span>
+                </div>
+              </label>
+              <label class="service-card">
+                <input type="checkbox" name="svc" value="copi_custom_reports" />
+                <div>
+                  <strong>Reportes personalizados Copi</strong>
+                  <span>copi_custom_reports · Informes a medida</span>
+                </div>
+              </label>
+            </div>
+
+            <h3 class="service-group-title">Notificaciones</h3>
+            <div class="service-grid">
+              <label class="service-card is-selected">
+                <input type="checkbox" name="svc" value="notifications" checked />
+                <div>
+                  <strong>Notificaciones push</strong>
+                  <span>notifications · Avisos para el equipo</span>
+                </div>
+              </label>
+            </div>
+
+            <h3 class="service-group-title">Canales</h3>
+            <div class="service-grid">
+              <label class="service-card is-selected">
+                <input type="checkbox" name="svc" value="integrations_whatsapp" checked />
+                <div>
+                  <strong>WhatsApp</strong>
+                  <span>integrations_whatsapp · Bandeja WhatsApp</span>
+                </div>
+              </label>
+              <label class="service-card is-selected">
+                <input type="checkbox" name="svc" value="integrations_instagram" checked />
+                <div>
+                  <strong>Instagram</strong>
+                  <span>integrations_instagram · Mensajes IG</span>
+                </div>
+              </label>
+              <label class="service-card is-selected">
+                <input type="checkbox" name="svc" value="integrations_messenger" checked />
+                <div>
+                  <strong>Messenger</strong>
+                  <span>integrations_messenger · Facebook Messenger</span>
+                </div>
+              </label>
+              <label class="service-card is-selected">
+                <input type="checkbox" name="svc" value="integrations_email" checked />
+                <div>
+                  <strong>Email</strong>
+                  <span>integrations_email · Canal de correo</span>
+                </div>
+              </label>
+              <label class="service-card is-selected">
+                <input type="checkbox" name="svc" value="integrations_sms" checked />
+                <div>
+                  <strong>SMS</strong>
+                  <span>integrations_sms · Envío de SMS</span>
+                </div>
+              </label>
+            </div>
+
+            <h3 class="service-group-title">Operaciones</h3>
+            <div class="service-grid">
+              <label class="service-card">
+                <input type="checkbox" name="svc" value="multi_sucursales" />
+                <div>
+                  <strong>Varias sucursales</strong>
+                  <span>multi_sucursales · Más de un centro</span>
+                </div>
+              </label>
+            </div>
+
+            <div class="onboard-actions">
+              <a class="btn btn-secondary" href="paso-1.html">← Volver</a>
+              <button class="btn btn-primary" type="submit">Continuar →</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="mkt-footer">
+    © 2026 Nexolia · <a href="../index.html">Mockups</a>
+  </footer>
+
+  <script src="../onboard.js"></script>
+</body>
+</html>

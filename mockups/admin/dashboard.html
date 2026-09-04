@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="es-AR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Dashboard — Nexolia Admin</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Outfit:wght@500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../styles.css" />
+</head>
+<body class="admin-body">
+  <div class="sidebar-overlay" id="sidebarOverlay" hidden></div>
+  <div class="admin-app">
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-brand">
+        <span class="brand-mark">nexolia</span>
+        <span class="brand-sub">Admin Portal</span>
+      </div>
+      <nav class="sidebar-nav">
+        <div class="nav-group">
+          <div class="nav-group-label">Gestión</div>
+          <a class="nav-link is-active" href="dashboard.html"><span class="dot"></span> Dashboard</a>
+          <a class="nav-link" href="clientes.html"><span class="dot"></span> Clientes</a>
+          <a class="nav-link" href="organizaciones.html"><span class="dot"></span> Organizaciones y usuarios</a>
+          <a class="nav-link" href="planes.html"><span class="dot"></span> Planes y suscripciones</a>
+        </div>
+        <div class="nav-group">
+          <div class="nav-group-label">Comunicaciones</div>
+          <a class="nav-link" href="pronto.html?m=WhatsApp"><span class="dot"></span> WhatsApp</a>
+          <a class="nav-link" href="pronto.html?m=Instagram"><span class="dot"></span> Instagram</a>
+          <a class="nav-link" href="pronto.html?m=Inbox"><span class="dot"></span> Inbox</a>
+        </div>
+        <div class="nav-group">
+          <div class="nav-group-label">Operaciones</div>
+          <a class="nav-link" href="pronto.html?m=Ventas"><span class="dot"></span> Ventas</a>
+          <a class="nav-link" href="pronto.html?m=Facturas"><span class="dot"></span> Facturas</a>
+        </div>
+        <div class="nav-group">
+          <div class="nav-group-label">Sistema</div>
+          <a class="nav-link" href="pronto.html?m=Integraciones"><span class="dot"></span> Integraciones</a>
+          <a class="nav-link" href="roles.html"><span class="dot"></span> Roles y permisos</a>
+          <a class="nav-link" href="auditoria.html"><span class="dot"></span> Auditoría</a>
+          <a class="nav-link" href="pronto.html?m=Notificaciones"><span class="dot"></span> Notificaciones</a>
+          <a class="nav-link" href="pronto.html?m=Salud"><span class="dot"></span> Salud</a>
+        </div>
+      </nav>
+    </aside>
+
+    <div class="admin-main">
+      <header class="admin-header">
+        <button class="menu-toggle" type="button" id="menuToggle" aria-label="Abrir menú">
+          <span></span><span></span><span></span>
+        </button>
+        <div class="search-box" role="search">
+          <span aria-hidden="true">⌕</span>
+          <span>Buscar…</span>
+          <kbd>⌘K</kbd>
+        </div>
+        <div class="header-actions">
+          <button class="icon-btn" type="button" aria-label="Notificaciones">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 17h5l-1.4-1.4A2 2 0 0 1 18 14.2V11a6 6 0 1 0-12 0v3.2c0 .5-.2 1-.6 1.4L4 17h5"/><path d="M9 17a3 3 0 0 0 6 0"/></svg>
+            <span class="ping"></span>
+          </button>
+          <span class="badge badge-navy">Super Admin</span>
+        </div>
+      </header>
+
+      <main class="admin-content">
+        <div class="page-title-row">
+          <div>
+            <h1>Dashboard</h1>
+            <p>Resumen operativo — leads, pagos y licencias</p>
+          </div>
+          <a class="btn btn-secondary btn-sm" href="../index.html">Galería</a>
+        </div>
+
+        <div class="kpi-grid">
+          <div class="kpi-card">
+            <div class="label">Clientes activos</div>
+            <div class="value">128</div>
+            <div class="delta">+6 este mes</div>
+          </div>
+          <div class="kpi-card">
+            <div class="label">En prueba</div>
+            <div class="value">14</div>
+            <div class="delta">3 por vencer</div>
+          </div>
+          <div class="kpi-card">
+            <div class="label">Pagos por confirmar</div>
+            <div class="value">7</div>
+            <div class="delta warn">2 hace más de 48 h</div>
+          </div>
+          <div class="kpi-card">
+            <div class="label">Licencias por vencer</div>
+            <div class="value">5</div>
+            <div class="delta warn">próximos 15 días</div>
+          </div>
+        </div>
+
+        <div class="dash-grid">
+          <div class="card">
+            <div class="chart-placeholder" aria-label="Gráfico de pagos confirmados">
+              <div class="chart-label">Pagos confirmados (últimos 30 días)</div>
+              <div class="bar" style="height:35%"></div>
+              <div class="bar" style="height:52%"></div>
+              <div class="bar" style="height:40%"></div>
+              <div class="bar" style="height:68%"></div>
+              <div class="bar" style="height:55%"></div>
+              <div class="bar" style="height:78%"></div>
+              <div class="bar" style="height:62%"></div>
+              <div class="bar" style="height:88%"></div>
+            </div>
+          </div>
+          <div class="card">
+            <h2>Actividad reciente</h2>
+            <ul class="activity-list">
+              <li>
+                <span class="dot-a"></span>
+                <div>
+                  <strong>Lead nuevo</strong> — Ferretería Villalba (Básico)
+                  <div class="time">hace 12 min</div>
+                </div>
+              </li>
+              <li>
+                <span class="dot-a warn"></span>
+                <div>
+                  <strong>Pago por confirmar</strong> — Dietética Sol · transferencia $69.000
+                  <div class="time">hace 45 min</div>
+                </div>
+              </li>
+              <li>
+                <span class="dot-a"></span>
+                <div>
+                  <strong>Lead convertido</strong> — Clínica Norte → org creada
+                  <div class="time">hace 2 h</div>
+                </div>
+              </li>
+              <li>
+                <span class="dot-a danger"></span>
+                <div>
+                  <strong>Licencia por vencer</strong> — Taller El Rápido · Pro
+                  <div class="time">hace 3 h</div>
+                </div>
+              </li>
+              <li>
+                <span class="dot-a warn"></span>
+                <div>
+                  <strong>Pago en efectivo</strong> — Veterinaria Paz · pendiente de caja
+                  <div class="time">ayer</div>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="card" style="padding:0;overflow:hidden">
+          <div class="panel-toolbar">
+            <h2 style="margin:0;flex:1">Clientes recientes</h2>
+            <a class="btn btn-secondary btn-sm" href="clientes.html">Ver todos</a>
+          </div>
+          <div class="table-wrap">
+            <table class="data">
+              <thead>
+                <tr>
+                  <th>Cliente</th>
+                  <th>Plan</th>
+                  <th>Estado</th>
+                  <th>Último pago</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr onclick="location.href='clientes.html'">
+                  <td><a href="clientes.html">Ferretería Villalba</a></td>
+                  <td>Básico</td>
+                  <td><span class="badge badge-green">Activo</span></td>
+                  <td>$69.000 · 28/08</td>
+                </tr>
+                <tr onclick="location.href='clientes.html'">
+                  <td><a href="clientes.html">Dietética Sol</a></td>
+                  <td>Starter</td>
+                  <td><span class="badge badge-warn">Pago pendiente</span></td>
+                  <td>—</td>
+                </tr>
+                <tr onclick="location.href='clientes.html'">
+                  <td><a href="clientes.html">Clínica Norte</a></td>
+                  <td>Pro</td>
+                  <td><span class="badge badge-green">Activo</span></td>
+                  <td>$149.000 · 01/09</td>
+                </tr>
+                <tr onclick="location.href='clientes.html'">
+                  <td><a href="clientes.html">Taller El Rápido</a></td>
+                  <td>Pro</td>
+                  <td><span class="badge badge-warn">Por vencer</span></td>
+                  <td>$149.000 · 15/08</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <a class="fab-grok" href="dashboard-grok.html">
+    <svg class="spark" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2l1.2 6.3L19 12l-5.8 3.7L12 22l-1.2-6.3L5 12l5.8-3.7L12 2z"/></svg>
+    <span class="label">Asistente Grok</span>
+  </a>
+
+  <script src="../shell.js"></script>
+</body>
+</html>

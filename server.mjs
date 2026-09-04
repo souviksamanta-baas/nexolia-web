@@ -1,10 +1,13 @@
+// Standalone HTML preview server for the `mockups/` folder.
+// Not used by the Next.js app — run with `npm run mockups` when you want
+// to review the static QA references without booting Next.
 import { createServer } from 'node:http';
 import { readFile, stat } from 'node:fs/promises';
 import { join, extname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const __dirname = fileURLToPath(new URL('.', import.meta.url));
-const PORT = Number(process.env.PORT) || 3000;
+const PORT = Number(process.env.PORT) || 4400;
 const ROOT = __dirname;
 
 const MIME = {
@@ -13,23 +16,17 @@ const MIME = {
   '.svg': 'image/svg+xml',
   '.png': 'image/png',
   '.jpg': 'image/jpeg',
+  '.jpeg': 'image/jpeg',
   '.ico': 'image/x-icon',
   '.js': 'text/javascript; charset=utf-8',
+  '.mjs': 'text/javascript; charset=utf-8',
   '.json': 'application/json',
-};
-
-const ROUTES = {
-  '/': 'index.html',
-  '/privacidad': 'privacidad.html',
-  '/privacy': 'privacidad.html',
-  '/eliminacion-de-cuenta': 'eliminacion-de-cuenta.html',
-  '/account-deletion': 'eliminacion-de-cuenta.html',
-  '/styles.css': 'styles.css',
+  '.md': 'text/markdown; charset=utf-8',
 };
 
 async function serveFile(res, filePath) {
   const data = await readFile(filePath);
-  const ext = extname(filePath);
+  const ext = extname(filePath).toLowerCase();
   res.writeHead(200, { 'Content-Type': MIME[ext] || 'application/octet-stream' });
   res.end(data);
 }
@@ -38,32 +35,37 @@ const server = createServer(async (req, res) => {
   try {
     const url = new URL(req.url, `http://${req.headers.host}`);
     let pathname = url.pathname;
+    if (pathname !== '/' && pathname.endsWith('/')) pathname = pathname.slice(0, -1);
+    if (pathname === '/') pathname = '/mockups/index.html';
 
-    if (pathname !== '/' && pathname.endsWith('/')) {
-      pathname = pathname.slice(0, -1);
-    }
-
+    // /public/* → repo `public/` (mockups reference logos there).
     if (pathname.startsWith('/public/')) {
       const filePath = join(ROOT, pathname.slice(1));
-      await serveFile(res, filePath);
-      return;
+      try {
+        await serveFile(res, filePath);
+        return;
+      } catch {
+        // fall through
+      }
     }
 
-    const mapped = ROUTES[pathname];
-    if (mapped) {
-      await serveFile(res, join(ROOT, mapped));
-      return;
-    }
-
-    const staticPath = join(ROOT, 'public', pathname.slice(1));
-    try {
-      const info = await stat(staticPath);
-      if (info.isFile()) {
-        await serveFile(res, staticPath);
+    // /mockups/* → repo `mockups/`.
+    if (pathname.startsWith('/mockups')) {
+      let filePath = join(ROOT, pathname.slice(1));
+      try {
+        const info = await stat(filePath);
+        if (info.isDirectory()) filePath = join(filePath, 'index.html');
+      } catch {
+        // let serveFile 404 below
+      }
+      try {
+        await serveFile(res, filePath);
+        return;
+      } catch {
+        res.writeHead(404, { 'Content-Type': 'text/plain; charset=utf-8' });
+        res.end('Not Found');
         return;
       }
-    } catch {
-      // fall through to 404
     }
 
     res.writeHead(404, { 'Content-Type': 'text/plain; charset=utf-8' });
@@ -75,5 +77,5 @@ const server = createServer(async (req, res) => {
 });
 
 server.listen(PORT, '0.0.0.0', () => {
-  console.log(`Nexolia Web listening on 0.0.0.0:${PORT}`);
+  console.log(`Mockups preview on http://localhost:${PORT}/mockups/`);
 });

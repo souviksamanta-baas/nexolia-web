@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="es-AR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Comenzar — Paso 1 | Nexolia</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Outfit:wght@500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../styles.css" />
+</head>
+<body class="onboard-body">
+  <header class="mkt-header">
+    <a href="../index.html"><img class="logo" src="../../public/nexolia-logo.svg" alt="Nexolia" /></a>
+    <nav class="mkt-nav" aria-label="Principal">
+      <a href="#">Producto</a>
+      <a href="paso-3.html">Planes</a>
+      <a href="#">Ayuda</a>
+    </nav>
+    <div class="mkt-actions">
+      <a class="btn btn-ghost btn-sm" href="../admin/login.html">Iniciar sesión</a>
+      <a class="btn btn-primary btn-sm" href="paso-1.html">Comenzar</a>
+    </div>
+  </header>
+
+  <main class="onboard-main">
+    <ol class="steps">
+      <li class="is-current">Tu negocio</li>
+      <li>Servicios</li>
+      <li>Plan</li>
+      <li>Confirmación</li>
+    </ol>
+
+    <div class="onboard-layout">
+      <aside class="onboard-rail">
+        <h2>Tu información</h2>
+        <ul class="rail-list">
+          <li class="is-current">Datos de contacto</li>
+          <li>Categoría del negocio</li>
+          <li class="muted">Servicios · pendiente</li>
+          <li class="muted">Plan · pendiente</li>
+        </ul>
+      </aside>
+
+      <div class="onboard-main-inner">
+        <div class="onboard-card">
+          <h1>Contanos sobre tu negocio</h1>
+          <p class="secondary">Paso 1 de 3 — empezamos con lo básico para armar tu cuenta.</p>
+
+          <form action="paso-2.html" method="get">
+            <div class="field">
+              <label for="email">Correo electrónico</label>
+              <input id="email" name="email" type="email" placeholder="tu@negocio.com.ar" value="contacto@ferreteriavillalba.com.ar" required />
+              <span class="hint">Te enviaremos la confirmación y datos de pago acá.</span>
+            </div>
+            <div class="field">
+              <label for="categoria">Categoría del negocio</label>
+              <select id="categoria" name="categoria" required>
+                <option value="" disabled>Elegí una categoría</option>
+                <option selected>Ferretería</option>
+                <option>Dietética</option>
+                <option>Clínica</option>
+                <option>Veterinaria</option>
+                <option>Restaurante</option>
+                <option>Taller</option>
+                <option>Servicios profesionales</option>
+              </select>
+            </div>
+            <div class="onboard-actions">
+              <span></span>
+              <button class="btn btn-primary" type="submit">Continuar →</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="mkt-footer">
+    © 2026 Nexolia · <a href="../index.html">Mockups</a>
+  </footer>
+</body>
+</html>

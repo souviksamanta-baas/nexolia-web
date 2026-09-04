@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="es-AR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Dashboard + Grok — Nexolia Admin</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Outfit:wght@500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../styles.css" />
+</head>
+<body class="admin-body">
+  <div class="sidebar-overlay" id="sidebarOverlay" hidden></div>
+  <div class="admin-app">
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-brand">
+        <span class="brand-mark">nexolia</span>
+        <span class="brand-sub">Admin Portal</span>
+      </div>
+      <nav class="sidebar-nav">
+        <div class="nav-group">
+          <div class="nav-group-label">Gestión</div>
+          <a class="nav-link is-active" href="dashboard.html"><span class="dot"></span> Dashboard</a>
+          <a class="nav-link" href="clientes.html"><span class="dot"></span> Clientes</a>
+          <a class="nav-link" href="organizaciones.html"><span class="dot"></span> Organizaciones y usuarios</a>
+          <a class="nav-link" href="planes.html"><span class="dot"></span> Planes y suscripciones</a>
+        </div>
+        <div class="nav-group">
+          <div class="nav-group-label">Comunicaciones</div>
+          <a class="nav-link" href="pronto.html?m=WhatsApp"><span class="dot"></span> WhatsApp</a>
+          <a class="nav-link" href="pronto.html?m=Instagram"><span class="dot"></span> Instagram</a>
+          <a class="nav-link" href="pronto.html?m=Inbox"><span class="dot"></span> Inbox</a>
+        </div>
+        <div class="nav-group">
+          <div class="nav-group-label">Operaciones</div>
+          <a class="nav-link" href="pronto.html?m=Ventas"><span class="dot"></span> Ventas</a>
+          <a class="nav-link" href="pronto.html?m=Facturas"><span class="dot"></span> Facturas</a>
+        </div>
+        <div class="nav-group">
+          <div class="nav-group-label">Sistema</div>
+          <a class="nav-link" href="pronto.html?m=Integraciones"><span class="dot"></span> Integraciones</a>
+          <a class="nav-link" href="roles.html"><span class="dot"></span> Roles y permisos</a>
+          <a class="nav-link" href="auditoria.html"><span class="dot"></span> Auditoría</a>
+          <a class="nav-link" href="pronto.html?m=Notificaciones"><span class="dot"></span> Notificaciones</a>
+          <a class="nav-link" href="pronto.html?m=Salud"><span class="dot"></span> Salud</a>
+        </div>
+      </nav>
+    </aside>
+
+    <div class="admin-main">
+      <header class="admin-header">
+        <button class="menu-toggle" type="button" id="menuToggle" aria-label="Abrir menú">
+          <span></span><span></span><span></span>
+        </button>
+        <div class="search-box" role="search">
+          <span aria-hidden="true">⌕</span>
+          <span>Buscar…</span>
+          <kbd>⌘K</kbd>
+        </div>
+        <div class="header-actions">
+          <button class="icon-btn" type="button" aria-label="Notificaciones">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 17h5l-1.4-1.4A2 2 0 0 1 18 14.2V11a6 6 0 1 0-12 0v3.2c0 .5-.2 1-.6 1.4L4 17h5"/><path d="M9 17a3 3 0 0 0 6 0"/></svg>
+            <span class="ping"></span>
+          </button>
+          <span class="badge badge-navy">Super Admin</span>
+        </div>
+      </header>
+
+      <main class="admin-content">
+        <div class="page-title-row">
+          <div>
+            <h1>Dashboard</h1>
+            <p>Asistente Grok activo — consultas operativas v1</p>
+          </div>
+          <a class="btn btn-secondary btn-sm" href="dashboard.html">Cerrar Grok</a>
+        </div>
+
+        <div class="grok-layout">
+          <div>
+            <div class="kpi-grid">
+              <div class="kpi-card">
+                <div class="label">Clientes activos</div>
+                <div class="value">128</div>
+                <div class="delta">+6 este mes</div>
+              </div>
+              <div class="kpi-card">
+                <div class="label">En prueba</div>
+                <div class="value">14</div>
+                <div class="delta">3 por vencer</div>
+              </div>
+              <div class="kpi-card">
+                <div class="label">Pagos por confirmar</div>
+                <div class="value">7</div>
+                <div class="delta warn">2 hace más de 48 h</div>
+              </div>
+              <div class="kpi-card">
+                <div class="label">Licencias por vencer</div>
+                <div class="value">5</div>
+                <div class="delta warn">próximos 15 días</div>
+              </div>
+            </div>
+
+            <div class="card">
+              <h2>Actividad reciente</h2>
+              <ul class="activity-list">
+                <li>
+                  <span class="dot-a"></span>
+                  <div>
+                    <strong>Lead nuevo</strong> — Ferretería Villalba (Básico)
+                    <div class="time">hace 12 min</div>
+                  </div>
+                </li>
+                <li>
+                  <span class="dot-a warn"></span>
+                  <div>
+                    <strong>Pago por confirmar</strong> — Dietética Sol · $69.000
+                    <div class="time">hace 45 min</div>
+                  </div>
+                </li>
+                <li>
+                  <span class="dot-a danger"></span>
+                  <div>
+                    <strong>Org sin owner</strong> — Dietética Sol
+                    <div class="time">hace 1 h</div>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <aside class="grok-panel" aria-label="Asistente Grok">
+            <div class="grok-panel-header">
+              <h2>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2l1.2 6.3L19 12l-5.8 3.7L12 22l-1.2-6.3L5 12l5.8-3.7L12 2z"/></svg>
+                Asistente Grok
+              </h2>
+              <a class="btn btn-ghost btn-sm" href="dashboard.html" aria-label="Cerrar panel">✕</a>
+            </div>
+            <div class="grok-chips">
+              <button class="chip is-active" type="button">Leads pendientes</button>
+              <button class="chip" type="button">Pagos por confirmar</button>
+              <button class="chip" type="button">Orgs sin owner</button>
+              <button class="chip" type="button">Licencias por vencer</button>
+            </div>
+            <div class="grok-messages">
+              <div class="msg msg-bot">
+                Hola, Souvik. Hay <strong>3 leads pendientes</strong> de contacto esta semana y <strong>7 pagos</strong> esperando confirmación.
+              </div>
+              <div class="msg msg-user">
+                Mostrame los leads pendientes
+              </div>
+              <div class="msg msg-bot">
+                <strong>Leads pendientes (3):</strong><br /><br />
+                1. Restaurante La Plaza — Lead · contacto@laplaza.com.ar<br />
+                2. Taller Méndez — Lead · taller.mendez@gmail.com<br />
+                3. Servicios Contables LR — Lead · info@lrc.com.ar<br /><br />
+                ¿Querés que redacte un mail de seguimiento para alguno?
+              </div>
+            </div>
+            <form class="grok-input" action="#" onsubmit="return false">
+              <input type="text" placeholder="Preguntale a Grok…" aria-label="Mensaje para Grok" />
+              <button class="btn btn-primary btn-sm" type="submit">Enviar</button>
+            </form>
+          </aside>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <script src="../shell.js"></script>
+</body>
+</html>

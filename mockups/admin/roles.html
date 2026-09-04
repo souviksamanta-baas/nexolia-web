@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="es-AR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Roles — Nexolia Admin</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Outfit:wght@500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../styles.css" />
+</head>
+<body class="admin-body">
+  <div class="sidebar-overlay" id="sidebarOverlay" hidden></div>
+  <div class="admin-app">
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-brand">
+        <span class="brand-mark">nexolia</span>
+        <span class="brand-sub">Admin Portal</span>
+      </div>
+      <nav class="sidebar-nav">
+        <div class="nav-group">
+          <div class="nav-group-label">Gestión</div>
+          <a class="nav-link" href="dashboard.html"><span class="dot"></span> Dashboard</a>
+          <a class="nav-link" href="clientes.html"><span class="dot"></span> Clientes</a>
+          <a class="nav-link" href="organizaciones.html"><span class="dot"></span> Organizaciones y usuarios</a>
+          <a class="nav-link" href="planes.html"><span class="dot"></span> Planes y suscripciones</a>
+        </div>
+        <div class="nav-group">
+          <div class="nav-group-label">Comunicaciones</div>
+          <a class="nav-link" href="pronto.html?m=WhatsApp"><span class="dot"></span> WhatsApp</a>
+          <a class="nav-link" href="pronto.html?m=Instagram"><span class="dot"></span> Instagram</a>
+          <a class="nav-link" href="pronto.html?m=Inbox"><span class="dot"></span> Inbox</a>
+        </div>
+        <div class="nav-group">
+          <div class="nav-group-label">Operaciones</div>
+          <a class="nav-link" href="pronto.html?m=Ventas"><span class="dot"></span> Ventas</a>
+          <a class="nav-link" href="pronto.html?m=Facturas"><span class="dot"></span> Facturas</a>
+        </div>
+        <div class="nav-group">
+          <div class="nav-group-label">Sistema</div>
+          <a class="nav-link" href="pronto.html?m=Integraciones"><span class="dot"></span> Integraciones</a>
+          <a class="nav-link is-active" href="roles.html"><span class="dot"></span> Roles y permisos</a>
+          <a class="nav-link" href="auditoria.html"><span class="dot"></span> Auditoría</a>
+          <a class="nav-link" href="pronto.html?m=Notificaciones"><span class="dot"></span> Notificaciones</a>
+          <a class="nav-link" href="pronto.html?m=Salud"><span class="dot"></span> Salud</a>
+        </div>
+      </nav>
+    </aside>
+
+    <div class="admin-main">
+      <header class="admin-header">
+        <button class="menu-toggle" type="button" id="menuToggle" aria-label="Abrir menú">
+          <span></span><span></span><span></span>
+        </button>
+        <div class="search-box" role="search">
+          <span aria-hidden="true">⌕</span>
+          <span>Buscar…</span>
+          <kbd>⌘K</kbd>
+        </div>
+        <div class="header-actions">
+          <button class="icon-btn" type="button" aria-label="Notificaciones">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 17h5l-1.4-1.4A2 2 0 0 1 18 14.2V11a6 6 0 1 0-12 0v3.2c0 .5-.2 1-.6 1.4L4 17h5"/><path d="M9 17a3 3 0 0 0 6 0"/></svg>
+            <span class="ping"></span>
+          </button>
+          <span class="badge badge-navy">Super Admin</span>
+        </div>
+      </header>
+
+      <main class="admin-content">
+        <div class="page-title-row">
+          <div>
+            <h1>Roles y permisos</h1>
+            <p>Acceso del equipo Nexolia al portal admin</p>
+          </div>
+          <button class="btn btn-primary btn-sm" type="button">+ Invitar staff</button>
+        </div>
+
+        <div class="dash-grid">
+          <div class="card">
+            <h2>Roles del portal</h2>
+            <div class="table-wrap" style="margin-top:0.75rem">
+              <table class="data">
+                <thead>
+                  <tr>
+                    <th>Rol</th>
+                    <th>Descripción</th>
+                    <th>Miembros</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><strong>Super Admin</strong></td>
+                    <td>Acceso total — clientes, orgs, planes, sistema</td>
+                    <td>2</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Operaciones</strong></td>
+                    <td>Clientes, pagos, suscripciones</td>
+                    <td>3</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Soporte</strong></td>
+                    <td>Lectura de clientes y orgs, sin cambios de plan</td>
+                    <td>4</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Finanzas</strong></td>
+                    <td>Confirmación de pagos y reportes</td>
+                    <td>1</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="card">
+            <h2>Staff Nexolia</h2>
+            <ul class="activity-list" style="margin-top:0.5rem">
+              <li>
+                <span class="dot-a"></span>
+                <div>
+                  <strong>Souvik Samanta</strong> · Super Admin<br />
+                  <span class="muted">souvik@nexolia.com.ar</span>
+                  <div class="time">Activo hoy</div>
+                </div>
+              </li>
+              <li>
+                <span class="dot-a"></span>
+                <div>
+                  <strong>Lucía Fernández</strong> · Operaciones<br />
+                  <span class="muted">lucia@nexolia.com.ar</span>
+                  <div class="time">Activo ayer</div>
+                </div>
+              </li>
+              <li>
+                <span class="dot-a warn"></span>
+                <div>
+                  <strong>Martín Ruiz</strong> · Soporte<br />
+                  <span class="muted">martin@nexolia.com.ar</span>
+                  <div class="time">Invitación pendiente</div>
+                </div>
+              </li>
+              <li>
+                <span class="dot-a"></span>
+                <div>
+                  <strong>Carla Díaz</strong> · Finanzas<br />
+                  <span class="muted">carla@nexolia.com.ar</span>
+                  <div class="time">Activo hace 3 d</div>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <a class="fab-grok" href="dashboard-grok.html">
+    <svg class="spark" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2l1.2 6.3L19 12l-5.8 3.7L12 22l-1.2-6.3L5 12l5.8-3.7L12 2z"/></svg>
+    <span class="label">Asistente Grok</span>
+  </a>
+
+  <script src="../shell.js"></script>
+</body>
+</html>
