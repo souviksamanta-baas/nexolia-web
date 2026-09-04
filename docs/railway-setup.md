@@ -29,12 +29,34 @@ Step-by-step to deploy `nexolia-web` as a **second service** in the existing Baa
    - **502 / Application failed to respond** — process not listening on `PORT` or crashed on boot.
    - **404 from Railway edge** — domain exists but no healthy deployment is attached.
 
-## 3. Custom domain (nexolia.com.ar)
+## 3. Environment variables
+
+Set these on the **nexolia-web** Railway service (Variables), then redeploy:
+
+| Variable | Value |
+|----------|--------|
+| `BAAS_API_URL` | `https://baas-project-production.up.railway.app` |
+| `NEXT_PUBLIC_BAAS_API_URL` | same as above (admin client) |
+| `NEXT_PUBLIC_SITE_URL` | `https://nexolia.com.ar` |
+| `NEXT_PUBLIC_ADMIN_URL` | `https://admin.nexolia.com.ar` |
+| `NEXT_PUBLIC_SUPABASE_URL` | same Supabase project as the app |
+| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | anon / publishable key |
+
+Public `/comenzar` posts to same-origin `/api/public/leads`, which proxies to Nest. Nest must expose `POST /public/leads` and allow CORS for the apex/admin origins if the browser ever calls Nest directly.
+
+On the **API** service, ensure `BAAS_CORS_ALLOWED_ORIGINS` includes:
+
+`https://nexolia.com.ar,https://admin.nexolia.com.ar` (plus local ports as needed).
+
+## 4. Custom domain (nexolia.com.ar + admin)
 
 1. Open the **nexolia-web** service → **Networking** tab (same page as Public Networking).
 2. Under **Public Networking**, click **+ Custom Domain**.
-3. Enter `nexolia.com.ar` (and optionally add `www.nexolia.com.ar` as a second domain).
-4. Copy the DNS records Railway shows and add them at your `.com.ar` registrar.
+3. Enter `nexolia.com.ar` (and optionally `www.nexolia.com.ar`).
+4. Also add **`admin.nexolia.com.ar`** on the **same** nexolia-web service (host-based middleware serves the staff portal).
+5. Copy the DNS records Railway shows and add them at Cloudflare / your `.com.ar` registrar.
+
+`admin.nexolia.com.ar` must resolve (CNAME/ALIAS to Railway). Without that DNS record the host is `NXDOMAIN` and the admin portal cannot load.
 
 ### Registrar (`.com.ar`)
 
@@ -47,19 +69,22 @@ At your domain registrar, create the records **exactly** as Railway displays. Co
 
 > **Note:** As of setup, `https://nexolia.com.ar` returned HTTP 403 — DNS is not yet pointing to Railway.
 
-## 4. SSL
+## 5. SSL
 
 Railway provisions TLS automatically once DNS propagates (usually minutes to a few hours).
 
-## 5. Verification
+## 6. Verification
 
 ```bash
 curl -I https://nexolia.com.ar/
+curl -I https://nexolia.com.ar/comenzar
 curl -I https://nexolia.com.ar/privacidad
-curl -I https://nexolia.com.ar/privacy
+curl -I https://admin.nexolia.com.ar/login
+curl -sS -X POST https://baas-project-production.up.railway.app/public/leads \
+  -H 'Content-Type: application/json' -d '{}'
 ```
 
-Expected: `HTTP/2 200` for all three.
+Expected: `HTTP/2 200` for site routes; empty lead POST should be **400** (validation), not **404**.
 
 ## CLI alternative (local terminal)
 

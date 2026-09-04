@@ -20,8 +20,11 @@
  *   PATCH  /admin/plans/:id
  */
 
+/** Browser / server Nest base URL (prefer same-origin `/api/*` proxies for public POSTs). */
 export const API_BASE_URL =
-  process.env.NEXT_PUBLIC_BAAS_API_URL || "http://localhost:8080";
+  process.env.NEXT_PUBLIC_BAAS_API_URL ||
+  process.env.BAAS_API_URL ||
+  "https://baas-project-production.up.railway.app";
 
 export class ApiError extends Error {
   status: number;
@@ -44,7 +47,11 @@ export async function apiFetch<T = unknown>(
   options: ApiOptions = {},
 ): Promise<T> {
   const { token, body, headers, ...rest } = options;
-  const url = path.startsWith("http") ? path : `${API_BASE_URL}${path}`;
+  const url = path.startsWith("http")
+    ? path
+    : path.startsWith("/api/")
+      ? path // same-origin Next.js route handlers
+      : `${API_BASE_URL}${path}`;
 
   const finalHeaders: Record<string, string> = {
     Accept: "application/json",
@@ -110,7 +117,8 @@ export interface PublicLeadResponse {
 }
 
 export function submitPublicLead(input: PublicLeadInput) {
-  return apiFetch<PublicLeadResponse>("/public/leads", {
+  // Same-origin Next proxy → Nest (runtime BAAS_API_URL; no CORS / no localhost bake-in).
+  return apiFetch<PublicLeadResponse>("/api/public/leads", {
     method: "POST",
     body: input,
     cache: "no-store",
