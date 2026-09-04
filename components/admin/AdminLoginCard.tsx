@@ -6,17 +6,9 @@ import { useRouter } from "next/navigation";
 import { getSupabaseBrowserClient } from "@/lib/supabase/client";
 import { adminApi } from "@/lib/api";
 
-function recoveryRedirectTo(): string {
-  if (typeof window === "undefined") return "";
-  const origin = window.location.origin;
-  const host = window.location.hostname.toLowerCase();
-  return host.startsWith("admin.")
-    ? `${origin}/reset-password`
-    : `${origin}/admin/reset-password`;
-}
-
 /**
  * Staff login (email/password). Google OAuth is deferred.
+ * Password reset goes through Nest + Resend (Spanish email).
  */
 export function AdminLoginCard() {
   const router = useRouter();
@@ -106,20 +98,40 @@ export function AdminLoginCard() {
 
     setResetting(true);
     try {
-      const supabase = getSupabaseBrowserClient();
-      const { error } = await supabase.auth.resetPasswordForEmail(trimmed, {
-        redirectTo: recoveryRedirectTo(),
+      const res = await fetch("/api/public/admin/password-reset", {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email: trimmed }),
+        cache: "no-store",
       });
-      if (error) throw error;
+      const raw = await res.text();
+      let parsed: unknown = raw;
+      if (raw) {
+        try {
+          parsed = JSON.parse(raw);
+        } catch {
+          /* keep text */
+        }
+      }
+      if (!res.ok) {
+        const message =
+          parsed &&
+          typeof parsed === "object" &&
+          "message" in parsed &&
+          (parsed as { message: unknown }).message
+            ? String((parsed as { message: unknown }).message)
+            : "No pudimos enviar el correo de recuperación.";
+        throw new Error(message);
+      }
       setInfo(
-        "Te enviamos un correo para restablecer la contraseña. Revisá tu bandeja (y spam).",
+        "Te enviamos un correo en español para restablecer la contraseña. Revisá tu bandeja (y spam).",
       );
     } catch (err) {
       const raw = err instanceof Error ? err.message : "";
-      const message = raw.includes("Supabase env vars missing")
-        ? "Falta la configuración de Supabase en el servidor. Probá de nuevo en unos minutos."
-        : raw || "No pudimos enviar el correo de recuperación.";
-      setError(message);
+      setError(raw || "No pudimos enviar el correo de recuperación.");
     } finally {
       setResetting(false);
     }

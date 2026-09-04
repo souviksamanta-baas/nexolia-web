@@ -49,6 +49,8 @@ Also in **Supabase → Authentication → URL configuration → Redirect URLs**,
 - `http://localhost:3000/admin/login`
 - `http://localhost:3000/admin/reset-password`
 
+Staff password reset emails are sent in **Spanish via Nest + Resend** (`POST /public/admin/password-reset`), not the default English Supabase template.
+
 Public `/comenzar` posts to same-origin `/api/public/leads`, which proxies to Nest. Nest must expose `POST /public/leads` and allow CORS for the apex/admin origins if the browser ever calls Nest directly.
 
 On the **API** service, ensure `BAAS_CORS_ALLOWED_ORIGINS` includes:

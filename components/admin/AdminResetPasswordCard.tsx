@@ -13,8 +13,10 @@ function loginHref(): string {
 }
 
 /**
- * Recovery landing: Supabase email link redirects here with a session.
- * User sets a new password, then continues to login.
+ * Recovery landing. Supports:
+ * - `?token_hash=&type=recovery` (Resend Spanish mail from Nest)
+ * - `?code=` (Supabase PKCE)
+ * - hash / PASSWORD_RECOVERY events (legacy Supabase mailer)
  */
 export function AdminResetPasswordCard() {
   const router = useRouter();
@@ -27,33 +29,106 @@ export function AdminResetPasswordCard() {
 
   useEffect(() => {
     let cancelled = false;
+    let unsubscribe: (() => void) | undefined;
+
+    const markReady = () => {
+      if (!cancelled) {
+        setReady(true);
+        setError(null);
+      }
+    };
+
+    const markInvalid = (message?: string) => {
+      if (!cancelled) {
+        setReady(false);
+        setError(
+          message ||
+            "El enlace de recuperación no es válido o expiró. Pedí uno nuevo desde el login.",
+        );
+      }
+    };
+
     void (async () => {
       try {
         const supabase = getSupabaseBrowserClient();
-        // Recovery links set the session via URL hash / PKCE exchange.
+        const url = new URL(window.location.href);
+        const hashParams = new URLSearchParams(
+          window.location.hash.replace(/^#/, ""),
+        );
+
+        const tokenHash =
+          url.searchParams.get("token_hash") ||
+          hashParams.get("token_hash") ||
+          "";
+        const type =
+          url.searchParams.get("type") || hashParams.get("type") || "recovery";
+        const code = url.searchParams.get("code") || hashParams.get("code");
+
+        if (tokenHash) {
+          const { error } = await supabase.auth.verifyOtp({
+            token_hash: tokenHash,
+            type: type === "recovery" ? "recovery" : "email",
+          });
+          if (error) {
+            markInvalid(error.message);
+            return;
+          }
+          window.history.replaceState({}, "", url.pathname);
+          markReady();
+          return;
+        }
+
+        if (code) {
+          const { error } = await supabase.auth.exchangeCodeForSession(code);
+          if (error) {
+            markInvalid(error.message);
+            return;
+          }
+          window.history.replaceState({}, "", url.pathname);
+          markReady();
+          return;
+        }
+
         const {
           data: { session },
         } = await supabase.auth.getSession();
-        if (!cancelled) {
-          setReady(Boolean(session));
-          if (!session) {
-            setError(
-              "El enlace de recuperación no es válido o expiró. Pedí uno nuevo desde el login.",
-            );
+        if (session) {
+          markReady();
+          return;
+        }
+
+        const {
+          data: { subscription },
+        } = supabase.auth.onAuthStateChange((event, nextSession) => {
+          if (
+            (event === "PASSWORD_RECOVERY" || event === "SIGNED_IN") &&
+            nextSession
+          ) {
+            markReady();
           }
+        });
+        unsubscribe = () => subscription.unsubscribe();
+
+        await new Promise((r) => setTimeout(r, 800));
+        if (cancelled) return;
+        const again = await supabase.auth.getSession();
+        if (again.data.session) {
+          markReady();
+        } else {
+          markInvalid();
         }
       } catch (err) {
-        if (!cancelled) {
-          setError(
-            err instanceof Error
-              ? err.message
-              : "No pudimos validar el enlace de recuperación.",
-          );
-        }
+        markInvalid(
+          err instanceof Error
+            ? err.message
+            : "No pudimos validar el enlace de recuperación.",
+        );
       }
     })();
+
     return () => {
       cancelled = true;
+      unsubscribe?.();
     };
   }, []);
 
