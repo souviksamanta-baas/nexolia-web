@@ -9,7 +9,7 @@ Public onboarding at **nexolia.com.ar** and staff portal at **admin.nexolia.com.
 | App | Next.js App Router, TypeScript, Tailwind | Replaces static `server.mjs` |
 | Hosting | Railway | Apex + `admin.nexolia.com.ar` (Cloudflare DNS) |
 | Brand | Navy `#101935`, green `#08bd66` | Design system tokens |
-| Staff auth | Supabase email/password + Google | `nexolia_staff` only |
+| Staff auth | Supabase email/password (`nexolia_staff` / invites); Google OAuth later |
 | Client auth | Not on this site (v1) | Mobile OTP in baas-mvp |
 | API | NestJS in baas-mvp | `/admin/*`, public lead POST |
 | Data | Same Supabase as the app | RLS for clients; service-role in Nest admin |
