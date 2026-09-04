@@ -88,18 +88,15 @@ export function Sidebar() {
         {GROUPS.map((group) => (
           <div key={group.label} className="nav-group">
             <div className="nav-group-label">{group.label}</div>
-            <ul>
-              {group.items.map((item) => (
-                <li key={item.href}>
-                  <Link
-                    href={adminHref(item.href)}
-                    className={isActive(item) ? "is-active" : undefined}
-                  >
-                    {item.label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
+            {group.items.map((item) => (
+              <Link
+                key={item.label}
+                className={`nav-link${isActive(item) ? " is-active" : ""}`}
+                href={adminHref(item.href)}
+              >
+                <span className="dot" /> {item.label}
+              </Link>
+            ))}
           </div>
         ))}
       </nav>
