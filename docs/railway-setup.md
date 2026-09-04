@@ -42,6 +42,13 @@ Set these on the **nexolia-web** Railway service (Variables), then redeploy:
 | `NEXT_PUBLIC_SUPABASE_URL` | same Supabase project as the app |
 | `NEXT_PUBLIC_SUPABASE_ANON_KEY` | anon / publishable key |
 
+Also in **Supabase → Authentication → URL configuration → Redirect URLs**, allow:
+
+- `https://admin.nexolia.com.ar/login`
+- `https://admin.nexolia.com.ar/reset-password`
+- `http://localhost:3000/admin/login`
+- `http://localhost:3000/admin/reset-password`
+
 Public `/comenzar` posts to same-origin `/api/public/leads`, which proxies to Nest. Nest must expose `POST /public/leads` and allow CORS for the apex/admin origins if the browser ever calls Nest directly.
 
 On the **API** service, ensure `BAAS_CORS_ALLOWED_ORIGINS` includes:

@@ -1,0 +1,168 @@
+"use client";
+
+import { useEffect, useState } from "react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { getSupabaseBrowserClient } from "@/lib/supabase/client";
+
+function loginHref(): string {
+  if (typeof window === "undefined") return "/admin/login";
+  return window.location.hostname.toLowerCase().startsWith("admin.")
+    ? "/login"
+    : "/admin/login";
+}
+
+/**
+ * Recovery landing: Supabase email link redirects here with a session.
+ * User sets a new password, then continues to login.
+ */
+export function AdminResetPasswordCard() {
+  const router = useRouter();
+  const [password, setPassword] = useState("");
+  const [confirm, setConfirm] = useState("");
+  const [ready, setReady] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [done, setDone] = useState(false);
+
+  useEffect(() => {
+    let cancelled = false;
+    void (async () => {
+      try {
+        const supabase = getSupabaseBrowserClient();
+        // Recovery links set the session via URL hash / PKCE exchange.
+        const {
+          data: { session },
+        } = await supabase.auth.getSession();
+        if (!cancelled) {
+          setReady(Boolean(session));
+          if (!session) {
+            setError(
+              "El enlace de recuperación no es válido o expiró. Pedí uno nuevo desde el login.",
+            );
+          }
+        }
+      } catch (err) {
+        if (!cancelled) {
+          setError(
+            err instanceof Error
+              ? err.message
+              : "No pudimos validar el enlace de recuperación.",
+          );
+        }
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError(null);
+
+    if (password.length < 8) {
+      setError("La contraseña debe tener al menos 8 caracteres.");
+      return;
+    }
+    if (password !== confirm) {
+      setError("Las contraseñas no coinciden.");
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const supabase = getSupabaseBrowserClient();
+      const { error } = await supabase.auth.updateUser({ password });
+      if (error) throw error;
+      setDone(true);
+      await supabase.auth.signOut();
+      setTimeout(() => {
+        router.replace(loginHref());
+        router.refresh();
+      }, 1200);
+    } catch (err) {
+      setError(
+        err instanceof Error
+          ? err.message
+          : "No pudimos actualizar la contraseña.",
+      );
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <div className="login-card">
+      <img className="logo" src="/nexolia-logo.svg" alt="Nexolia" />
+      <div className="portal-label">Admin Portal</div>
+      <h1 style={{ marginBottom: "0.35rem" }}>Nueva contraseña</h1>
+      <p
+        className="secondary"
+        style={{ marginBottom: "1.5rem", fontSize: "0.9rem" }}
+      >
+        Elegí una contraseña nueva para tu cuenta de staff.
+      </p>
+
+      {error && <p className="login-error">{error}</p>}
+      {done && (
+        <p
+          className="secondary"
+          style={{
+            marginBottom: "1rem",
+            padding: "0.75rem 0.9rem",
+            borderRadius: 10,
+            background: "rgba(8, 189, 102, 0.12)",
+            color: "#0a5c38",
+            fontSize: "0.9rem",
+          }}
+        >
+          Contraseña actualizada. Te llevamos al login…
+        </p>
+      )}
+
+      {ready && !done && (
+        <form onSubmit={handleSubmit}>
+          <div className="field">
+            <label htmlFor="password">Nueva contraseña</label>
+            <input
+              id="password"
+              name="password"
+              type="password"
+              autoComplete="new-password"
+              required
+              minLength={8}
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+          </div>
+          <div className="field">
+            <label htmlFor="confirm">Confirmar contraseña</label>
+            <input
+              id="confirm"
+              name="confirm"
+              type="password"
+              autoComplete="new-password"
+              required
+              minLength={8}
+              value={confirm}
+              onChange={(e) => setConfirm(e.target.value)}
+            />
+          </div>
+          <button
+            className="btn btn-primary btn-block"
+            type="submit"
+            disabled={loading}
+            style={{ marginTop: "0.5rem" }}
+          >
+            {loading ? "Guardando…" : "Guardar contraseña"}
+          </button>
+        </form>
+      )}
+
+      <p style={{ marginTop: "1rem", textAlign: "center", fontSize: "0.8rem" }}>
+        <Link href={loginHref()}>← Volver al login</Link>
+      </p>
+    </div>
+  );
+}

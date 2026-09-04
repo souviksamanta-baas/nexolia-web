@@ -12,6 +12,7 @@ Next.js App Router rebuild of the Nexolia website. Hosts both the public marketi
 | `/privacidad`, `/privacy` | Política de privacidad (es-AR) |
 | `/eliminacion-de-cuenta`, `/account-deletion` | Baja de cuenta (Play/App Store) |
 | `admin.nexolia.com.ar/login` (or `?admin=1` on localhost) | Staff login (Supabase email/password; Google later) |
+| `admin.nexolia.com.ar/reset-password` | Password recovery landing (email link) |
 | `admin.nexolia.com.ar/dashboard` | KPIs + Grok assistant |
 | `.../clientes`, `.../organizaciones`, `.../planes`, `.../roles`, `.../auditoria`, `.../pronto` | Portal pages backed by Nest `/admin/*` |
 | `/mockups/*` | Static HTML QA references (served by `app/mockups/[[...slug]]/route.ts`) |
