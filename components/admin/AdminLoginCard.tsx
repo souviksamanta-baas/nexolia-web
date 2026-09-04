@@ -14,6 +14,7 @@ export function AdminLoginCard() {
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [resetting, setResetting] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -127,7 +128,7 @@ export function AdminLoginCard() {
         throw new Error(message);
       }
       setInfo(
-        "Te enviamos un correo en español para restablecer la contraseña. Revisá tu bandeja (y spam).",
+        "Te enviamos un correo para restablecer la contraseña. Revisá tu bandeja (y spam).",
       );
     } catch (err) {
       const raw = err instanceof Error ? err.message : "";
@@ -182,15 +183,26 @@ export function AdminLoginCard() {
         </div>
         <div className="field">
           <label htmlFor="password">Contraseña</label>
-          <input
-            id="password"
-            name="password"
-            type="password"
-            autoComplete="current-password"
-            required
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
+          <div className="password-field">
+            <input
+              id="password"
+              name="password"
+              type={showPassword ? "text" : "password"}
+              autoComplete="current-password"
+              required
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+            <button
+              type="button"
+              className="password-toggle"
+              onClick={() => setShowPassword((v) => !v)}
+              aria-label={showPassword ? "Ocultar contraseña" : "Mostrar contraseña"}
+              title={showPassword ? "Ocultar contraseña" : "Mostrar contraseña"}
+            >
+              {showPassword ? <EyeOffIcon /> : <EyeIcon />}
+            </button>
+          </div>
         </div>
         <div
           className="field"
@@ -238,5 +250,39 @@ export function AdminLoginCard() {
         <Link href="https://nexolia.com.ar/">← Volver al sitio</Link>
       </p>
     </div>
+  );
+}
+
+function EyeIcon() {
+  return (
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path
+        d="M2.5 12S6.5 5.5 12 5.5 21.5 12 21.5 12 17.5 18.5 12 18.5 2.5 12 2.5 12Z"
+        stroke="currentColor"
+        strokeWidth="1.6"
+        strokeLinejoin="round"
+      />
+      <circle cx="12" cy="12" r="3.2" stroke="currentColor" strokeWidth="1.6" />
+    </svg>
+  );
+}
+
+function EyeOffIcon() {
+  return (
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path
+        d="M3 3l18 18"
+        stroke="currentColor"
+        strokeWidth="1.6"
+        strokeLinecap="round"
+      />
+      <path
+        d="M10.6 10.7a3.2 3.2 0 0 0 4.5 4.5M6.1 6.3C4.1 7.6 2.5 12 2.5 12S6.5 18.5 12 18.5c1.7 0 3.2-.4 4.5-1M9.9 5.7C10.6 5.6 11.3 5.5 12 5.5 17.5 5.5 21.5 12 21.5 12c-.5.9-1.2 1.9-2.1 2.8"
+        stroke="currentColor"
+        strokeWidth="1.6"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
   );
 }
