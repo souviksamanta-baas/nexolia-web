@@ -67,11 +67,15 @@ export function middleware(req: NextRequest) {
   }
 
   if (isAdminHost) {
-    if (!pathIsAdmin) {
-      url.pathname = "/admin" + (pathname === "/" ? "" : pathname);
-      return NextResponse.rewrite(url);
+    // Canonicalize: never show /admin/* in the address bar on admin.*
+    if (pathIsAdmin) {
+      const stripped =
+        pathname === "/admin" ? "/" : pathname.slice("/admin".length) || "/";
+      url.pathname = stripped;
+      return NextResponse.redirect(url);
     }
-    return NextResponse.next();
+    url.pathname = "/admin" + (pathname === "/" ? "" : pathname);
+    return NextResponse.rewrite(url);
   }
 
   // Sticky localhost admin mode: only rewrite non-public paths.

@@ -3,6 +3,8 @@ import Link from "next/link";
 import { getServerAccessToken } from "@/lib/supabase/server";
 import { adminApi, type DashboardResponse } from "@/lib/api";
 import { formatARS } from "@/lib/formatters";
+import { headers } from "next/headers";
+import { adminHref } from "@/lib/admin-paths";
 
 export const metadata: Metadata = {
   title: "Dashboard — Admin",
@@ -76,6 +78,7 @@ const FALLBACK: DashboardResponse = {
 };
 
 export default async function DashboardPage() {
+  const host = (await headers()).get("host");
   const token = await getServerAccessToken();
   let data: DashboardResponse = FALLBACK;
   if (token) {
@@ -93,7 +96,7 @@ export default async function DashboardPage() {
           <h1>Dashboard</h1>
           <p>Resumen operativo — leads, pagos y licencias</p>
         </div>
-        <Link className="btn btn-secondary btn-sm" href="/admin/dashboard/grok">
+        <Link className="btn btn-secondary btn-sm" href={adminHref("/dashboard/grok", { host })}>
           Abrir Grok
         </Link>
       </div>
@@ -159,7 +162,7 @@ export default async function DashboardPage() {
       <div className="card" style={{ padding: 0, overflow: "hidden" }}>
         <div className="panel-toolbar">
           <h2 style={{ margin: 0, flex: 1 }}>Clientes recientes</h2>
-          <Link className="btn btn-secondary btn-sm" href="/admin/clientes">
+          <Link className="btn btn-secondary btn-sm" href={adminHref("/clientes", { host })}>
             Ver todos
           </Link>
         </div>
@@ -177,7 +180,7 @@ export default async function DashboardPage() {
               {data.recentClients.map((client) => (
                 <tr key={client.id}>
                   <td>
-                    <Link href="/admin/clientes">{client.name}</Link>
+                    <Link href={adminHref("/clientes", { host })}>{client.name}</Link>
                   </td>
                   <td>{client.plan}</td>
                   <td>

@@ -4,6 +4,7 @@ import { useCallback, useMemo, useState } from "react";
 import Link from "next/link";
 import { getSupabaseBrowserClient } from "@/lib/supabase/client";
 import { adminApi, type GrokChatMessage } from "@/lib/api";
+import { adminHref } from "@/lib/admin-paths";
 
 const CHIPS = [
   "Leads pendientes",
@@ -79,7 +80,7 @@ export function GrokPanel() {
         <h2>
           <SparkIcon /> Asistente Grok
         </h2>
-        <Link className="btn btn-ghost btn-sm" href="/admin/dashboard" aria-label="Cerrar panel">
+        <Link className="btn btn-ghost btn-sm" href={adminHref("/dashboard")} aria-label="Cerrar panel">
           ✕
         </Link>
       </div>

@@ -1,10 +1,12 @@
 import { redirect } from "next/navigation";
+import { headers } from "next/headers";
 import { Sidebar } from "@/components/admin/Sidebar";
 import { AdminHeader } from "@/components/admin/AdminHeader";
 import { FabGrok } from "@/components/admin/FabGrok";
 import { SidebarOverlay } from "@/components/admin/SidebarOverlay";
 import { getSupabaseServerClient, getServerAccessToken } from "@/lib/supabase/server";
 import { adminApi } from "@/lib/api";
+import { adminHref } from "@/lib/admin-paths";
 
 // The portal always reads the current session cookie and calls Nest, so it
 // can't be statically rendered.
@@ -23,6 +25,8 @@ export default async function PortalLayout({
 }) {
   let userLabel: string | undefined;
   let roleLabel: string | undefined;
+  const host = (await headers()).get("host");
+  const loginPath = adminHref("/login", { host });
 
   try {
     const supabase = await getSupabaseServerClient();
@@ -31,12 +35,12 @@ export default async function PortalLayout({
     } = await supabase.auth.getSession();
 
     if (!session) {
-      redirect("/admin/login");
+      redirect(loginPath);
     }
 
     const token = await getServerAccessToken();
     if (!token) {
-      redirect("/admin/login");
+      redirect(loginPath);
     }
 
     try {
@@ -45,8 +49,8 @@ export default async function PortalLayout({
       roleLabel = friendlyRole(me.role);
     } catch {
       // Nest rejected the session (not staff / stale token). Sign out via a
-      // client redirect to /admin/login where the user can retry.
-      redirect("/admin/login");
+      // client redirect to login where the user can retry.
+      redirect(loginPath);
     }
   } catch (err) {
     // Supabase env vars aren't set — fail closed to login. This lets a dev
@@ -55,7 +59,7 @@ export default async function PortalLayout({
       err instanceof Error &&
       err.message.includes("Supabase env vars missing")
     ) {
-      redirect("/admin/login");
+      redirect(loginPath);
     }
     throw err;
   }

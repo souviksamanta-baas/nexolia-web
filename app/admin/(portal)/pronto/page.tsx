@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { headers } from "next/headers";
+import { adminHref } from "@/lib/admin-paths";
 
 interface Props {
   searchParams: Promise<{ m?: string }>;
@@ -11,6 +13,7 @@ export async function generateMetadata({ searchParams }: Props): Promise<Metadat
 }
 
 export default async function ProntoPage({ searchParams }: Props) {
+  const host = (await headers()).get("host");
   const { m } = await searchParams;
   const mod = m || "Comunicaciones";
 
@@ -22,7 +25,7 @@ export default async function ProntoPage({ searchParams }: Props) {
         Este módulo estará disponible pronto. Mientras tanto podés gestionar
         clientes, organizaciones y planes desde el menú de Gestión.
       </p>
-      <Link className="btn btn-primary" href="/admin/dashboard" style={{ marginTop: "1rem" }}>
+      <Link className="btn btn-primary" href={adminHref("/dashboard", { host })} style={{ marginTop: "1rem" }}>
         Volver al dashboard
       </Link>
     </div>

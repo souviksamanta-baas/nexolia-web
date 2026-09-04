@@ -3,6 +3,8 @@ import Link from "next/link";
 import { GrokPanel } from "@/components/admin/GrokPanel";
 import { getServerAccessToken } from "@/lib/supabase/server";
 import { adminApi, type DashboardResponse } from "@/lib/api";
+import { headers } from "next/headers";
+import { adminHref } from "@/lib/admin-paths";
 
 export const metadata: Metadata = {
   title: "Dashboard + Grok — Admin",
@@ -16,6 +18,7 @@ const FALLBACK_KPIS = [
 ];
 
 export default async function DashboardGrokPage() {
+  const host = (await headers()).get("host");
   const token = await getServerAccessToken();
   let data: DashboardResponse | null = null;
   if (token) {
@@ -61,7 +64,7 @@ export default async function DashboardGrokPage() {
           <h1>Dashboard</h1>
           <p>Asistente Grok activo — consultas operativas v1</p>
         </div>
-        <Link className="btn btn-secondary btn-sm" href="/admin/dashboard">
+        <Link className="btn btn-secondary btn-sm" href={adminHref("/dashboard", { host })}>
           Cerrar Grok
         </Link>
       </div>

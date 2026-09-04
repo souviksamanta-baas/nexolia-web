@@ -2,11 +2,12 @@
 
 import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
+import { adminHref, normalizeAdminPathname } from "@/lib/admin-paths";
 
 interface NavItem {
   label: string;
+  /** Clean path without `/admin` prefix. */
   href: string;
-  /** Match string appended to /admin/pronto?m= for stub links. */
   moduleKey?: string;
 }
 
@@ -19,35 +20,43 @@ const GROUPS: NavGroup[] = [
   {
     label: "Gestión",
     items: [
-      { label: "Dashboard", href: "/admin/dashboard" },
-      { label: "Clientes", href: "/admin/clientes" },
-      { label: "Organizaciones y usuarios", href: "/admin/organizaciones" },
-      { label: "Planes y suscripciones", href: "/admin/planes" },
+      { label: "Dashboard", href: "/dashboard" },
+      { label: "Clientes", href: "/clientes" },
+      { label: "Organizaciones y usuarios", href: "/organizaciones" },
+      { label: "Planes y suscripciones", href: "/planes" },
     ],
   },
   {
     label: "Comunicaciones",
     items: [
-      { label: "WhatsApp", href: "/admin/pronto?m=WhatsApp", moduleKey: "WhatsApp" },
-      { label: "Instagram", href: "/admin/pronto?m=Instagram", moduleKey: "Instagram" },
-      { label: "Inbox", href: "/admin/pronto?m=Inbox", moduleKey: "Inbox" },
+      { label: "WhatsApp", href: "/pronto?m=WhatsApp", moduleKey: "WhatsApp" },
+      { label: "Instagram", href: "/pronto?m=Instagram", moduleKey: "Instagram" },
+      { label: "Inbox", href: "/pronto?m=Inbox", moduleKey: "Inbox" },
     ],
   },
   {
     label: "Operaciones",
     items: [
-      { label: "Ventas", href: "/admin/pronto?m=Ventas", moduleKey: "Ventas" },
-      { label: "Facturas", href: "/admin/pronto?m=Facturas", moduleKey: "Facturas" },
+      { label: "Ventas", href: "/pronto?m=Ventas", moduleKey: "Ventas" },
+      { label: "Facturas", href: "/pronto?m=Facturas", moduleKey: "Facturas" },
     ],
   },
   {
     label: "Sistema",
     items: [
-      { label: "Integraciones", href: "/admin/pronto?m=Integraciones", moduleKey: "Integraciones" },
-      { label: "Roles y permisos", href: "/admin/roles" },
-      { label: "Auditoría", href: "/admin/auditoria" },
-      { label: "Notificaciones", href: "/admin/pronto?m=Notificaciones", moduleKey: "Notificaciones" },
-      { label: "Salud", href: "/admin/pronto?m=Salud", moduleKey: "Salud" },
+      {
+        label: "Integraciones",
+        href: "/pronto?m=Integraciones",
+        moduleKey: "Integraciones",
+      },
+      { label: "Roles y permisos", href: "/roles" },
+      { label: "Auditoría", href: "/auditoria" },
+      {
+        label: "Notificaciones",
+        href: "/pronto?m=Notificaciones",
+        moduleKey: "Notificaciones",
+      },
+      { label: "Salud", href: "/pronto?m=Salud", moduleKey: "Salud" },
     ],
   },
 ];
@@ -56,17 +65,17 @@ export function Sidebar() {
   const pathname = usePathname();
   const search = useSearchParams();
   const activeModule = search.get("m");
+  const current = normalizeAdminPathname(pathname || "/");
 
   const isActive = (item: NavItem) => {
     const [path] = item.href.split("?");
-    if (!pathname) return false;
     if (item.moduleKey) {
-      return pathname.startsWith("/admin/pronto") && activeModule === item.moduleKey;
+      return current.startsWith("/pronto") && activeModule === item.moduleKey;
     }
-    if (path === "/admin/dashboard") {
-      return pathname === "/admin/dashboard" || pathname === "/admin";
+    if (path === "/dashboard") {
+      return current === "/dashboard" || current === "/";
     }
-    return pathname === path || pathname.startsWith(`${path}/`);
+    return current === path || current.startsWith(`${path}/`);
   };
 
   return (
@@ -79,15 +88,18 @@ export function Sidebar() {
         {GROUPS.map((group) => (
           <div key={group.label} className="nav-group">
             <div className="nav-group-label">{group.label}</div>
-            {group.items.map((item) => (
-              <Link
-                key={item.label}
-                className={`nav-link${isActive(item) ? " is-active" : ""}`}
-                href={item.href}
-              >
-                <span className="dot" /> {item.label}
-              </Link>
-            ))}
+            <ul>
+              {group.items.map((item) => (
+                <li key={item.href}>
+                  <Link
+                    href={adminHref(item.href)}
+                    className={isActive(item) ? "is-active" : undefined}
+                  >
+                    {item.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
           </div>
         ))}
       </nav>

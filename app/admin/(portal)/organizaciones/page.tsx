@@ -3,6 +3,8 @@ import { getServerAccessToken } from "@/lib/supabase/server";
 import { adminApi, type AdminOrganization } from "@/lib/api";
 import { OrganizacionesTabs } from "@/components/admin/OrganizacionesTabs";
 import { initialsFrom } from "@/lib/formatters";
+import { headers } from "next/headers";
+import { adminHref } from "@/lib/admin-paths";
 
 export const metadata: Metadata = { title: "Organizaciones y usuarios — Admin" };
 
@@ -21,6 +23,7 @@ const FALLBACK_USERS = [
 ];
 
 export default async function OrganizacionesPage() {
+  const host = (await headers()).get("host");
   const token = await getServerAccessToken();
   let orgs: AdminOrganization[] = FALLBACK_ORGS;
   if (token) {
@@ -83,7 +86,7 @@ export default async function OrganizacionesPage() {
             <div>
               <dt>Cliente origen</dt>
               <dd>
-                <a href="/admin/clientes">Ver lead / cliente</a>
+                <a href={adminHref("/clientes", { host })}>Ver lead / cliente</a>
               </dd>
             </div>
           </dl>

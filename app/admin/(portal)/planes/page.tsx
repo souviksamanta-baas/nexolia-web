@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { getServerAccessToken } from "@/lib/supabase/server";
 import { adminApi, type AdminPlan } from "@/lib/api";
 import { formatARS } from "@/lib/formatters";
+import { headers } from "next/headers";
+import { adminHref } from "@/lib/admin-paths";
 
 export const metadata: Metadata = { title: "Planes y suscripciones — Admin" };
 
@@ -49,6 +51,7 @@ const SUBSCRIPTIONS: SubscriptionRow[] = [
 ];
 
 export default async function PlanesPage() {
+  const host = (await headers()).get("host");
   const token = await getServerAccessToken();
   let plans: AdminPlan[] = FALLBACK_PLANS;
   if (token) {
@@ -120,7 +123,7 @@ export default async function PlanesPage() {
               {SUBSCRIPTIONS.map((s) => (
                 <tr key={s.id}>
                   <td>
-                    <a href="/admin/organizaciones">{s.org}</a>
+                    <a href={adminHref("/organizaciones", { host })}>{s.org}</a>
                   </td>
                   <td>{s.plan}</td>
                   <td>{s.cycle}</td>

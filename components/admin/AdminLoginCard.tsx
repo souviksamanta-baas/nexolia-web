@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { getSupabaseBrowserClient } from "@/lib/supabase/client";
 import { adminApi } from "@/lib/api";
+import { adminHref } from "@/lib/admin-paths";
 
 /**
  * Staff login (email/password). Google OAuth is deferred.
@@ -33,7 +34,7 @@ export function AdminLoginCard() {
         }
         await adminApi.me(session.access_token);
         if (!cancelled) {
-          router.replace("/admin/dashboard");
+          router.replace(adminHref("/dashboard"));
           router.refresh();
         }
       } catch {
@@ -75,7 +76,7 @@ export function AdminLoginCard() {
         );
       }
 
-      router.replace("/admin/dashboard");
+      router.replace(adminHref("/dashboard"));
       router.refresh();
     } catch (err) {
       const raw = err instanceof Error ? err.message : "";

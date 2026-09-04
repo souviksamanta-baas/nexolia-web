@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { getServerAccessToken } from "@/lib/supabase/server";
 import { adminApi, type AdminLead } from "@/lib/api";
 import { formatARS, initialsFrom } from "@/lib/formatters";
+import { headers } from "next/headers";
+import { adminHref } from "@/lib/admin-paths";
 
 export const metadata: Metadata = { title: "Clientes — Admin" };
 
@@ -43,6 +45,7 @@ const FALLBACK: ClientRow[] = [
 ];
 
 export default async function ClientesPage() {
+  const host = (await headers()).get("host");
   const token = await getServerAccessToken();
   let clients: ClientRow[] = FALLBACK;
 
@@ -153,7 +156,7 @@ export default async function ClientesPage() {
               <div>
                 <dt>Organización</dt>
                 <dd>
-                  <a href="/admin/organizaciones">{active.orgLabel}</a>
+                  <a href={adminHref("/organizaciones", { host })}>{active.orgLabel}</a>
                 </dd>
               </div>
             )}
@@ -179,7 +182,7 @@ export default async function ClientesPage() {
             )}
           </dl>
           <div className="detail-actions">
-            <a className="btn btn-primary btn-sm" href="/admin/planes">
+            <a className="btn btn-primary btn-sm" href={adminHref("/planes", { host })}>
               Ver suscripción
             </a>
             <button className="btn btn-secondary btn-sm" type="button">

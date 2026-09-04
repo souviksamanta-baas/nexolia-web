@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { getSupabaseBrowserClient } from "@/lib/supabase/client";
+import { adminHref } from "@/lib/admin-paths";
 
 interface AdminHeaderProps {
   userLabel?: string;
@@ -26,7 +27,7 @@ export function AdminHeader({
     try {
       const supabase = getSupabaseBrowserClient();
       await supabase.auth.signOut();
-      router.replace("/admin/login");
+      router.replace(adminHref("/login"));
       router.refresh();
     } catch {
       // ignore — sign-out failures aren't user-facing
