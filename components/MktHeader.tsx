@@ -14,7 +14,10 @@ export function MktHeader() {
       <div className="mkt-actions">
         <a
           className="btn btn-ghost btn-sm"
-          href={process.env.NEXT_PUBLIC_ADMIN_URL || "/admin/login"}
+          href={
+            process.env.NEXT_PUBLIC_ADMIN_URL ||
+            "https://admin.nexolia.com.ar/login"
+          }
         >
           Iniciar sesión
         </a>

@@ -42,7 +42,7 @@ npm run mockups
 | `NEXT_PUBLIC_BAAS_API_URL` | Base URL for the Nest API (baas-mvp) |
 | `NEXT_PUBLIC_SUPABASE_URL` / `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Supabase staff auth |
 | `NEXT_PUBLIC_SITE_URL` | e.g. `https://nexolia.com.ar` (used for OG metadata) |
-| `NEXT_PUBLIC_ADMIN_URL` | e.g. `https://admin.nexolia.com.ar` |
+| `NEXT_PUBLIC_ADMIN_URL` | e.g. `https://admin.nexolia.com.ar/login` |
 
 ## Deployment (Railway)
 

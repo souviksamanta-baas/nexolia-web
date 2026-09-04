@@ -81,17 +81,25 @@ export function AdminLoginCard() {
     setGoogleLoading(true);
     try {
       const supabase = getSupabaseBrowserClient();
-      const redirectTo =
-        (typeof window !== "undefined" &&
-          `${window.location.origin}/admin/login`) ||
-        undefined;
+      const origin =
+        typeof window !== "undefined" ? window.location.origin : "";
+      const host =
+        typeof window !== "undefined" ? window.location.hostname.toLowerCase() : "";
+      // Prefer clean /login on admin.* ; path /admin/login on apex.
+      const redirectTo = host.startsWith("admin.")
+        ? `${origin}/login`
+        : `${origin}/admin/login`;
       const { error } = await supabase.auth.signInWithOAuth({
         provider: "google",
         options: { redirectTo },
       });
       if (error) throw error;
     } catch (err) {
-      setError(err instanceof Error ? err.message : "No pudimos iniciar con Google.");
+      const raw = err instanceof Error ? err.message : "";
+      const message = raw.includes("Supabase env vars missing")
+        ? "Falta la configuración de Supabase en el servidor. Probá de nuevo en unos minutos."
+        : raw || "No pudimos iniciar con Google.";
+      setError(message);
       setGoogleLoading(false);
     }
   };

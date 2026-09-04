@@ -38,7 +38,7 @@ Set these on the **nexolia-web** Railway service (Variables), then redeploy:
 | `BAAS_API_URL` | `https://baas-project-production.up.railway.app` |
 | `NEXT_PUBLIC_BAAS_API_URL` | same as above (admin client) |
 | `NEXT_PUBLIC_SITE_URL` | `https://nexolia.com.ar` |
-| `NEXT_PUBLIC_ADMIN_URL` | `https://admin.nexolia.com.ar` |
+| `NEXT_PUBLIC_ADMIN_URL` | `https://admin.nexolia.com.ar/login` |
 | `NEXT_PUBLIC_SUPABASE_URL` | same Supabase project as the app |
 | `NEXT_PUBLIC_SUPABASE_ANON_KEY` | anon / publishable key |
 
