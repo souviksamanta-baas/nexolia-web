@@ -37,15 +37,31 @@ const SERVICE_GROUPS = Array.from(
 );
 
 interface Plan {
-  id: "basico" | "pro" | "advanced";
+  id: "basico" | "pro" | "max";
   name: string;
   monthly: number;
   annual: number;
   tagline: string;
+  features: string[];
   featured?: boolean;
 }
 
-/** Suscripciones gratis por ahora — montos en $0. */
+/** Segmentos de módulos incluidos en todos los planes. */
+const PLAN_SEGMENTS = [
+  "Comercio",
+  "Facturación",
+  "Agenda",
+  "Canales",
+] as const;
+
+const COPI_PRO_FEATURES = [
+  "Copi Pro",
+  "Copi con voz",
+  "Copi con visión",
+  "Reportes personalizados Copi",
+] as const;
+
+/** Suscripciones gratuitas por ahora — montos en $0. */
 const PLANS: Plan[] = [
   {
     id: "basico",
@@ -54,6 +70,10 @@ const PLANS: Plan[] = [
     annual: 0,
     tagline: "Hasta 5 usuarios",
     featured: true,
+    features: [
+      ...PLAN_SEGMENTS,
+      "Copi básico (5 preguntas preconfiguradas)",
+    ],
   },
   {
     id: "pro",
@@ -61,13 +81,15 @@ const PLANS: Plan[] = [
     monthly: 0,
     annual: 0,
     tagline: "Hasta 10 usuarios · 1 sucursal",
+    features: [...PLAN_SEGMENTS, ...COPI_PRO_FEATURES],
   },
   {
-    id: "advanced",
-    name: "Advanced",
+    id: "max",
+    name: "Max",
     monthly: 0,
     annual: 0,
     tagline: "Multisucursal",
+    features: [...PLAN_SEGMENTS, ...COPI_PRO_FEATURES, "Multisucursal"],
   },
 ];
 
@@ -280,7 +302,7 @@ function RailList({
 
   const planLabel =
     step >= 5
-      ? `Plan ${selectedPlan.name} · gratis`
+      ? `Plan ${selectedPlan.name} · gratuito`
       : "Plan · pendiente";
 
   return (
@@ -601,6 +623,12 @@ function StepCopi({
         Paso 3 de 4 — activá las capacidades de Copi que quieras. También las
         podés cambiar después.
       </p>
+      <p className="hint" style={{ marginBottom: "1.25rem", maxWidth: "42rem" }}>
+        Copi es el asistente de Nexolia: responde consultas del negocio, resume
+        actividad y te ayuda a operar más rápido. Elegí qué capacidades querés
+        activar según cómo trabajás — desde preguntas listas hasta acciones
+        automáticas, voz, visión y reportes a medida.
+      </p>
 
       <label
         className="service-card"
@@ -667,7 +695,7 @@ function StepPlan({
       <h1>Elegí tu plan</h1>
       <p className="secondary">
         Paso 4 de 4 — por ahora la app no cobra: las suscripciones son{" "}
-        <strong>gratis</strong>.
+        <strong>gratuitas</strong>.
       </p>
 
       <div
@@ -725,6 +753,11 @@ function StepPlan({
                 >
                   {plan.tagline}
                 </p>
+                <ul className="plan-features">
+                  {plan.features.map((feature) => (
+                    <li key={feature}>{feature}</li>
+                  ))}
+                </ul>
               </label>
             );
           })}
@@ -781,7 +814,7 @@ function ThanksPanel({
         </p>
         <p className="secondary">
           Nuestro equipo activará tu cuenta a la brevedad. Por ahora no hay
-          cargos: las suscripciones son gratis.
+          cargos: las suscripciones son gratuitas.
         </p>
         <p className="hint" style={{ marginTop: "1rem" }}>
           {INACTIVITY_NOTE}
