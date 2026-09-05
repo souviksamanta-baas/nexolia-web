@@ -1,10 +1,10 @@
 /**
- * Selectable org feature flags for public /comenzar (Paso 2).
+ * Selectable org feature flags for public /comenzar.
  * Keys MUST match `OrganizationFeatureFlags` in baas-mvp mobile
  * (`apps/mobile/src/types/features.ts`) so staff conversion can apply them 1:1.
  *
- * Baseline flags (always on in the app) are NOT listed here — they are merged
- * at submit time via `buildLeadFeatureFlags`.
+ * Baseline flags (always on) are merged at submit via `buildLeadFeatureFlags`.
+ * Copi options are a separate paso (Paso 3).
  */
 
 export type FeatureFlagKey =
@@ -35,14 +35,16 @@ export interface FeatureServiceOption {
   key: FeatureFlagKey;
   title: string;
   description: string;
-  /** Pre-checked on the wizard (commerce defaults match app kiosco-like). */
+  /** Pre-checked on the wizard. */
   defaultSelected?: boolean;
   group: string;
+  /** Shown but not selectable (e.g. próximamente). */
+  disabled?: boolean;
+  disabledHint?: string;
 }
 
-/** Same grouping / labels as mobile OnboardingScreen FEATURE_GROUPS (+ channels + multi). */
+/** Paso 2 — servicios (sin Copi; notificaciones y atajo Ventas van en baseline). */
 export const FEATURE_SERVICE_OPTIONS: FeatureServiceOption[] = [
-  // Comercio
   {
     key: "commerce_pos",
     title: "Punto de venta",
@@ -79,14 +81,6 @@ export const FEATURE_SERVICE_OPTIONS: FeatureServiceOption[] = [
     group: "Comercio",
   },
   {
-    key: "commerce_nav_shortcut",
-    title: "Atajo Ventas en menú",
-    description: "Muestra Ventas en el menú inferior de la app",
-    defaultSelected: true,
-    group: "Comercio",
-  },
-  // Facturación
-  {
     key: "billing_invoices",
     title: "Facturas",
     description: "Emisión de facturas",
@@ -110,50 +104,15 @@ export const FEATURE_SERVICE_OPTIONS: FeatureServiceOption[] = [
   {
     key: "billing_cash",
     title: "Caja",
-    description: "Arqueos y medios de pago",
+    description: "Gestioná ingresos y egresos",
     group: "Facturación",
   },
-  // Agenda
   {
     key: "appointments",
-    title: "Turnos y agenda",
-    description: "Reservas para clínicas y servicios",
+    title: "Agenda",
+    description: "Agregá y administrá turnos",
     group: "Agenda",
   },
-  // Copi
-  {
-    key: "copi_pro_agent",
-    title: "Copi Pro",
-    description: "Acciones automáticas del asistente",
-    group: "Copi",
-  },
-  {
-    key: "copi_voice",
-    title: "Copi con voz",
-    description: "Entrada y respuestas por voz",
-    group: "Copi",
-  },
-  {
-    key: "copi_vision",
-    title: "Copi con visión",
-    description: "Análisis de imágenes",
-    group: "Copi",
-  },
-  {
-    key: "copi_custom_reports",
-    title: "Reportes personalizados Copi",
-    description: "Informes a medida con Copi",
-    group: "Copi",
-  },
-  // Notificaciones
-  {
-    key: "notifications",
-    title: "Notificaciones push",
-    description: "Avisos push para el equipo",
-    defaultSelected: true,
-    group: "Notificaciones",
-  },
-  // Canales (integrations_*)
   {
     key: "integrations_whatsapp",
     title: "WhatsApp",
@@ -189,16 +148,45 @@ export const FEATURE_SERVICE_OPTIONS: FeatureServiceOption[] = [
     defaultSelected: true,
     group: "Canales",
   },
-  // Ops
   {
     key: "multi_sucursales",
     title: "Varias sucursales",
     description: "Más de un centro de negocio",
     group: "Operaciones",
+    disabled: true,
+    disabledHint: "Próximamente",
   },
 ];
 
-/** Always-on flags from the app (`BASELINE_FEATURE_FLAGS`). */
+/** Paso 3 — Copi (separado de servicios). */
+export const COPI_SERVICE_OPTIONS: FeatureServiceOption[] = [
+  {
+    key: "copi_pro_agent",
+    title: "Copi Pro",
+    description: "Acciones automáticas del asistente",
+    group: "Copi",
+  },
+  {
+    key: "copi_voice",
+    title: "Copi con voz",
+    description: "Entrada y respuestas por voz",
+    group: "Copi",
+  },
+  {
+    key: "copi_vision",
+    title: "Copi con visión",
+    description: "Análisis de imágenes",
+    group: "Copi",
+  },
+  {
+    key: "copi_custom_reports",
+    title: "Reportes personalizados Copi",
+    description: "Informes a medida con Copi",
+    group: "Copi",
+  },
+];
+
+/** Always-on flags (app baseline + flags everyone gets). */
 export const BASELINE_FEATURE_FLAGS: Record<string, true> = {
   account: true,
   browser_session: true,
@@ -209,20 +197,37 @@ export const BASELINE_FEATURE_FLAGS: Record<string, true> = {
   copi_enabled: true,
   copi_basic_reports: true,
   copi_freeform_questions: true,
+  // Available to everyone — not shown as optional toggles.
+  commerce_nav_shortcut: true,
+  notifications: true,
 };
 
-export function defaultSelectedFeatureKeys(): FeatureFlagKey[] {
-  return FEATURE_SERVICE_OPTIONS.filter((o) => o.defaultSelected).map((o) => o.key);
+export function selectableServiceKeys(): FeatureFlagKey[] {
+  return FEATURE_SERVICE_OPTIONS.filter((o) => !o.disabled).map((o) => o.key);
 }
 
-/** Build org feature_flags payload from selected Paso 2 keys. */
+export function selectableCopiKeys(): FeatureFlagKey[] {
+  return COPI_SERVICE_OPTIONS.filter((o) => !o.disabled).map((o) => o.key);
+}
+
+export function defaultSelectedFeatureKeys(): FeatureFlagKey[] {
+  return FEATURE_SERVICE_OPTIONS.filter(
+    (o) => o.defaultSelected && !o.disabled,
+  ).map((o) => o.key);
+}
+
+/** Build org feature_flags payload from selected servicios + Copi keys. */
 export function buildLeadFeatureFlags(
   selected: Iterable<string>,
 ): Record<string, boolean> {
   const selectedSet = new Set(selected);
   const flags: Record<string, boolean> = { ...BASELINE_FEATURE_FLAGS };
 
-  for (const option of FEATURE_SERVICE_OPTIONS) {
+  for (const option of [...FEATURE_SERVICE_OPTIONS, ...COPI_SERVICE_OPTIONS]) {
+    if (option.disabled) {
+      flags[option.key] = false;
+      continue;
+    }
     flags[option.key] = selectedSet.has(option.key);
   }
 
@@ -230,5 +235,12 @@ export function buildLeadFeatureFlags(
 }
 
 export function featureOptionTitle(key: string): string {
-  return FEATURE_SERVICE_OPTIONS.find((o) => o.key === key)?.title ?? key;
+  return (
+    FEATURE_SERVICE_OPTIONS.find((o) => o.key === key)?.title ??
+    COPI_SERVICE_OPTIONS.find((o) => o.key === key)?.title ??
+    key
+  );
 }
+
+/** WhatsApp support (same line as the mobile HelpSupportScreen). */
+export const SUPPORT_WHATSAPP_URL = "https://wa.me/543546517096";

@@ -2,19 +2,25 @@
 
 import { useMemo, useState } from "react";
 import Link from "next/link";
-import { submitPublicLead, type BillingCycle, ApiError } from "@/lib/api";
+import {
+  checkOrgName,
+  submitPublicLead,
+  type BillingCycle,
+  ApiError,
+} from "@/lib/api";
 import { formatARS } from "@/lib/formatters";
 import {
   FEATURE_SERVICE_OPTIONS,
+  COPI_SERVICE_OPTIONS,
+  SUPPORT_WHATSAPP_URL,
   buildLeadFeatureFlags,
   defaultSelectedFeatureKeys,
   featureOptionTitle,
+  selectableCopiKeys,
+  selectableServiceKeys,
   type FeatureFlagKey,
+  type FeatureServiceOption,
 } from "@/lib/feature-catalog";
-
-/* ------------------------------------------------------------------ */
-/* Static content                                                     */
-/* ------------------------------------------------------------------ */
 
 const CATEGORIAS = [
   "Ferretería",
@@ -31,7 +37,7 @@ const SERVICE_GROUPS = Array.from(
 );
 
 interface Plan {
-  id: "starter" | "basico" | "pro";
+  id: "basico" | "pro" | "advanced";
   name: string;
   monthly: number;
   annual: number;
@@ -39,30 +45,41 @@ interface Plan {
   featured?: boolean;
 }
 
-// Annual price = monthly * 12 * 0.85 (−15%), rounded to nearest 100.
+/** Suscripciones gratis por ahora — montos en $0. */
 const PLANS: Plan[] = [
-  { id: "starter", name: "Starter", monthly: 29_000, annual: 295_800, tagline: "1 usuario · reportes básicos" },
-  { id: "basico", name: "Básico", monthly: 69_000, annual: 703_800, tagline: "Hasta 5 usuarios · stock + ventas", featured: true },
-  { id: "pro", name: "Pro", monthly: 149_000, annual: 1_519_800, tagline: "Ilimitado · todos los módulos" },
+  {
+    id: "basico",
+    name: "Básico",
+    monthly: 0,
+    annual: 0,
+    tagline: "Hasta 5 usuarios",
+    featured: true,
+  },
+  {
+    id: "pro",
+    name: "Pro",
+    monthly: 0,
+    annual: 0,
+    tagline: "Hasta 10 usuarios · 1 sucursal",
+  },
+  {
+    id: "advanced",
+    name: "Advanced",
+    monthly: 0,
+    annual: 0,
+    tagline: "Multisucursal",
+  },
 ];
 
-const TRANSFER = {
-  cbu: "00701234-0123456789012345-6",
-  alias: "NEXOLIA.PAGOS",
-  titular: "Nexolia SRL · CUIT 30-71234567-8",
-  efectivo: "Av. Colón 1234, Córdoba · Lun a Vie 9–18 h",
-};
+const INACTIVITY_NOTE =
+  "Si tu organización permanece inactiva durante 30 días, puede eliminarse automáticamente.";
 
-/* ------------------------------------------------------------------ */
-/* Component                                                          */
-/* ------------------------------------------------------------------ */
-
-type Step = 1 | 2 | 3 | 4;
+type Step = 1 | 2 | 3 | 4 | 5;
 
 interface FormState {
   email: string;
+  orgName: string;
   categoria: (typeof CATEGORIAS)[number] | "";
-  /** Selected OrganizationFeatureFlags keys */
   servicios: FeatureFlagKey[];
   plan: Plan["id"];
   ciclo: BillingCycle;
@@ -70,6 +87,7 @@ interface FormState {
 
 const initialState: FormState = {
   email: "",
+  orgName: "",
   categoria: "",
   servicios: defaultSelectedFeatureKeys(),
   plan: "basico",
@@ -84,12 +102,13 @@ export function OnboardingWizard() {
   const [leadId, setLeadId] = useState<string | null>(null);
 
   const selectedPlan = useMemo(
-    () => PLANS.find((p) => p.id === form.plan) ?? PLANS[1],
+    () => PLANS.find((p) => p.id === form.plan) ?? PLANS[0],
     [form.plan],
   );
 
   const totalDisplay = useMemo(() => {
-    const amount = form.ciclo === "annual" ? selectedPlan.annual : selectedPlan.monthly;
+    const amount =
+      form.ciclo === "annual" ? selectedPlan.annual : selectedPlan.monthly;
     return `${formatARS(amount)} ${form.ciclo === "annual" ? "/ año" : "/ mes"}`;
   }, [form.ciclo, selectedPlan]);
 
@@ -102,6 +121,17 @@ export function OnboardingWizard() {
     }));
   };
 
+  const setServiceSelection = (keys: FeatureFlagKey[], selected: boolean) => {
+    setForm((f) => {
+      const set = new Set(f.servicios);
+      for (const key of keys) {
+        if (selected) set.add(key);
+        else set.delete(key);
+      }
+      return { ...f, servicios: Array.from(set) };
+    });
+  };
+
   const submit = async () => {
     setSubmitting(true);
     setError(null);
@@ -109,6 +139,7 @@ export function OnboardingWizard() {
       const featureFlags = buildLeadFeatureFlags(form.servicios);
       const res = await submitPublicLead({
         email: form.email,
+        orgName: form.orgName,
         categoria: form.categoria,
         servicios: form.servicios,
         featureFlags,
@@ -117,7 +148,7 @@ export function OnboardingWizard() {
         source: "nexolia-web/comenzar",
       });
       setLeadId(res.id ?? "pendiente");
-      setStep(4);
+      setStep(5);
     } catch (err) {
       const message =
         err instanceof ApiError
@@ -149,24 +180,34 @@ export function OnboardingWizard() {
               <StepServices
                 form={form}
                 toggleService={toggleService}
+                setServiceSelection={setServiceSelection}
                 onBack={() => setStep(1)}
                 onNext={() => setStep(3)}
               />
             )}
             {step === 3 && (
+              <StepCopi
+                form={form}
+                toggleService={toggleService}
+                setServiceSelection={setServiceSelection}
+                onBack={() => setStep(2)}
+                onNext={() => setStep(4)}
+              />
+            )}
+            {step === 4 && (
               <StepPlan
                 form={form}
                 setForm={setForm}
                 submitting={submitting}
                 error={error}
-                onBack={() => setStep(2)}
+                onBack={() => setStep(3)}
                 onSubmit={submit}
               />
             )}
-            {step === 4 && (
+            {step === 5 && (
               <ThanksPanel
                 email={form.email}
-                total={totalDisplay}
+                orgName={form.orgName}
                 planName={selectedPlan.name}
                 leadId={leadId}
                 onReset={() => {
@@ -184,16 +225,13 @@ export function OnboardingWizard() {
   );
 }
 
-/* ------------------------------------------------------------------ */
-/* Rail + steps                                                        */
-/* ------------------------------------------------------------------ */
-
 function StepsBar({ step }: { step: Step }) {
   const items: { label: string; index: Step }[] = [
     { label: "Tu negocio", index: 1 },
     { label: "Servicios", index: 2 },
-    { label: "Plan", index: 3 },
-    { label: "Confirmación", index: 4 },
+    { label: "Copi", index: 3 },
+    { label: "Plan", index: 4 },
+    { label: "Confirmación", index: 5 },
   ];
   return (
     <ol className="steps">
@@ -220,57 +258,61 @@ function RailList({
   form: FormState;
   selectedPlan: Plan;
 }) {
+  const serviceKeys = form.servicios.filter((k) =>
+    selectableServiceKeys().includes(k),
+  );
+  const copiKeys = form.servicios.filter((k) =>
+    selectableCopiKeys().includes(k),
+  );
+
   const serviciosLabel =
-    form.servicios.length === 0
+    serviceKeys.length === 0
       ? "Servicios · pendiente"
-      : `${form.servicios.length} módulos · ${form.servicios
+      : `${serviceKeys.length} módulos · ${serviceKeys
           .slice(0, 3)
           .map((id) => featureOptionTitle(id))
-          .join(", ")}${form.servicios.length > 3 ? "…" : ""}`;
+          .join(", ")}${serviceKeys.length > 3 ? "…" : ""}`;
+
+  const copiLabel =
+    copiKeys.length === 0
+      ? "Copi · pendiente"
+      : `Copi · ${copiKeys.map((id) => featureOptionTitle(id)).join(", ")}`;
 
   const planLabel =
-    step >= 4
-      ? `Plan ${selectedPlan.name} · ${formatARS(
-          form.ciclo === "annual" ? selectedPlan.annual : selectedPlan.monthly,
-        )}${form.ciclo === "annual" ? "/año" : "/mes"}`
+    step >= 5
+      ? `Plan ${selectedPlan.name} · gratis`
       : "Plan · pendiente";
 
   return (
     <aside className="onboard-rail">
       <h2>Tu información</h2>
       <ul className="rail-list">
+        <li className={form.orgName ? "is-done" : step === 1 ? "is-current" : ""}>
+          {form.orgName || "Nombre del negocio"}
+        </li>
         <li className={form.email ? "is-done" : step === 1 ? "is-current" : ""}>
           {form.email || "Datos de contacto"}
         </li>
         <li
           className={
-            form.categoria
-              ? "is-done"
-              : step === 1
-              ? "is-current"
-              : ""
+            form.categoria ? "is-done" : step === 1 ? "is-current" : ""
           }
         >
           {form.categoria || "Categoría del negocio"}
         </li>
-        <li
-          className={
-            step >= 3 ? "is-done" : step === 2 ? "is-current" : ""
-          }
-        >
+        <li className={step >= 3 ? "is-done" : step === 2 ? "is-current" : ""}>
           {step >= 2 ? serviciosLabel : "Servicios · pendiente"}
         </li>
-        <li className={step === 4 ? "is-done" : step === 3 ? "is-current" : ""}>
+        <li className={step >= 4 ? "is-done" : step === 3 ? "is-current" : ""}>
+          {step >= 3 ? copiLabel : "Copi · pendiente"}
+        </li>
+        <li className={step === 5 ? "is-done" : step === 4 ? "is-current" : ""}>
           {planLabel}
         </li>
       </ul>
     </aside>
   );
 }
-
-/* ------------------------------------------------------------------ */
-/* Step 1 — business                                                   */
-/* ------------------------------------------------------------------ */
 
 function StepBusiness({
   form,
@@ -281,18 +323,65 @@ function StepBusiness({
   setForm: React.Dispatch<React.SetStateAction<FormState>>;
   onNext: () => void;
 }) {
+  const [checking, setChecking] = useState(false);
+  const [nameError, setNameError] = useState<string | null>(null);
+  const [ownedByMe, setOwnedByMe] = useState(false);
+
+  const handleNext = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setNameError(null);
+    setOwnedByMe(false);
+    setChecking(true);
+    try {
+      const result = await checkOrgName({
+        name: form.orgName.trim(),
+        email: form.email.trim(),
+      });
+      if (!result.available) {
+        setOwnedByMe(result.ownedByRequester);
+        setNameError(
+          result.ownedByRequester
+            ? `El negocio «${result.orgName}» ya está registrado con tu correo.`
+            : `El negocio «${result.orgName}» ya está registrado.`,
+        );
+        return;
+      }
+      onNext();
+    } catch (err) {
+      setNameError(
+        err instanceof ApiError
+          ? err.message
+          : "No pudimos verificar el nombre. Intentá de nuevo.",
+      );
+    } finally {
+      setChecking(false);
+    }
+  };
+
   return (
     <>
       <h1>Contanos sobre tu negocio</h1>
       <p className="secondary">
-        Paso 1 de 3 — empezamos con lo básico para armar tu cuenta.
+        Paso 1 de 4 — empezamos con lo básico para armar tu cuenta.
       </p>
-      <form
-        onSubmit={(e) => {
-          e.preventDefault();
-          onNext();
-        }}
-      >
+      <form onSubmit={(e) => void handleNext(e)}>
+        <div className="field">
+          <label htmlFor="orgName">Nombre del negocio</label>
+          <input
+            id="orgName"
+            name="orgName"
+            type="text"
+            placeholder="Ej. Ferretería Villalba"
+            value={form.orgName}
+            onChange={(e) => {
+              setNameError(null);
+              setOwnedByMe(false);
+              setForm((f) => ({ ...f, orgName: e.target.value }));
+            }}
+            required
+            minLength={2}
+          />
+        </div>
         <div className="field">
           <label htmlFor="email">Correo electrónico</label>
           <input
@@ -301,11 +390,15 @@ function StepBusiness({
             type="email"
             placeholder="tu@negocio.com.ar"
             value={form.email}
-            onChange={(e) => setForm((f) => ({ ...f, email: e.target.value }))}
+            onChange={(e) => {
+              setNameError(null);
+              setOwnedByMe(false);
+              setForm((f) => ({ ...f, email: e.target.value }));
+            }}
             required
           />
           <span className="hint">
-            Te enviaremos la confirmación y datos de pago acá.
+            Te enviaremos la confirmación de alta a este correo.
           </span>
         </div>
         <div className="field">
@@ -332,10 +425,35 @@ function StepBusiness({
             ))}
           </select>
         </div>
+
+        {nameError && (
+          <div className="login-error" style={{ marginBottom: "1rem" }}>
+            <p style={{ margin: 0 }}>{nameError}</p>
+            {ownedByMe && (
+              <p style={{ margin: "0.65rem 0 0", fontSize: "0.9rem" }}>
+                Si necesitás ayuda, escribinos por{" "}
+                <a
+                  href={SUPPORT_WHATSAPP_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  WhatsApp
+                </a>
+                .
+              </p>
+            )}
+          </div>
+        )}
+
+        <p className="hint" style={{ marginBottom: "1.25rem" }}>
+          {INACTIVITY_NOTE}{" "}
+          <Link href="/privacidad">Ver política de privacidad</Link>.
+        </p>
+
         <div className="onboard-actions">
           <span />
-          <button className="btn btn-primary" type="submit">
-            Continuar →
+          <button className="btn btn-primary" type="submit" disabled={checking}>
+            {checking ? "Verificando…" : "Continuar →"}
           </button>
         </div>
       </form>
@@ -343,28 +461,84 @@ function StepBusiness({
   );
 }
 
-/* ------------------------------------------------------------------ */
-/* Step 2 — services                                                   */
-/* ------------------------------------------------------------------ */
+function ServiceOptionCard({
+  option,
+  selected,
+  onToggle,
+}: {
+  option: FeatureServiceOption;
+  selected: boolean;
+  onToggle: () => void;
+}) {
+  return (
+    <label
+      className={`service-card${selected ? " is-selected" : ""}${
+        option.disabled ? " is-disabled" : ""
+      }`}
+      aria-disabled={option.disabled || undefined}
+    >
+      <input
+        type="checkbox"
+        name="svc"
+        value={option.key}
+        checked={selected}
+        disabled={option.disabled}
+        onChange={() => {
+          if (!option.disabled) onToggle();
+        }}
+      />
+      <div>
+        <strong>
+          {option.title}
+          {option.disabled && option.disabledHint
+            ? ` (${option.disabledHint})`
+            : ""}
+        </strong>
+        <span>{option.description}</span>
+      </div>
+    </label>
+  );
+}
 
 function StepServices({
   form,
   toggleService,
+  setServiceSelection,
   onBack,
   onNext,
 }: {
   form: FormState;
   toggleService: (id: FeatureFlagKey) => void;
+  setServiceSelection: (keys: FeatureFlagKey[], selected: boolean) => void;
   onBack: () => void;
   onNext: () => void;
 }) {
+  const selectable = selectableServiceKeys();
+  const allSelected = selectable.every((k) => form.servicios.includes(k));
+
   return (
     <>
       <h1>¿Qué módulos necesitás?</h1>
       <p className="secondary">
-        Paso 2 de 3 — cada opción es un feature flag de la app Nexolia. Lo que
-        marques se activa al convertir el lead.
+        Paso 2 de 4 — elegí los servicios para tu negocio. Podés cambiar estas
+        selecciones más adelante.
       </p>
+
+      <label
+        className="service-card"
+        style={{ marginBottom: "1.25rem", maxWidth: "100%" }}
+      >
+        <input
+          type="checkbox"
+          checked={allSelected}
+          onChange={() => setServiceSelection(selectable, !allSelected)}
+        />
+        <div>
+          <strong>Seleccionar todos los servicios</strong>
+          <span>Marca o desmarca todas las opciones disponibles</span>
+        </div>
+      </label>
+
       <form
         onSubmit={(e) => {
           e.preventDefault();
@@ -376,29 +550,14 @@ function StepServices({
             <h3 className="service-group-title">{group}</h3>
             <div className="service-grid">
               {FEATURE_SERVICE_OPTIONS.filter((svc) => svc.group === group).map(
-                (svc) => {
-                  const selected = form.servicios.includes(svc.key);
-                  return (
-                    <label
-                      key={svc.key}
-                      className={`service-card${selected ? " is-selected" : ""}`}
-                    >
-                      <input
-                        type="checkbox"
-                        name="svc"
-                        value={svc.key}
-                        checked={selected}
-                        onChange={() => toggleService(svc.key)}
-                      />
-                      <div>
-                        <strong>{svc.title}</strong>
-                        <span>
-                          {svc.key} · {svc.description}
-                        </span>
-                      </div>
-                    </label>
-                  );
-                },
+                (svc) => (
+                  <ServiceOptionCard
+                    key={svc.key}
+                    option={svc}
+                    selected={form.servicios.includes(svc.key)}
+                    onToggle={() => toggleService(svc.key)}
+                  />
+                ),
               )}
             </div>
           </div>
@@ -417,9 +576,76 @@ function StepServices({
   );
 }
 
-/* ------------------------------------------------------------------ */
-/* Step 3 — plan                                                       */
-/* ------------------------------------------------------------------ */
+function StepCopi({
+  form,
+  toggleService,
+  setServiceSelection,
+  onBack,
+  onNext,
+}: {
+  form: FormState;
+  toggleService: (id: FeatureFlagKey) => void;
+  setServiceSelection: (keys: FeatureFlagKey[], selected: boolean) => void;
+  onBack: () => void;
+  onNext: () => void;
+}) {
+  const selectable = selectableCopiKeys();
+  const allSelected =
+    selectable.length > 0 &&
+    selectable.every((k) => form.servicios.includes(k));
+
+  return (
+    <>
+      <h1>Copi, tu asistente</h1>
+      <p className="secondary">
+        Paso 3 de 4 — activá las capacidades de Copi que quieras. También las
+        podés cambiar después.
+      </p>
+
+      <label
+        className="service-card"
+        style={{ marginBottom: "1.25rem", maxWidth: "100%" }}
+      >
+        <input
+          type="checkbox"
+          checked={allSelected}
+          onChange={() => setServiceSelection(selectable, !allSelected)}
+        />
+        <div>
+          <strong>Seleccionar todas las opciones de Copi</strong>
+          <span>Marca o desmarca todas las capacidades de Copi</span>
+        </div>
+      </label>
+
+      <form
+        onSubmit={(e) => {
+          e.preventDefault();
+          onNext();
+        }}
+      >
+        <div className="service-grid">
+          {COPI_SERVICE_OPTIONS.map((svc) => (
+            <ServiceOptionCard
+              key={svc.key}
+              option={svc}
+              selected={form.servicios.includes(svc.key)}
+              onToggle={() => toggleService(svc.key)}
+            />
+          ))}
+        </div>
+
+        <div className="onboard-actions">
+          <button className="btn btn-secondary" type="button" onClick={onBack}>
+            ← Volver
+          </button>
+          <button className="btn btn-primary" type="submit">
+            Continuar →
+          </button>
+        </div>
+      </form>
+    </>
+  );
+}
 
 function StepPlan({
   form,
@@ -440,10 +666,15 @@ function StepPlan({
     <>
       <h1>Elegí tu plan</h1>
       <p className="secondary">
-        Paso 3 de 3 — pagás por transferencia o efectivo. Activamos tu cuenta al confirmar el pago.
+        Paso 4 de 4 — por ahora la app no cobra: las suscripciones son{" "}
+        <strong>gratis</strong>.
       </p>
 
-      <div className="billing-toggle" role="group" aria-label="Período de facturación">
+      <div
+        className="billing-toggle"
+        role="group"
+        aria-label="Período de facturación"
+      >
         <button
           type="button"
           className={form.ciclo === "monthly" ? "is-active" : ""}
@@ -456,10 +687,7 @@ function StepPlan({
           className={form.ciclo === "annual" ? "is-active" : ""}
           onClick={() => setForm((f) => ({ ...f, ciclo: "annual" }))}
         >
-          Anual{" "}
-          <span className="badge badge-green" style={{ marginLeft: "0.25rem" }}>
-            −15%
-          </span>
+          Anual
         </button>
       </div>
 
@@ -483,9 +711,7 @@ function StepPlan({
                   name="plan"
                   value={plan.id}
                   checked={selected}
-                  onChange={() =>
-                    setForm((f) => ({ ...f, plan: plan.id }))
-                  }
+                  onChange={() => setForm((f) => ({ ...f, plan: plan.id }))}
                   className="sr-only"
                 />
                 <div className="name">{plan.name}</div>
@@ -507,11 +733,20 @@ function StepPlan({
         {error && <p className="login-error">{error}</p>}
 
         <div className="onboard-actions">
-          <button className="btn btn-secondary" type="button" onClick={onBack} disabled={submitting}>
+          <button
+            className="btn btn-secondary"
+            type="button"
+            onClick={onBack}
+            disabled={submitting}
+          >
             ← Volver
           </button>
-          <button className="btn btn-primary" type="submit" disabled={submitting}>
-            {submitting ? "Enviando…" : "Confirmar pedido →"}
+          <button
+            className="btn btn-primary"
+            type="submit"
+            disabled={submitting}
+          >
+            {submitting ? "Enviando…" : "Confirmar →"}
           </button>
         </div>
       </form>
@@ -519,19 +754,15 @@ function StepPlan({
   );
 }
 
-/* ------------------------------------------------------------------ */
-/* Step 4 — thanks                                                     */
-/* ------------------------------------------------------------------ */
-
 function ThanksPanel({
   email,
-  total,
+  orgName,
   planName,
   leadId,
   onReset,
 }: {
   email: string;
-  total: string;
+  orgName: string;
   planName: string;
   leadId: string | null;
   onReset: () => void;
@@ -542,39 +773,24 @@ function ThanksPanel({
         <div className="check" aria-hidden="true">
           ✓
         </div>
-        <h1>¡Gracias por tu pedido!</h1>
+        <h1>¡Gracias!</h1>
         <p className="secondary">
-          Recibimos tu solicitud del plan <strong>{planName}</strong>. Te
-          enviamos un correo a <strong>{email}</strong> con los detalles.
+          Recibimos el alta de <strong>{orgName}</strong> con el plan{" "}
+          <strong>{planName}</strong>. Te enviamos un correo a{" "}
+          <strong>{email}</strong> con los detalles.
         </p>
         <p className="secondary">
-          Activamos tu cuenta cuando confirmemos el pago (usualmente en menos de 24 h).
+          Nuestro equipo activará tu cuenta a la brevedad. Por ahora no hay
+          cargos: las suscripciones son gratis.
+        </p>
+        <p className="hint" style={{ marginTop: "1rem" }}>
+          {INACTIVITY_NOTE}
         </p>
         {leadId && (
           <p className="muted" style={{ fontSize: "0.8rem" }}>
             Referencia: <code>{leadId}</code>
           </p>
         )}
-      </div>
-
-      <div className="transfer-box">
-        <h2 style={{ fontSize: "1rem", marginBottom: "0.75rem" }}>Datos para pagar</h2>
-        <p style={{ fontSize: "0.88rem", color: "var(--text-secondary)", marginBottom: "1rem" }}>
-          Podés abonar por <strong>transferencia bancaria</strong> o en{" "}
-          <strong>efectivo</strong> en nuestra oficina. Indicá tu correo como referencia.
-        </p>
-        <dl>
-          <dt>Total a pagar</dt>
-          <dd style={{ fontSize: "1.25rem", color: "var(--primary-dark)" }}>{total}</dd>
-          <dt>Transferencia — CBU</dt>
-          <dd>{TRANSFER.cbu}</dd>
-          <dt>Alias</dt>
-          <dd>{TRANSFER.alias}</dd>
-          <dt>Titular</dt>
-          <dd>{TRANSFER.titular}</dd>
-          <dt>Efectivo</dt>
-          <dd>{TRANSFER.efectivo}</dd>
-        </dl>
       </div>
 
       <div className="onboard-actions" style={{ marginTop: "1.5rem" }}>

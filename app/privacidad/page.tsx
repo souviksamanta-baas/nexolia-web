@@ -225,6 +225,12 @@ export default function PrivacidadPage() {
           según la sección 9. Los registros de webhook y mensajes se conservan según necesidades
           operativas y de auditoría del negocio.
         </p>
+        <p>
+          <strong>Inactividad:</strong> si una organización permanece inactiva durante{" "}
+          <strong>30 días</strong>, Nexolia puede eliminarla automáticamente junto con los datos
+          asociados a ese negocio. Te recomendamos ingresar a la app con regularidad para mantener
+          tu cuenta activa.
+        </p>
 
         <h2>9. Tus derechos</h2>
         <p>Según la legislación aplicable en Argentina, podés solicitar:</p>

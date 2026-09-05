@@ -116,6 +116,8 @@ Ningún sistema es 100 % seguro; te recomendamos proteger tu dispositivo y no co
 
 Conservamos los datos mientras tu cuenta esté activa o sea necesario para prestar el servicio, resolver disputas y cumplir obligaciones legales. Podés solicitar eliminación según la sección 9.
 
+**Inactividad:** si una organización permanece inactiva durante **30 días**, Nexolia puede eliminarla automáticamente junto con los datos asociados a ese negocio.
+
 Los registros de webhook y mensajes se conservan según necesidades operativas y de auditoría del negocio.
 
 ## 9. Tus derechos

@@ -99,6 +99,7 @@ export type BillingCycle = "monthly" | "annual";
 
 export interface PublicLeadInput {
   email: string;
+  orgName: string;
   categoria: string;
   /** Selected feature-flag keys (same as OrganizationFeatureFlags). */
   servicios: string[];
@@ -116,9 +117,23 @@ export interface PublicLeadResponse {
   createdAt?: string;
 }
 
+export interface OrgNameCheckResult {
+  available: boolean;
+  ownedByRequester: boolean;
+  orgName: string;
+}
+
 export function submitPublicLead(input: PublicLeadInput) {
   // Same-origin Next proxy → Nest (runtime BAAS_API_URL; no CORS / no localhost bake-in).
   return apiFetch<PublicLeadResponse>("/api/public/leads", {
+    method: "POST",
+    body: input,
+    cache: "no-store",
+  });
+}
+
+export function checkOrgName(input: { email: string; name: string }) {
+  return apiFetch<OrgNameCheckResult>("/api/public/org-name-check", {
     method: "POST",
     body: input,
     cache: "no-store",

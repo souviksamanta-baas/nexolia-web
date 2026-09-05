@@ -1244,6 +1244,13 @@ table.data a:hover {
   border-color: var(--primary);
   background: var(--primary-soft);
 }
+.service-card.is-disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+.service-card.is-disabled:hover {
+  border-color: var(--border);
+}
 .service-card input {
   margin-top: 0.2rem;
   accent-color: var(--primary);
