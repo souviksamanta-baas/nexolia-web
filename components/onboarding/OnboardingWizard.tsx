@@ -11,13 +11,17 @@ import {
 import { formatARS } from "@/lib/formatters";
 import {
   FEATURE_SERVICE_OPTIONS,
-  COPI_SERVICE_OPTIONS,
+  COPI_PRO_BULLETS,
+  COPI_TIER_OPTIONS,
   SUPPORT_WHATSAPP_URL,
+  applyCopiTierSelection,
   buildLeadFeatureFlags,
+  copiTierFromSelection,
   defaultSelectedFeatureKeys,
   featureOptionTitle,
-  selectableCopiKeys,
+  hasCopiProSelection,
   selectableServiceKeys,
+  type CopiTierId,
   type FeatureFlagKey,
   type FeatureServiceOption,
 } from "@/lib/feature-catalog";
@@ -37,14 +41,16 @@ const SERVICE_GROUPS = Array.from(
 );
 
 interface Plan {
-  id: "basico" | "pro" | "max";
+  id: "basico" | "pro" | "enterprise";
   name: string;
-  monthly: number;
-  annual: number;
+  monthly: number | null;
+  annual: number | null;
   tagline: string;
   servicios: string[];
   copi: string[];
   featured?: boolean;
+  /** When set, show this instead of a $ price (e.g. Enterprise). */
+  customPriceLabel?: string;
 }
 
 /** Segmentos de módulos incluidos en todos los planes. */
@@ -55,14 +61,11 @@ const PLAN_SERVICIOS = [
   "Canales",
 ] as const;
 
-const COPI_PRO_FEATURES = [
-  "Copi Pro",
-  "Copi con voz",
-  "Copi con visión",
-  "Reportes personalizados Copi",
+const COPI_BASIC_PLAN_FEATURES = [
+  "Copi básico (5 preguntas preconfiguradas)",
 ] as const;
 
-/** Suscripciones gratuitas por ahora — montos en $0. */
+/** Suscripciones: Básico/Pro gratuitas por ahora; Enterprise a medida. */
 const PLANS: Plan[] = [
   {
     id: "basico",
@@ -72,7 +75,7 @@ const PLANS: Plan[] = [
     tagline: "Hasta 5 usuarios",
     featured: true,
     servicios: [...PLAN_SERVICIOS],
-    copi: ["Copi básico (5 preguntas preconfiguradas)"],
+    copi: [...COPI_BASIC_PLAN_FEATURES],
   },
   {
     id: "pro",
@@ -81,35 +84,28 @@ const PLANS: Plan[] = [
     annual: 0,
     tagline: "Hasta 10 usuarios · 1 sucursal",
     servicios: [...PLAN_SERVICIOS],
-    copi: [...COPI_PRO_FEATURES],
+    copi: [...COPI_PRO_BULLETS],
   },
   {
-    id: "max",
-    name: "Max",
-    monthly: 0,
-    annual: 0,
+    id: "enterprise",
+    name: "Enterprise",
+    monthly: null,
+    annual: null,
     tagline: "Usuarios ilimitados · Multisucursal",
+    customPriceLabel:
+      "Precio a medida según tus requisitos y el diseño de la solución",
     servicios: [...PLAN_SERVICIOS, "Multisucursal", "Usuarios ilimitados"],
-    copi: [...COPI_PRO_FEATURES],
+    copi: [...COPI_PRO_BULLETS],
   },
 ];
 
 const INACTIVITY_NOTE =
   "Si tu organización permanece inactiva durante 30 días, puede eliminarse automáticamente.";
 
-/** Copi Pro options (not Copi básico) — selecting any bumps plan to Pro. */
-const COPI_PRO_OPTION_KEYS: FeatureFlagKey[] = COPI_SERVICE_OPTIONS.map(
-  (o) => o.key,
-);
-
-function hasCopiProSelection(servicios: FeatureFlagKey[]): boolean {
-  return COPI_PRO_OPTION_KEYS.some((key) => servicios.includes(key));
-}
-
-/** If the user picks Copi Pro options, default the plan to Pro (keep Max if already chosen). */
+/** If the user picks Copi Pro, default the plan to Pro (keep Enterprise if already chosen). */
 function applyPlanForCopiSelection(form: FormState): FormState {
   if (!hasCopiProSelection(form.servicios)) return form;
-  if (form.plan === "max") return form;
+  if (form.plan === "enterprise") return form;
   if (form.plan === "pro") return form;
   return { ...form, plan: "pro" };
 }
@@ -146,12 +142,6 @@ export function OnboardingWizard() {
     [form.plan],
   );
 
-  const totalDisplay = useMemo(() => {
-    const amount =
-      form.ciclo === "annual" ? selectedPlan.annual : selectedPlan.monthly;
-    return `${formatARS(amount)} ${form.ciclo === "annual" ? "/ año" : "/ mes"}`;
-  }, [form.ciclo, selectedPlan]);
-
   const toggleService = (id: FeatureFlagKey) => {
     setForm((f) => {
       const servicios = f.servicios.includes(id)
@@ -173,6 +163,15 @@ export function OnboardingWizard() {
         servicios: Array.from(set),
       });
     });
+  };
+
+  const setCopiTier = (tier: CopiTierId) => {
+    setForm((f) =>
+      applyPlanForCopiSelection({
+        ...f,
+        servicios: applyCopiTierSelection(f.servicios, tier),
+      }),
+    );
   };
 
   const submit = async () => {
@@ -231,8 +230,7 @@ export function OnboardingWizard() {
             {step === 3 && (
               <StepCopi
                 form={form}
-                toggleService={toggleService}
-                setServiceSelection={setServiceSelection}
+                setCopiTier={setCopiTier}
                 onBack={() => setStep(2)}
                 onNext={() => {
                   setForm((f) => applyPlanForCopiSelection(f));
@@ -307,9 +305,7 @@ function RailList({
   const serviceKeys = form.servicios.filter((k) =>
     selectableServiceKeys().includes(k),
   );
-  const copiKeys = form.servicios.filter((k) =>
-    selectableCopiKeys().includes(k),
-  );
+  const copiTier = copiTierFromSelection(form.servicios);
 
   const serviciosLabel =
     serviceKeys.length === 0
@@ -320,13 +316,13 @@ function RailList({
           .join(", ")}${serviceKeys.length > 3 ? "…" : ""}`;
 
   const copiLabel =
-    copiKeys.length === 0
-      ? "Copi · pendiente"
-      : `Copi · ${copiKeys.map((id) => featureOptionTitle(id)).join(", ")}`;
+    copiTier === "pro" ? "Copi · Copi Pro" : "Copi · Copi básico";
 
   const planLabel =
     step >= 5
-      ? `Plan ${selectedPlan.name} · suscripción gratuita`
+      ? selectedPlan.customPriceLabel
+        ? `Plan ${selectedPlan.name} · a medida`
+        : `Plan ${selectedPlan.name} · suscripción gratuita`
       : "Plan · pendiente";
 
   return (
@@ -624,50 +620,29 @@ function StepServices({
 
 function StepCopi({
   form,
-  toggleService,
-  setServiceSelection,
+  setCopiTier,
   onBack,
   onNext,
 }: {
   form: FormState;
-  toggleService: (id: FeatureFlagKey) => void;
-  setServiceSelection: (keys: FeatureFlagKey[], selected: boolean) => void;
+  setCopiTier: (tier: CopiTierId) => void;
   onBack: () => void;
   onNext: () => void;
 }) {
-  const selectable = selectableCopiKeys();
-  const allSelected =
-    selectable.length > 0 &&
-    selectable.every((k) => form.servicios.includes(k));
+  const selectedTier = copiTierFromSelection(form.servicios);
 
   return (
     <>
       <h1>Copi, tu asistente</h1>
       <p className="secondary">
-        Paso 3 de 4 — activá las capacidades de Copi que quieras. También las
-        podés cambiar después.
+        Paso 3 de 4 — elegí cómo querés que Copi te ayude. Después lo podés
+        cambiar.
       </p>
       <p className="hint" style={{ marginBottom: "1.25rem", maxWidth: "42rem" }}>
-        Copi es el asistente de Nexolia: responde consultas del negocio, resume
-        actividad y te ayuda a operar más rápido. Elegí qué capacidades querés
-        activar según cómo trabajás — desde preguntas listas hasta acciones
-        automáticas, voz, visión y reportes a medida.
+        Copi es el asistente de Nexolia: te responde sobre tu negocio (ventas,
+        stock, clientes) y, si lo activás en Pro, también puede hacer cosas por
+        vos — como crear tareas o turnos, escucharte por voz y mirar fotos.
       </p>
-
-      <label
-        className="service-card"
-        style={{ marginBottom: "1.25rem", maxWidth: "100%" }}
-      >
-        <input
-          type="checkbox"
-          checked={allSelected}
-          onChange={() => setServiceSelection(selectable, !allSelected)}
-        />
-        <div>
-          <strong>Seleccionar todas las opciones de Copi</strong>
-          <span>Marca o desmarca todas las capacidades de Copi</span>
-        </div>
-      </label>
 
       <form
         onSubmit={(e) => {
@@ -676,14 +651,42 @@ function StepCopi({
         }}
       >
         <div className="service-grid">
-          {COPI_SERVICE_OPTIONS.map((svc) => (
-            <ServiceOptionCard
-              key={svc.key}
-              option={svc}
-              selected={form.servicios.includes(svc.key)}
-              onToggle={() => toggleService(svc.key)}
-            />
-          ))}
+          {COPI_TIER_OPTIONS.map((option) => {
+            const selected = selectedTier === option.id;
+            return (
+              <label
+                key={option.id}
+                className={`service-card${selected ? " is-selected" : ""}`}
+              >
+                <input
+                  type="radio"
+                  name="copi-tier"
+                  value={option.id}
+                  checked={selected}
+                  onChange={() => setCopiTier(option.id)}
+                />
+                <div>
+                  <strong>{option.title}</strong>
+                  <span>{option.description}</span>
+                  {option.bullets ? (
+                    <ul
+                      style={{
+                        margin: "0.5rem 0 0",
+                        paddingLeft: "1.1rem",
+                        color: "inherit",
+                        fontSize: "0.85rem",
+                        lineHeight: 1.45,
+                      }}
+                    >
+                      {option.bullets.map((bullet) => (
+                        <li key={bullet}>{bullet}</li>
+                      ))}
+                    </ul>
+                  ) : null}
+                </div>
+              </label>
+            );
+          })}
         </div>
 
         <div className="onboard-actions">
@@ -718,8 +721,8 @@ function StepPlan({
     <>
       <h1>Elegí tu plan</h1>
       <p className="secondary">
-        Paso 4 de 4 — por ahora la app no cobra: las suscripciones son{" "}
-        <strong>gratuitas</strong>.
+        Paso 4 de 4 — Básico y Pro son <strong>gratuitos</strong> por ahora.
+        Enterprise se cotiza según tus requisitos.
       </p>
 
       <div
@@ -752,7 +755,8 @@ function StepPlan({
         <div className="onboard-plans">
           {PLANS.map((plan) => {
             const selected = form.plan === plan.id;
-            const price = form.ciclo === "annual" ? plan.annual : plan.monthly;
+            const price =
+              form.ciclo === "annual" ? plan.annual : plan.monthly;
             return (
               <label
                 key={plan.id}
@@ -768,8 +772,18 @@ function StepPlan({
                 />
                 <div className="name">{plan.name}</div>
                 <div className="price">
-                  {formatARS(price)}{" "}
-                  <small>{form.ciclo === "annual" ? "/ año" : "/ mes"}</small>
+                  {plan.customPriceLabel ? (
+                    <small style={{ fontSize: "0.95rem", fontWeight: 500 }}>
+                      {plan.customPriceLabel}
+                    </small>
+                  ) : (
+                    <>
+                      {formatARS(price ?? 0)}{" "}
+                      <small>
+                        {form.ciclo === "annual" ? "/ año" : "/ mes"}
+                      </small>
+                    </>
+                  )}
                 </div>
                 <p
                   className="muted"

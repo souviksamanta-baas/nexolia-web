@@ -31,6 +31,8 @@ export type FeatureFlagKey =
   | "integrations_sms"
   | "multi_sucursales";
 
+export type CopiTierId = "basic" | "pro";
+
 export interface FeatureServiceOption {
   key: FeatureFlagKey;
   title: string;
@@ -43,7 +45,7 @@ export interface FeatureServiceOption {
   disabledHint?: string;
 }
 
-/** Paso 2 — servicios (sin Copi; notificaciones y atajo Ventas van en baseline). */
+/** Paso 2 — servicios (sin Copi ni canales; canales van en baseline). */
 export const FEATURE_SERVICE_OPTIONS: FeatureServiceOption[] = [
   {
     key: "commerce_pos",
@@ -114,41 +116,6 @@ export const FEATURE_SERVICE_OPTIONS: FeatureServiceOption[] = [
     group: "Agenda",
   },
   {
-    key: "integrations_whatsapp",
-    title: "WhatsApp",
-    description: "Bandeja y envíos por WhatsApp",
-    defaultSelected: true,
-    group: "Canales",
-  },
-  {
-    key: "integrations_instagram",
-    title: "Instagram",
-    description: "Mensajes de Instagram",
-    defaultSelected: true,
-    group: "Canales",
-  },
-  {
-    key: "integrations_messenger",
-    title: "Messenger",
-    description: "Mensajes de Facebook Messenger",
-    defaultSelected: true,
-    group: "Canales",
-  },
-  {
-    key: "integrations_email",
-    title: "Email",
-    description: "Canal de correo",
-    defaultSelected: true,
-    group: "Canales",
-  },
-  {
-    key: "integrations_sms",
-    title: "SMS",
-    description: "Envío de SMS",
-    defaultSelected: true,
-    group: "Canales",
-  },
-  {
     key: "multi_sucursales",
     title: "Varias sucursales",
     description: "Más de un centro de negocio",
@@ -158,31 +125,46 @@ export const FEATURE_SERVICE_OPTIONS: FeatureServiceOption[] = [
   },
 ];
 
-/** Paso 3 — Copi (separado de servicios). */
-export const COPI_SERVICE_OPTIONS: FeatureServiceOption[] = [
+/** Flags enabled together when the user picks Copi Pro. */
+export const COPI_PRO_FLAG_KEYS: FeatureFlagKey[] = [
+  "copi_pro_agent",
+  "copi_voice",
+  "copi_vision",
+  "copi_custom_reports",
+];
+
+/** Bullets shared by Copi Pro option and Pro / Enterprise plans. */
+export const COPI_PRO_BULLETS = [
+  "Crear tareas, turnos y otras acciones automáticamente",
+  "Entradas y respuestas por voz",
+  "Reportes personalizados",
+  "Análisis de imágenes",
+] as const;
+
+export const COPI_BASIC_DESCRIPTION =
+  "Consultá a Copi con 5 preguntas ya armadas. No podés escribir preguntas libres.";
+
+export const COPI_PRO_DESCRIPTION =
+  "Todo lo de Copi básico, y además Copi puede actuar por vos:";
+
+export interface CopiTierOption {
+  id: CopiTierId;
+  title: string;
+  description: string;
+  bullets?: readonly string[];
+}
+
+export const COPI_TIER_OPTIONS: CopiTierOption[] = [
   {
-    key: "copi_pro_agent",
+    id: "basic",
+    title: "Copi básico",
+    description: COPI_BASIC_DESCRIPTION,
+  },
+  {
+    id: "pro",
     title: "Copi Pro",
-    description: "Acciones automáticas del asistente",
-    group: "Copi",
-  },
-  {
-    key: "copi_voice",
-    title: "Copi con voz",
-    description: "Entrada y respuestas por voz",
-    group: "Copi",
-  },
-  {
-    key: "copi_vision",
-    title: "Copi con visión",
-    description: "Análisis de imágenes",
-    group: "Copi",
-  },
-  {
-    key: "copi_custom_reports",
-    title: "Reportes personalizados Copi",
-    description: "Informes a medida con Copi",
-    group: "Copi",
+    description: COPI_PRO_DESCRIPTION,
+    bullets: COPI_PRO_BULLETS,
   },
 ];
 
@@ -200,6 +182,12 @@ export const BASELINE_FEATURE_FLAGS: Record<string, true> = {
   // Available to everyone — not shown as optional toggles.
   commerce_nav_shortcut: true,
   notifications: true,
+  // Canales on by default (not shown in servicios).
+  integrations_whatsapp: true,
+  integrations_instagram: true,
+  integrations_messenger: true,
+  integrations_email: true,
+  integrations_sms: true,
 };
 
 export function selectableServiceKeys(): FeatureFlagKey[] {
@@ -207,7 +195,7 @@ export function selectableServiceKeys(): FeatureFlagKey[] {
 }
 
 export function selectableCopiKeys(): FeatureFlagKey[] {
-  return COPI_SERVICE_OPTIONS.filter((o) => !o.disabled).map((o) => o.key);
+  return [...COPI_PRO_FLAG_KEYS];
 }
 
 export function defaultSelectedFeatureKeys(): FeatureFlagKey[] {
@@ -216,19 +204,47 @@ export function defaultSelectedFeatureKeys(): FeatureFlagKey[] {
   ).map((o) => o.key);
 }
 
+export function hasCopiProSelection(selected: Iterable<string>): boolean {
+  const set = new Set(selected);
+  return COPI_PRO_FLAG_KEYS.some((key) => set.has(key));
+}
+
+export function copiTierFromSelection(selected: Iterable<string>): CopiTierId {
+  return hasCopiProSelection(selected) ? "pro" : "basic";
+}
+
+/** Apply Copi básico / Pro as a single choice (mutually exclusive). */
+export function applyCopiTierSelection(
+  selected: FeatureFlagKey[],
+  tier: CopiTierId,
+): FeatureFlagKey[] {
+  const withoutCopi = selected.filter(
+    (key) => !COPI_PRO_FLAG_KEYS.includes(key),
+  );
+  if (tier === "basic") {
+    return withoutCopi;
+  }
+  return [...withoutCopi, ...COPI_PRO_FLAG_KEYS];
+}
+
 /** Build org feature_flags payload from selected servicios + Copi keys. */
 export function buildLeadFeatureFlags(
   selected: Iterable<string>,
 ): Record<string, boolean> {
   const selectedSet = new Set(selected);
   const flags: Record<string, boolean> = { ...BASELINE_FEATURE_FLAGS };
+  const pro = hasCopiProSelection(selectedSet);
 
-  for (const option of [...FEATURE_SERVICE_OPTIONS, ...COPI_SERVICE_OPTIONS]) {
+  for (const option of FEATURE_SERVICE_OPTIONS) {
     if (option.disabled) {
       flags[option.key] = false;
       continue;
     }
     flags[option.key] = selectedSet.has(option.key);
+  }
+
+  for (const key of COPI_PRO_FLAG_KEYS) {
+    flags[key] = pro;
   }
 
   return flags;
@@ -237,8 +253,7 @@ export function buildLeadFeatureFlags(
 export function featureOptionTitle(key: string): string {
   return (
     FEATURE_SERVICE_OPTIONS.find((o) => o.key === key)?.title ??
-    COPI_SERVICE_OPTIONS.find((o) => o.key === key)?.title ??
-    key
+    (COPI_PRO_FLAG_KEYS.includes(key as FeatureFlagKey) ? "Copi Pro" : key)
   );
 }
 

@@ -227,9 +227,10 @@ function planLabel(plan: string): string {
       return "Básico";
     case "pro":
       return "Pro";
+    case "enterprise":
     case "max":
     case "advanced":
-      return "Max";
+      return "Enterprise";
     case "starter":
       return "Starter";
     default:
