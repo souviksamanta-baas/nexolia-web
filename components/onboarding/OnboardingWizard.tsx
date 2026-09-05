@@ -96,6 +96,23 @@ const PLANS: Plan[] = [
 const INACTIVITY_NOTE =
   "Si tu organización permanece inactiva durante 30 días, puede eliminarse automáticamente.";
 
+/** Copi Pro options (not Copi básico) — selecting any bumps plan to Pro. */
+const COPI_PRO_OPTION_KEYS: FeatureFlagKey[] = COPI_SERVICE_OPTIONS.map(
+  (o) => o.key,
+);
+
+function hasCopiProSelection(servicios: FeatureFlagKey[]): boolean {
+  return COPI_PRO_OPTION_KEYS.some((key) => servicios.includes(key));
+}
+
+/** If the user picks Copi Pro options, default the plan to Pro (keep Max if already chosen). */
+function applyPlanForCopiSelection(form: FormState): FormState {
+  if (!hasCopiProSelection(form.servicios)) return form;
+  if (form.plan === "max") return form;
+  if (form.plan === "pro") return form;
+  return { ...form, plan: "pro" };
+}
+
 type Step = 1 | 2 | 3 | 4 | 5;
 
 interface FormState {
@@ -135,12 +152,12 @@ export function OnboardingWizard() {
   }, [form.ciclo, selectedPlan]);
 
   const toggleService = (id: FeatureFlagKey) => {
-    setForm((f) => ({
-      ...f,
-      servicios: f.servicios.includes(id)
+    setForm((f) => {
+      const servicios = f.servicios.includes(id)
         ? f.servicios.filter((s) => s !== id)
-        : [...f.servicios, id],
-    }));
+        : [...f.servicios, id];
+      return applyPlanForCopiSelection({ ...f, servicios });
+    });
   };
 
   const setServiceSelection = (keys: FeatureFlagKey[], selected: boolean) => {
@@ -150,7 +167,10 @@ export function OnboardingWizard() {
         if (selected) set.add(key);
         else set.delete(key);
       }
-      return { ...f, servicios: Array.from(set) };
+      return applyPlanForCopiSelection({
+        ...f,
+        servicios: Array.from(set),
+      });
     });
   };
 
@@ -213,7 +233,10 @@ export function OnboardingWizard() {
                 toggleService={toggleService}
                 setServiceSelection={setServiceSelection}
                 onBack={() => setStep(2)}
-                onNext={() => setStep(4)}
+                onNext={() => {
+                  setForm((f) => applyPlanForCopiSelection(f));
+                  setStep(4);
+                }}
               />
             )}
             {step === 4 && (
@@ -302,7 +325,7 @@ function RailList({
 
   const planLabel =
     step >= 5
-      ? `Plan ${selectedPlan.name} · gratuito`
+      ? `Plan ${selectedPlan.name} · suscripción gratuita`
       : "Plan · pendiente";
 
   return (
