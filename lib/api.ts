@@ -188,6 +188,8 @@ export interface AdminLead {
   ciclo: BillingCycle;
   status: "new" | "contacted" | "converted" | "lost" | string;
   createdAt: string;
+  organizationId?: string | null;
+  orgName?: string | null;
 }
 
 export interface AdminOrganization {
@@ -254,11 +256,17 @@ export const adminApi = {
     leadId: string,
     input: { orgName: string; ownerEmail: string; ownerName?: string; plan?: string },
   ) =>
-    apiFetch<AdminOrganization>(`/admin/leads/${leadId}/convert`, {
+    apiFetch<{ organizationId: string }>(`/admin/leads/${leadId}/convert`, {
       token,
       method: "POST",
       body: input,
     }),
+
+  provisionPendingLeads: (token: string) =>
+    apiFetch<{ converted: number; failed: number }>(
+      "/admin/leads/provision-pending",
+      { token, method: "POST" },
+    ),
 
   createPayment: (
     token: string,

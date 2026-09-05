@@ -64,7 +64,7 @@ export function OrganizacionesTabs({
                     <strong>{org.name}</strong>
                   </td>
                   <td>
-                    {org.ownerName || (
+                    {org.ownerName || org.ownerEmail || (
                       <span className="badge badge-warn">Sin owner</span>
                     )}
                   </td>
