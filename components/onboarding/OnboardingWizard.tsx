@@ -42,12 +42,13 @@ interface Plan {
   monthly: number;
   annual: number;
   tagline: string;
-  features: string[];
+  servicios: string[];
+  copi: string[];
   featured?: boolean;
 }
 
 /** Segmentos de módulos incluidos en todos los planes. */
-const PLAN_SEGMENTS = [
+const PLAN_SERVICIOS = [
   "Comercio",
   "Facturación",
   "Agenda",
@@ -70,10 +71,8 @@ const PLANS: Plan[] = [
     annual: 0,
     tagline: "Hasta 5 usuarios",
     featured: true,
-    features: [
-      ...PLAN_SEGMENTS,
-      "Copi básico (5 preguntas preconfiguradas)",
-    ],
+    servicios: [...PLAN_SERVICIOS],
+    copi: ["Copi básico (5 preguntas preconfiguradas)"],
   },
   {
     id: "pro",
@@ -81,15 +80,17 @@ const PLANS: Plan[] = [
     monthly: 0,
     annual: 0,
     tagline: "Hasta 10 usuarios · 1 sucursal",
-    features: [...PLAN_SEGMENTS, ...COPI_PRO_FEATURES],
+    servicios: [...PLAN_SERVICIOS],
+    copi: [...COPI_PRO_FEATURES],
   },
   {
     id: "max",
     name: "Max",
     monthly: 0,
     annual: 0,
-    tagline: "Multisucursal",
-    features: [...PLAN_SEGMENTS, ...COPI_PRO_FEATURES, "Multisucursal"],
+    tagline: "Usuarios ilimitados · Multisucursal",
+    servicios: [...PLAN_SERVICIOS, "Multisucursal", "Usuarios ilimitados"],
+    copi: [...COPI_PRO_FEATURES],
   },
 ];
 
@@ -776,11 +777,22 @@ function StepPlan({
                 >
                   {plan.tagline}
                 </p>
-                <ul className="plan-features">
-                  {plan.features.map((feature) => (
-                    <li key={feature}>{feature}</li>
-                  ))}
-                </ul>
+                <div className="plan-feature-group">
+                  <div className="plan-feature-heading">Servicios</div>
+                  <ul className="plan-features">
+                    {plan.servicios.map((feature) => (
+                      <li key={feature}>{feature}</li>
+                    ))}
+                  </ul>
+                </div>
+                <div className="plan-feature-group">
+                  <div className="plan-feature-heading">Copi</div>
+                  <ul className="plan-features">
+                    {plan.copi.map((feature) => (
+                      <li key={feature}>{feature}</li>
+                    ))}
+                  </ul>
+                </div>
               </label>
             );
           })}
