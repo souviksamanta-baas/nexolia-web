@@ -20,6 +20,7 @@ import {
   defaultSelectedFeatureKeys,
   featureOptionTitle,
   hasCopiProSelection,
+  planIncludesCopiPro,
   selectableServiceKeys,
   type CopiTierId,
   type FeatureFlagKey,
@@ -92,8 +93,7 @@ const PLANS: Plan[] = [
     monthly: null,
     annual: null,
     tagline: "Usuarios ilimitados · Multisucursal",
-    customPriceLabel:
-      "Precio a medida según tus requisitos y el diseño de la solución",
+    customPriceLabel: "Precio a medida",
     servicios: [...PLAN_SERVICIOS, "Multisucursal", "Usuarios ilimitados"],
     copi: [...COPI_PRO_BULLETS],
   },
@@ -102,12 +102,28 @@ const PLANS: Plan[] = [
 const INACTIVITY_NOTE =
   "Si tu organización permanece inactiva durante 30 días, puede eliminarse automáticamente.";
 
-/** If the user picks Copi Pro, default the plan to Pro (keep Enterprise if already chosen). */
-function applyPlanForCopiSelection(form: FormState): FormState {
-  if (!hasCopiProSelection(form.servicios)) return form;
-  if (form.plan === "enterprise") return form;
-  if (form.plan === "pro") return form;
-  return { ...form, plan: "pro" };
+/**
+ * Keep Copi tier and plan in sync:
+ * - Copi Pro → at least plan Pro (keep Enterprise if already chosen)
+ * - Plan Pro / Enterprise → Copi Pro (plan entitlement)
+ */
+function syncPlanAndCopi(form: FormState): FormState {
+  let next = form;
+
+  if (hasCopiProSelection(next.servicios)) {
+    if (next.plan !== "pro" && next.plan !== "enterprise") {
+      next = { ...next, plan: "pro" };
+    }
+  }
+
+  if (planIncludesCopiPro(next.plan) && !hasCopiProSelection(next.servicios)) {
+    next = {
+      ...next,
+      servicios: applyCopiTierSelection(next.servicios, "pro"),
+    };
+  }
+
+  return next;
 }
 
 type Step = 1 | 2 | 3 | 4 | 5;
@@ -147,7 +163,7 @@ export function OnboardingWizard() {
       const servicios = f.servicios.includes(id)
         ? f.servicios.filter((s) => s !== id)
         : [...f.servicios, id];
-      return applyPlanForCopiSelection({ ...f, servicios });
+      return syncPlanAndCopi({ ...f, servicios });
     });
   };
 
@@ -158,7 +174,7 @@ export function OnboardingWizard() {
         if (selected) set.add(key);
         else set.delete(key);
       }
-      return applyPlanForCopiSelection({
+      return syncPlanAndCopi({
         ...f,
         servicios: Array.from(set),
       });
@@ -166,19 +182,32 @@ export function OnboardingWizard() {
   };
 
   const setCopiTier = (tier: CopiTierId) => {
-    setForm((f) =>
-      applyPlanForCopiSelection({
+    setForm((f) => {
+      // Choosing Copi básico while on Pro/Enterprise keeps the plan but Copi
+      // stays Pro (plan entitlement). Downgrade plan first if they want básico.
+      if (tier === "basic" && planIncludesCopiPro(f.plan)) {
+        return syncPlanAndCopi({
+          ...f,
+          plan: "basico",
+          servicios: applyCopiTierSelection(f.servicios, "basic"),
+        });
+      }
+      return syncPlanAndCopi({
         ...f,
         servicios: applyCopiTierSelection(f.servicios, tier),
-      }),
-    );
+      });
+    });
+  };
+
+  const setPlan = (plan: Plan["id"]) => {
+    setForm((f) => syncPlanAndCopi({ ...f, plan }));
   };
 
   const submit = async () => {
     setSubmitting(true);
     setError(null);
     try {
-      const featureFlags = buildLeadFeatureFlags(form.servicios);
+      const featureFlags = buildLeadFeatureFlags(form.servicios, form.plan);
       const res = await submitPublicLead({
         email: form.email,
         orgName: form.orgName,
@@ -233,7 +262,7 @@ export function OnboardingWizard() {
                 setCopiTier={setCopiTier}
                 onBack={() => setStep(2)}
                 onNext={() => {
-                  setForm((f) => applyPlanForCopiSelection(f));
+                  setForm((f) => syncPlanAndCopi(f));
                   setStep(4);
                 }}
               />
@@ -241,7 +270,8 @@ export function OnboardingWizard() {
             {step === 4 && (
               <StepPlan
                 form={form}
-                setForm={setForm}
+                setPlan={setPlan}
+                setCiclo={(ciclo) => setForm((f) => ({ ...f, ciclo }))}
                 submitting={submitting}
                 error={error}
                 onBack={() => setStep(3)}
@@ -704,14 +734,16 @@ function StepCopi({
 
 function StepPlan({
   form,
-  setForm,
+  setPlan,
+  setCiclo,
   submitting,
   error,
   onBack,
   onSubmit,
 }: {
   form: FormState;
-  setForm: React.Dispatch<React.SetStateAction<FormState>>;
+  setPlan: (plan: Plan["id"]) => void;
+  setCiclo: (ciclo: BillingCycle) => void;
   submitting: boolean;
   error: string | null;
   onBack: () => void;
@@ -733,14 +765,14 @@ function StepPlan({
         <button
           type="button"
           className={form.ciclo === "monthly" ? "is-active" : ""}
-          onClick={() => setForm((f) => ({ ...f, ciclo: "monthly" }))}
+          onClick={() => setCiclo("monthly")}
         >
           Mensual
         </button>
         <button
           type="button"
           className={form.ciclo === "annual" ? "is-active" : ""}
-          onClick={() => setForm((f) => ({ ...f, ciclo: "annual" }))}
+          onClick={() => setCiclo("annual")}
         >
           Anual
         </button>
@@ -767,7 +799,7 @@ function StepPlan({
                   name="plan"
                   value={plan.id}
                   checked={selected}
-                  onChange={() => setForm((f) => ({ ...f, plan: plan.id }))}
+                  onChange={() => setPlan(plan.id)}
                   className="sr-only"
                 />
                 <div className="name">{plan.name}</div>

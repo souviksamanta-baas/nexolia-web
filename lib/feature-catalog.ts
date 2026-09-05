@@ -230,10 +230,13 @@ export function applyCopiTierSelection(
 /** Build org feature_flags payload from selected servicios + Copi keys. */
 export function buildLeadFeatureFlags(
   selected: Iterable<string>,
+  planId?: string | null,
 ): Record<string, boolean> {
   const selectedSet = new Set(selected);
   const flags: Record<string, boolean> = { ...BASELINE_FEATURE_FLAGS };
-  const pro = hasCopiProSelection(selectedSet);
+  const planForcesCopiPro =
+    planId === "pro" || planId === "enterprise" || planId === "max";
+  const pro = hasCopiProSelection(selectedSet) || planForcesCopiPro;
 
   for (const option of FEATURE_SERVICE_OPTIONS) {
     if (option.disabled) {
@@ -247,7 +250,16 @@ export function buildLeadFeatureFlags(
     flags[key] = pro;
   }
 
+  if (planId === "enterprise" || planId === "max") {
+    flags.multi_sucursales = true;
+  }
+
   return flags;
+}
+
+/** Plans that include Copi Pro as an entitlement. */
+export function planIncludesCopiPro(planId: string | null | undefined): boolean {
+  return planId === "pro" || planId === "enterprise" || planId === "max";
 }
 
 export function featureOptionTitle(key: string): string {
