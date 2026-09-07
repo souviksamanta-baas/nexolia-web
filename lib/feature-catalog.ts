@@ -244,14 +244,11 @@ export function buildLeadFeatureFlags(
     flags[option.key] = selectedSet.has(option.key);
   }
 
+  // Always emit an explicit boolean so plan defaults cannot resurrect Multisucursal.
+  flags.multi_sucursales = selectedSet.has("multi_sucursales");
+
   for (const key of COPI_PRO_FLAG_KEYS) {
     flags[key] = pro;
-  }
-
-  if (planId === "enterprise" || planId === "max") {
-    flags.multi_sucursales = true;
-  } else if (!selectedSet.has("multi_sucursales")) {
-    flags.multi_sucursales = false;
   }
 
   return flags;

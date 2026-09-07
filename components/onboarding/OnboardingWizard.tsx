@@ -130,15 +130,7 @@ function syncPlanAndCopi(form: FormState): FormState {
     next = { ...next, plan: "enterprise" };
   }
 
-  if (
-    planIncludesMultiSucursales(next.plan) &&
-    !next.servicios.includes("multi_sucursales")
-  ) {
-    next = {
-      ...next,
-      servicios: [...next.servicios, "multi_sucursales"],
-    };
-  }
+  // Enterprise does not auto-enable Multisucursal — only the explicit toggle does.
 
   return next;
 }
