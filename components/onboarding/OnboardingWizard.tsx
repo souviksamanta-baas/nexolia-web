@@ -21,6 +21,7 @@ import {
   featureOptionTitle,
   hasCopiProSelection,
   planIncludesCopiPro,
+  planIncludesMultiSucursales,
   selectableServiceKeys,
   type CopiTierId,
   type FeatureFlagKey,
@@ -103,9 +104,10 @@ const INACTIVITY_NOTE =
   "Si tu organización permanece inactiva durante 30 días, puede eliminarse automáticamente.";
 
 /**
- * Keep Copi tier and plan in sync:
+ * Keep Copi tier / Multisucursal and plan in sync:
  * - Copi Pro → at least plan Pro (keep Enterprise if already chosen)
  * - Plan Pro / Enterprise → Copi Pro (plan entitlement)
+ * - Varias sucursales ↔ Enterprise
  */
 function syncPlanAndCopi(form: FormState): FormState {
   let next = form;
@@ -120,6 +122,21 @@ function syncPlanAndCopi(form: FormState): FormState {
     next = {
       ...next,
       servicios: applyCopiTierSelection(next.servicios, "pro"),
+    };
+  }
+
+  const wantsMulti = next.servicios.includes("multi_sucursales");
+  if (wantsMulti && !planIncludesMultiSucursales(next.plan)) {
+    next = { ...next, plan: "enterprise" };
+  }
+
+  if (
+    planIncludesMultiSucursales(next.plan) &&
+    !next.servicios.includes("multi_sucursales")
+  ) {
+    next = {
+      ...next,
+      servicios: [...next.servicios, "multi_sucursales"],
     };
   }
 
@@ -200,7 +217,16 @@ export function OnboardingWizard() {
   };
 
   const setPlan = (plan: Plan["id"]) => {
-    setForm((f) => syncPlanAndCopi({ ...f, plan }));
+    setForm((f) => {
+      let next: FormState = { ...f, plan };
+      if (!planIncludesMultiSucursales(plan)) {
+        next = {
+          ...next,
+          servicios: next.servicios.filter((key) => key !== "multi_sucursales"),
+        };
+      }
+      return syncPlanAndCopi(next);
+    });
   };
 
   const submit = async () => {

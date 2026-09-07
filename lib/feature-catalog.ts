@@ -118,10 +118,8 @@ export const FEATURE_SERVICE_OPTIONS: FeatureServiceOption[] = [
   {
     key: "multi_sucursales",
     title: "Varias sucursales",
-    description: "Más de un centro de negocio",
+    description: "Más de un centro de negocio (plan Enterprise)",
     group: "Operaciones",
-    disabled: true,
-    disabledHint: "Próximamente",
   },
 ];
 
@@ -252,6 +250,8 @@ export function buildLeadFeatureFlags(
 
   if (planId === "enterprise" || planId === "max") {
     flags.multi_sucursales = true;
+  } else if (!selectedSet.has("multi_sucursales")) {
+    flags.multi_sucursales = false;
   }
 
   return flags;
@@ -260,6 +260,13 @@ export function buildLeadFeatureFlags(
 /** Plans that include Copi Pro as an entitlement. */
 export function planIncludesCopiPro(planId: string | null | undefined): boolean {
   return planId === "pro" || planId === "enterprise" || planId === "max";
+}
+
+/** Plans that include Multisucursal as an entitlement. */
+export function planIncludesMultiSucursales(
+  planId: string | null | undefined,
+): boolean {
+  return planId === "enterprise" || planId === "max";
 }
 
 export function featureOptionTitle(key: string): string {
