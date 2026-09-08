@@ -12,15 +12,13 @@ export function MktHeader() {
         <a href="mailto:hola@nexolia.com.ar">Ayuda</a>
       </nav>
       <div className="mkt-actions">
-        <a
+        <span
           className="btn btn-ghost btn-sm"
-          href={
-            process.env.NEXT_PUBLIC_ADMIN_URL ||
-            "https://admin.nexolia.com.ar/login"
-          }
+          aria-disabled="true"
+          title="Próximamente"
         >
           Iniciar sesión
-        </a>
+        </span>
         <Link className="btn btn-primary btn-sm" href="/comenzar">
           Comenzar
         </Link>
