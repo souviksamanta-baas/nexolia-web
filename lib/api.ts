@@ -198,9 +198,18 @@ export interface AdminOrganization {
   ownerName?: string;
   ownerEmail?: string;
   plan: string;
+  planSlug?: string;
   members: number;
   status: "active" | "trial" | "suspended" | string;
   licenseExpiresAt?: string;
+}
+
+export interface AdminLlmCredentialStatus {
+  lastError: string | null;
+  monthlySpendLimitUsd: number | null;
+  openaiProjectId: string | null;
+  provisionedAt: string | null;
+  status: "pending" | "active" | "failed" | "revoked" | "missing";
 }
 
 export interface AdminPlan {
@@ -305,6 +314,24 @@ export const adminApi = {
       method: "PATCH",
       body: input,
     }),
+
+  getLlmCredentials: (token: string, orgId: string) =>
+    apiFetch<AdminLlmCredentialStatus>(
+      `/admin/organizations/${orgId}/llm-credentials`,
+      { token, cache: "no-store" },
+    ),
+
+  provisionLlmCredentials: (token: string, orgId: string) =>
+    apiFetch<AdminLlmCredentialStatus>(
+      `/admin/organizations/${orgId}/llm-credentials/provision`,
+      { token, method: "POST" },
+    ),
+
+  revokeLlmCredentials: (token: string, orgId: string) =>
+    apiFetch<AdminLlmCredentialStatus>(
+      `/admin/organizations/${orgId}/llm-credentials/revoke`,
+      { token, method: "POST" },
+    ),
 
   updatePlan: (
     token: string,

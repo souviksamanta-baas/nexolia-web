@@ -14,9 +14,13 @@ interface UserRow {
 export function OrganizacionesTabs({
   orgs,
   users,
+  selectedOrgId,
+  onSelectOrg,
 }: {
   orgs: AdminOrganization[];
   users: UserRow[];
+  selectedOrgId?: string;
+  onSelectOrg?: (orgId: string) => void;
 }) {
   const [tab, setTab] = useState<"orgs" | "users">("orgs");
 
@@ -58,8 +62,13 @@ export function OrganizacionesTabs({
               </tr>
             </thead>
             <tbody>
-              {orgs.map((org, idx) => (
-                <tr key={org.id} className={idx === 0 ? "is-active" : undefined}>
+              {orgs.map((org) => (
+                <tr
+                  key={org.id}
+                  className={org.id === selectedOrgId ? "is-active" : undefined}
+                  style={{ cursor: onSelectOrg ? "pointer" : undefined }}
+                  onClick={() => onSelectOrg?.(org.id)}
+                >
                   <td>
                     <strong>{org.name}</strong>
                   </td>
