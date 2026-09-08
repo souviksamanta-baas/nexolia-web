@@ -3,7 +3,6 @@
 import { useMemo, useState } from "react";
 import type { AdminOrganization } from "@/lib/api";
 import { initialsFrom } from "@/lib/formatters";
-import { adminHref } from "@/lib/admin-paths";
 import { ProvisionOpenAiKeyButton } from "@/components/admin/ProvisionOpenAiKeyButton";
 import { OrganizacionesTabs } from "@/components/admin/OrganizacionesTabs";
 
@@ -108,9 +107,4 @@ export function OrganizacionesWorkspace({
       </aside>
     </div>
   );
-}
-
-/** Keep adminHref import used by page for host-aware links. */
-export function organizacionesClientesHref(host: string | null): string {
-  return adminHref("/clientes", { host });
 }

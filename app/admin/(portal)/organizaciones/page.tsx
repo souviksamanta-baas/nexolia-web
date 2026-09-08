@@ -1,11 +1,9 @@
 import type { Metadata } from "next";
 import { getServerAccessToken } from "@/lib/supabase/server";
 import { adminApi, type AdminOrganization } from "@/lib/api";
-import {
-  OrganizacionesWorkspace,
-  organizacionesClientesHref,
-} from "@/components/admin/OrganizacionesWorkspace";
+import { OrganizacionesWorkspace } from "@/components/admin/OrganizacionesWorkspace";
 import { headers } from "next/headers";
+import { adminHref } from "@/lib/admin-paths";
 
 export const metadata: Metadata = { title: "Organizaciones y usuarios — Admin" };
 
@@ -59,7 +57,7 @@ export default async function OrganizacionesPage() {
         <OrganizacionesWorkspace
           orgs={orgs}
           users={users}
-          clientesHref={organizacionesClientesHref(host)}
+          clientesHref={adminHref("/clientes", { host })}
         />
       ) : null}
     </>
