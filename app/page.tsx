@@ -19,6 +19,9 @@ export default function HomePage() {
           <Link className="btn btn-primary" href="/comenzar">
             Comenzar
           </Link>
+          <Link className="btn btn-secondary" href="/guia">
+            Guía de la app
+          </Link>
           <a
             className="btn btn-secondary"
             href="mailto:hola@nexolia.com.ar"
@@ -29,6 +32,8 @@ export default function HomePage() {
       </main>
 
       <footer className="site-footer">
+        <Link href="/guia">Guía de la app</Link>
+        {" · "}
         <Link href="/privacidad">Política de privacidad</Link>
         {" · "}
         <Link href="/eliminacion-de-cuenta">Eliminación de cuenta</Link>

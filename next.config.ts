@@ -16,6 +16,7 @@ const nextConfig: NextConfig = {
     return [
       { source: "/privacy", destination: "/privacidad", permanent: true },
       { source: "/account-deletion", destination: "/eliminacion-de-cuenta", permanent: true },
+      { source: "/guide", destination: "/guia", permanent: true },
       { source: "/onboarding", destination: "/comenzar", permanent: true },
       { source: "/onboarding/:path*", destination: "/comenzar", permanent: true },
     ];

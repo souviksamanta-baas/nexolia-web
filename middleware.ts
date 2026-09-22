@@ -12,6 +12,8 @@ import { NextRequest, NextResponse } from "next/server";
 const PUBLIC_PATHS = [
   "/comenzar",
   "/onboarding", // legacy alias → redirected in next.config
+  "/guia",
+  "/guide",
   "/privacidad",
   "/privacy",
   "/eliminacion-de-cuenta",

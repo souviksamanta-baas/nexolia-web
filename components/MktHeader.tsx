@@ -8,6 +8,7 @@ export function MktHeader() {
       </Link>
       <nav className="mkt-nav" aria-label="Principal">
         <Link href="/">Producto</Link>
+        <Link href="/guia">Guía</Link>
         <Link href="/comenzar?step=3">Planes</Link>
         <a href="mailto:hola@nexolia.com.ar">Ayuda</a>
       </nav>

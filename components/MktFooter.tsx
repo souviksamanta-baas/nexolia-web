@@ -4,6 +4,7 @@ export function MktFooter() {
   return (
     <footer className="mkt-footer">
       © {new Date().getFullYear()} Nexolia ·{" "}
+      <Link href="/guia">Guía de la app</Link> ·{" "}
       <Link href="/privacidad">Privacidad</Link> ·{" "}
       <Link href="/eliminacion-de-cuenta">Eliminación de cuenta</Link>
     </footer>
