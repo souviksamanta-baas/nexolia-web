@@ -1,12 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 
-function apiBase(): string {
-  return (
-    process.env.BAAS_API_URL ||
-    process.env.NEXT_PUBLIC_BAAS_API_URL ||
-    "https://baas-project-production.up.railway.app"
-  ).replace(/\/$/, "");
-}
+import { nestApiBase } from "@/lib/nest-api-base";
 
 export async function POST(req: NextRequest) {
   let body: unknown;
@@ -16,7 +10,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ message: "JSON inválido." }, { status: 400 });
   }
 
-  const upstream = `${apiBase()}/public/org-name-check`;
+  const upstream = `${nestApiBase()}/public/org-name-check`;
   let res: Response;
   try {
     res = await fetch(upstream, {

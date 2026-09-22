@@ -2,6 +2,8 @@ import { readFile, stat } from "node:fs/promises";
 import { join, extname, normalize, resolve } from "node:path";
 import { NextResponse } from "next/server";
 
+import { isMockupsEnabled } from "@/lib/mockups-access";
+
 /**
  * Serve static mockup files (HTML/CSS/JS) from the repo-level `mockups/`
  * folder without moving them into `public/`. Preserving the folder in place
@@ -28,6 +30,10 @@ export async function GET(
   _req: Request,
   ctx: { params: Promise<{ slug?: string[] }> },
 ) {
+  if (!isMockupsEnabled()) {
+    return new NextResponse("Not Found", { status: 404 });
+  }
+
   const { slug = [] } = await ctx.params;
   const relative = slug.join("/");
   const target = normalize(join(ROOT, relative));

@@ -39,6 +39,13 @@ export async function getSupabaseServerClient(): Promise<SupabaseClient> {
 export async function getServerAccessToken(): Promise<string | null> {
   const supabase = await getSupabaseServerClient();
   const {
+    data: { user },
+    error,
+  } = await supabase.auth.getUser();
+  if (error || !user) {
+    return null;
+  }
+  const {
     data: { session },
   } = await supabase.auth.getSession();
   return session?.access_token ?? null;

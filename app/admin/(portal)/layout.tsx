@@ -4,9 +4,10 @@ import { Sidebar } from "@/components/admin/Sidebar";
 import { AdminHeader } from "@/components/admin/AdminHeader";
 import { FabGrok } from "@/components/admin/FabGrok";
 import { SidebarOverlay } from "@/components/admin/SidebarOverlay";
-import { getSupabaseServerClient, getServerAccessToken } from "@/lib/supabase/server";
+import { getServerAccessToken } from "@/lib/supabase/server";
 import { adminApi } from "@/lib/api";
 import { adminHref } from "@/lib/admin-paths";
+import { friendlyRole } from "@/lib/admin-role";
 
 // The portal always reads the current session cookie and calls Nest, so it
 // can't be statically rendered.
@@ -29,15 +30,6 @@ export default async function PortalLayout({
   const loginPath = adminHref("/login", { host });
 
   try {
-    const supabase = await getSupabaseServerClient();
-    const {
-      data: { session },
-    } = await supabase.auth.getSession();
-
-    if (!session) {
-      redirect(loginPath);
-    }
-
     const token = await getServerAccessToken();
     if (!token) {
       redirect(loginPath);
@@ -77,19 +69,4 @@ export default async function PortalLayout({
       <FabGrok />
     </div>
   );
-}
-
-function friendlyRole(role: string): string {
-  switch (role) {
-    case "super_admin":
-      return "Super Admin";
-    case "operations":
-      return "Operaciones";
-    case "support":
-      return "Soporte";
-    case "finance":
-      return "Finanzas";
-    default:
-      return role.replace(/_/g, " ");
-  }
 }

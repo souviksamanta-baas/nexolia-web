@@ -1,17 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
 
+import { nestApiBase } from "@/lib/nest-api-base";
+
 /**
  * Same-origin proxy for public lead intake.
  * Avoids baking localhost into the browser bundle and sidesteps CORS.
  */
-function apiBase(): string {
-  return (
-    process.env.BAAS_API_URL ||
-    process.env.NEXT_PUBLIC_BAAS_API_URL ||
-    "https://baas-project-production.up.railway.app"
-  ).replace(/\/$/, "");
-}
-
 export async function POST(req: NextRequest) {
   let body: unknown;
   try {
@@ -23,7 +17,7 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  const upstream = `${apiBase()}/public/leads`;
+  const upstream = `${nestApiBase()}/public/leads`;
   let res: Response;
   try {
     res = await fetch(upstream, {

@@ -148,7 +148,7 @@ export interface AdminMe {
   id: string;
   email: string;
   name?: string;
-  role: "super_admin" | "operations" | "support" | "finance" | string;
+  role: "super_admin" | "admin" | string;
 }
 
 export interface DashboardKpi {
