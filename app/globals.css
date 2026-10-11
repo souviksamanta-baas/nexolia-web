@@ -1726,6 +1726,12 @@ table.data a:hover {
 /* Owner app guide */
 .guide-page .site-main {
   max-width: 56rem;
+  width: 100%;
+  box-sizing: border-box;
+}
+.guide-page .site-header {
+  padding-left: max(1rem, env(safe-area-inset-left));
+  padding-right: max(1rem, env(safe-area-inset-right));
 }
 .guide-toc {
   margin: 1.75rem 0 2rem;
@@ -1752,12 +1758,26 @@ table.data a:hover {
 .guide-toc a {
   color: var(--navy);
   font-weight: 500;
+  word-break: break-word;
+}
+.guide-page h2,
+.guide-page h3,
+.guide-page h4 {
+  scroll-margin-top: 1rem;
+  overflow-wrap: anywhere;
 }
 .guide-page h4 {
   margin: 1.15rem 0 0.4rem;
   font-family: var(--font-display);
   font-size: 1rem;
   color: var(--navy);
+}
+.guide-page p,
+.guide-page li {
+  overflow-wrap: anywhere;
+}
+.guide-page a {
+  overflow-wrap: anywhere;
 }
 .guide-table-wrap {
   width: 100%;
@@ -1781,6 +1801,139 @@ table.data a:hover {
   align-items: center;
   gap: 0.75rem;
   color: var(--text);
+}
+.scroll-top-btn {
+  position: fixed;
+  right: max(1rem, env(safe-area-inset-right));
+  bottom: max(1.25rem, env(safe-area-inset-bottom));
+  z-index: 40;
+  width: 48px;
+  height: 48px;
+  display: inline-grid;
+  place-items: center;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--navy);
+  color: #fff;
+  box-shadow: var(--shadow);
+  cursor: pointer;
+}
+.scroll-top-btn:hover {
+  background: var(--primary-dark);
+}
+.scroll-top-btn:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 3px;
+}
+
+@media (max-width: 720px) {
+  .guide-page .site-header {
+    padding-top: 1.25rem;
+    text-align: left;
+  }
+  .guide-page .site-header img {
+    max-width: 150px;
+  }
+  .guide-page .site-main {
+    max-width: 100%;
+    padding: 1.25rem 1rem 5.5rem;
+  }
+  .guide-page .site-footer {
+    padding: 1.25rem 1rem;
+    font-size: 0.85rem;
+    line-height: 1.7;
+  }
+  .guide-toc {
+    padding: 0.9rem 1rem;
+    margin: 1.25rem 0 1.5rem;
+  }
+  .guide-toc > ol,
+  .guide-toc ol ol {
+    padding-left: 1rem;
+  }
+  .guide-page h1 {
+    font-size: clamp(1.45rem, 7vw, 1.85rem);
+    line-height: 1.2;
+  }
+  .guide-page h2 {
+    margin-top: 1.75rem;
+    font-size: 1.15rem;
+  }
+  .guide-page h3 {
+    font-size: 1rem;
+  }
+  .guide-page p,
+  .guide-page li,
+  .guide-page td {
+    font-size: 0.95rem;
+    line-height: 1.55;
+  }
+  .guide-table-wrap {
+    overflow: visible;
+    margin: 0.85rem 0 1.35rem;
+  }
+  .guide-page table,
+  .guide-page thead,
+  .guide-page tbody,
+  .guide-page th,
+  .guide-page td,
+  .guide-page tr {
+    display: block;
+    width: 100%;
+  }
+  .guide-page table {
+    min-width: 0;
+    border: none;
+  }
+  .guide-page thead {
+    display: none;
+  }
+  .guide-page tr {
+    margin: 0 0 0.85rem;
+    padding: 0.85rem 0.9rem;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    background: var(--surface);
+  }
+  .guide-page td {
+    border: none;
+    padding: 0.35rem 0;
+    width: auto;
+    white-space: normal;
+  }
+  .guide-page td:first-child {
+    width: auto;
+    padding-top: 0;
+    font-weight: 700;
+    color: var(--navy);
+  }
+  .guide-page td + td {
+    border-top: 1px solid var(--border);
+    margin-top: 0.45rem;
+    padding-top: 0.55rem;
+  }
+  .guide-page td::before {
+    content: attr(data-label);
+    display: block;
+    margin-bottom: 0.2rem;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+    color: var(--navy);
+  }
+  .guide-page td:first-child::before {
+    display: inline;
+    margin-right: 0.35rem;
+  }
+  .guide-cta {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .guide-cta .btn {
+    width: 100%;
+    text-align: center;
+  }
 }
 
 /* Responsive */

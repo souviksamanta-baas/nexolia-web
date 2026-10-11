@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { ScrollToTopButton } from "@/components/ScrollToTopButton";
 
 export const metadata: Metadata = {
   title: "Guía de la app Owner",
@@ -22,6 +23,7 @@ function GuideTable({
   headers: [string, string, string, string];
   rows: StepRow[];
 }) {
+  const [, whatLabel, stepsLabel, expectLabel] = headers;
   return (
     <div className="guide-table-wrap">
       <table>
@@ -35,10 +37,10 @@ function GuideTable({
         <tbody>
           {rows.map((row) => (
             <tr key={row.id}>
-              <td>{row.id}</td>
-              <td>{row.what}</td>
-              <td>{row.steps}</td>
-              <td>{row.expect}</td>
+              <td data-label="#">{row.id}</td>
+              <td data-label={whatLabel}>{row.what}</td>
+              <td data-label={stepsLabel}>{row.steps}</td>
+              <td data-label={expectLabel}>{row.expect}</td>
             </tr>
           ))}
         </tbody>
@@ -914,6 +916,8 @@ export default function GuiaPage() {
         {" · "}
         <Link href="/eliminacion-de-cuenta">Eliminación de cuenta</Link>
       </footer>
+
+      <ScrollToTopButton />
     </div>
   );
 }
