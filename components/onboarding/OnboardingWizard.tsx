@@ -1192,12 +1192,6 @@ function StepBillingConfirm({
 
       {isEnterprise && !submitted ? (
         <div className="enterprise-sizing">
-          <p className="muted" style={{ margin: "0 0 0.75rem", fontSize: "0.85rem" }}>
-            Indicá el tamaño de tu operación. El precio se calcula sobre el Pro (
-            {formatARS(proBaseMonthly)} / mes): 2ª sucursal +60%, desde la 3ª +30%
-            c/u. Cada sucursal incluye {USERS_PER_SUCURSAL} usuarios; usuarios
-            extra se cobran en bloques de {USERS_PER_SUCURSAL} (+30% c/u).
-          </p>
           <div className="enterprise-sizing-grid">
             <div className="field" style={{ margin: 0 }}>
               <label htmlFor="enterpriseSucursales">Sucursales</label>
@@ -1238,17 +1232,6 @@ function StepBillingConfirm({
               />
             </div>
           </div>
-          {enterpriseQuote ? (
-            <p className="muted" style={{ margin: "0.65rem 0 0", fontSize: "0.8rem" }}>
-              Límite incluido en esta cotización:{" "}
-              <strong>{enterpriseQuote.userLimit} usuarios</strong> (
-              {enterpriseSucursales} × {USERS_PER_SUCURSAL}
-              {enterpriseQuote.userLimit > enterpriseSucursales * USERS_PER_SUCURSAL
-                ? " + bloques extra"
-                : ""}
-              ).
-            </p>
-          ) : null}
         </div>
       ) : null}
 
