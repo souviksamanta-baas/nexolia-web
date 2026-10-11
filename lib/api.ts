@@ -111,6 +111,8 @@ export interface PublicLeadInput {
   featureFlags?: Record<string, boolean>;
   plan: string;
   ciclo: BillingCycle;
+  /** Optional free-text notes (promo code, source metadata). */
+  notes?: string;
   source?: string;
 }
 
