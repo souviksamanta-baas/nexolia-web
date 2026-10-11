@@ -920,7 +920,9 @@ function StepPlan({
             return (
               <label
                 key={plan.id}
-                className={`onboard-plan${selected ? " is-selected" : ""}`}
+                className={`onboard-plan${selected ? " is-selected" : ""}${
+                  plan.featured ? " is-featured" : ""
+                }`}
               >
                 <input
                   type="radio"
@@ -930,6 +932,9 @@ function StepPlan({
                   onChange={() => setPlan(plan.id)}
                   className="sr-only"
                 />
+                {plan.featured ? (
+                  <span className="onboard-plan-popular">Popular</span>
+                ) : null}
                 <div className="name">{plan.name}</div>
                 <div className="price">
                   {plan.customPriceLabel ? (
