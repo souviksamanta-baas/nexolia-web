@@ -217,6 +217,7 @@ export interface AdminOrganization {
     | "suspended"
     | "deleted"
     | string;
+  createdAt?: string;
   licenseExpiresAt?: string;
   archivedAt?: string | null;
   /** Present for hard-deleted tombstones reconstructed from admin audit. */

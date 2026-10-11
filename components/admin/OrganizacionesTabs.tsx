@@ -17,6 +17,17 @@ interface UserRow {
   role: string;
 }
 
+/** Days since org creation for trial / pending_payment; otherwise null. */
+function daysInTrialOrPending(org: AdminOrganization): number | null {
+  const state = resolveOrgLifecycleState(org);
+  if (state !== "trial" && state !== "pending_payment") return null;
+  if (!org.createdAt) return null;
+  const created = new Date(org.createdAt);
+  if (Number.isNaN(created.getTime())) return null;
+  const ms = Date.now() - created.getTime();
+  return Math.max(0, Math.floor(ms / (24 * 60 * 60 * 1000)));
+}
+
 export function OrganizacionesTabs({
   orgs,
   users,
@@ -63,6 +74,7 @@ export function OrganizacionesTabs({
               <tr>
                 <th>Organización</th>
                 <th>Estado</th>
+                <th>En prueba (días)</th>
                 <th>Owner</th>
                 <th>Plan</th>
                 <th>Miembros</th>
@@ -72,6 +84,7 @@ export function OrganizacionesTabs({
               {orgs.map((org) => {
                 const state = resolveOrgLifecycleState(org);
                 const selected = org.id === selectedOrgId;
+                const trialDays = daysInTrialOrPending(org);
                 return (
                   <tr
                     key={org.id}
@@ -91,6 +104,13 @@ export function OrganizacionesTabs({
                       <span className={orgLifecycleBadgeClass(state)}>
                         {orgLifecycleLabel(state)}
                       </span>
+                    </td>
+                    <td>
+                      {trialDays != null ? (
+                        trialDays
+                      ) : (
+                        <span className="muted">—</span>
+                      )}
                     </td>
                     <td>
                       {org.ownerName || org.ownerEmail || (
