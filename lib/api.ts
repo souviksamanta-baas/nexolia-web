@@ -204,9 +204,11 @@ export interface AdminOrganization {
   plan: string;
   planSlug?: string;
   members: number;
-  status: "active" | "trial" | "paused" | "suspended" | string;
+  status: "active" | "trial" | "paused" | "suspended" | "deleted" | string;
   licenseExpiresAt?: string;
   archivedAt?: string | null;
+  /** Present for hard-deleted tombstones reconstructed from admin audit. */
+  deletedAt?: string | null;
 }
 
 export interface AdminLlmCredentialStatus {

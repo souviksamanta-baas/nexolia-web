@@ -3,6 +3,11 @@
 import { useMemo, useState } from "react";
 import type { AdminOrganization } from "@/lib/api";
 import { initialsFrom } from "@/lib/formatters";
+import {
+  orgLifecycleBadgeClass,
+  orgLifecycleLabel,
+  resolveOrgLifecycleState,
+} from "@/lib/org-lifecycle-state";
 import { ProvisionOpenAiKeyButton } from "@/components/admin/ProvisionOpenAiKeyButton";
 import { OrgLifecycleActions } from "@/components/admin/OrgLifecycleActions";
 import { OrganizacionesTabs } from "@/components/admin/OrganizacionesTabs";
@@ -15,27 +20,26 @@ interface UserRow {
   role: string;
 }
 
-function StatusBadge({
-  status,
-  archivedAt,
-}: {
-  status: string;
-  archivedAt?: string | null;
-}) {
-  if (archivedAt) return <span className="badge badge-muted">Archivada</span>;
-  if (status === "active")
-    return <span className="badge badge-green">Activa</span>;
-  if (status === "trial")
-    return <span className="badge badge-warn">Prueba</span>;
-  if (status === "pending_payment")
-    return <span className="badge badge-warn">Pendiente de pago</span>;
-  if (status === "paused")
-    return <span className="badge badge-danger">Pausada</span>;
-  if (status === "suspended")
-    return <span className="badge badge-danger">Suspendida</span>;
-  if (status === "expired")
-    return <span className="badge badge-danger">Vencida</span>;
-  return <span className="badge badge-muted">{status}</span>;
+function StatusBadge({ org }: { org: AdminOrganization }) {
+  const state = resolveOrgLifecycleState(org);
+  return (
+    <span className={orgLifecycleBadgeClass(state)}>
+      {orgLifecycleLabel(state)}
+    </span>
+  );
+}
+
+function formatDeletedAt(value: string | null | undefined): string | null {
+  if (!value) return null;
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return value;
+  return date.toLocaleString("es-AR", {
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+  });
 }
 
 export function OrganizacionesWorkspace({
@@ -49,11 +53,17 @@ export function OrganizacionesWorkspace({
   clientesHref: string;
   staffRole: string;
 }) {
-  const [selectedId, setSelectedId] = useState<string | null>(orgs[0]?.id ?? null);
+  const defaultId =
+    orgs.find((org) => resolveOrgLifecycleState(org) !== "deleted")?.id ??
+    orgs[0]?.id ??
+    null;
+  const [selectedId, setSelectedId] = useState<string | null>(defaultId);
   const active = useMemo(
-    () => orgs.find((org) => org.id === selectedId) ?? orgs[0] ?? null,
-    [orgs, selectedId],
+    () => orgs.find((org) => org.id === selectedId) ?? orgs.find((org) => org.id === defaultId) ?? orgs[0] ?? null,
+    [defaultId, orgs, selectedId],
   );
+  const activeState = active ? resolveOrgLifecycleState(active) : null;
+  const isDeleted = activeState === "deleted";
 
   return (
     <div className="split-view">
@@ -90,37 +100,54 @@ export function OrganizacionesWorkspace({
                 flexWrap: "wrap",
               }}
             >
-              <StatusBadge
-                status={active.status}
-                archivedAt={active.archivedAt}
-              />
-              <span className="badge badge-navy">{active.plan || "Sin plan"}</span>
+              <StatusBadge org={active} />
+              {!isDeleted ? (
+                <span className="badge badge-navy">{active.plan || "Sin plan"}</span>
+              ) : null}
             </div>
             <dl className="detail-meta">
-              <div>
-                <dt>Owner</dt>
-                <dd>
-                  {active.ownerEmail || active.ownerName || (
-                    <span className="badge badge-warn">Sin owner</span>
-                  )}
-                </dd>
-              </div>
-              <div>
-                <dt>Miembros</dt>
-                <dd>{active.members} usuarios</dd>
-              </div>
-              <div>
-                <dt>Cliente origen</dt>
-                <dd>
-                  <a href={clientesHref}>Ver lead / cliente</a>
-                </dd>
-              </div>
+              {isDeleted ? (
+                <div>
+                  <dt>Eliminada</dt>
+                  <dd>{formatDeletedAt(active.deletedAt) || "Fecha no disponible"}</dd>
+                </div>
+              ) : (
+                <>
+                  <div>
+                    <dt>Owner</dt>
+                    <dd>
+                      {active.ownerEmail || active.ownerName || (
+                        <span className="badge badge-warn">Sin owner</span>
+                      )}
+                    </dd>
+                  </div>
+                  <div>
+                    <dt>Miembros</dt>
+                    <dd>{active.members} usuarios</dd>
+                  </div>
+                  <div>
+                    <dt>Cliente origen</dt>
+                    <dd>
+                      <a href={clientesHref}>Ver lead / cliente</a>
+                    </dd>
+                  </div>
+                </>
+              )}
             </dl>
-            <OrgLifecycleActions
-              organization={active}
-              staffRole={staffRole}
-            />
-            <ProvisionOpenAiKeyButton organization={active} />
+            {isDeleted ? (
+              <p className="muted" style={{ marginTop: "1rem", fontSize: "0.85rem" }}>
+                Organización eliminada. Solo queda un registro mínimo en auditoría
+                (sin datos del negocio ni del owner), alineado con Ley 25.326.
+              </p>
+            ) : (
+              <>
+                <OrgLifecycleActions
+                  organization={active}
+                  staffRole={staffRole}
+                />
+                <ProvisionOpenAiKeyButton organization={active} />
+              </>
+            )}
           </>
         ) : (
           <p className="muted">Seleccioná una organización para ver el detalle.</p>

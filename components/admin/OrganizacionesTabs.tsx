@@ -2,6 +2,12 @@
 
 import { useState } from "react";
 import type { AdminOrganization } from "@/lib/api";
+import {
+  orgLifecycleBadgeClass,
+  orgLifecycleLabel,
+  orgLifecycleRowClass,
+  resolveOrgLifecycleState,
+} from "@/lib/org-lifecycle-state";
 
 interface UserRow {
   id: string;
@@ -56,31 +62,46 @@ export function OrganizacionesTabs({
             <thead>
               <tr>
                 <th>Organización</th>
+                <th>Estado</th>
                 <th>Owner</th>
                 <th>Plan</th>
                 <th>Miembros</th>
               </tr>
             </thead>
             <tbody>
-              {orgs.map((org) => (
-                <tr
-                  key={org.id}
-                  className={org.id === selectedOrgId ? "is-active" : undefined}
-                  style={{ cursor: onSelectOrg ? "pointer" : undefined }}
-                  onClick={() => onSelectOrg?.(org.id)}
-                >
-                  <td>
-                    <strong>{org.name}</strong>
-                  </td>
-                  <td>
-                    {org.ownerName || org.ownerEmail || (
-                      <span className="badge badge-warn">Sin owner</span>
-                    )}
-                  </td>
-                  <td>{org.plan}</td>
-                  <td>{org.members}</td>
-                </tr>
-              ))}
+              {orgs.map((org) => {
+                const state = resolveOrgLifecycleState(org);
+                const selected = org.id === selectedOrgId;
+                return (
+                  <tr
+                    key={org.id}
+                    className={[
+                      orgLifecycleRowClass(state),
+                      selected ? "is-active" : "",
+                    ]
+                      .filter(Boolean)
+                      .join(" ")}
+                    style={{ cursor: onSelectOrg ? "pointer" : undefined }}
+                    onClick={() => onSelectOrg?.(org.id)}
+                  >
+                    <td>
+                      <strong>{org.name}</strong>
+                    </td>
+                    <td>
+                      <span className={orgLifecycleBadgeClass(state)}>
+                        {orgLifecycleLabel(state)}
+                      </span>
+                    </td>
+                    <td>
+                      {org.ownerName || org.ownerEmail || (
+                        <span className="badge badge-warn">Sin owner</span>
+                      )}
+                    </td>
+                    <td>{org.plan || "—"}</td>
+                    <td>{org.members}</td>
+                  </tr>
+                );
+              })}
             </tbody>
           </table>
         </div>

@@ -35,8 +35,9 @@ export default async function OrganizacionesPage() {
   }
 
   const users = orgs.flatMap((org) =>
-    org.ownerEmail
-      ? [
+    org.deletedAt || org.status === "deleted" || !org.ownerEmail
+      ? []
+      : [
           {
             id: `${org.id}-owner`,
             name: org.ownerName || org.ownerEmail.split("@")[0],
@@ -44,8 +45,7 @@ export default async function OrganizacionesPage() {
             org: org.name,
             role: "Owner",
           },
-        ]
-      : [],
+        ],
   );
 
   return (

@@ -326,6 +326,50 @@ table.data tbody tr:hover,
 table.data tbody tr.is-active {
   background: var(--primary-soft);
 }
+
+/* Org list row tints by lifecycle state */
+table.data tbody tr.org-row--active {
+  background: color-mix(in srgb, #16a34a 7%, transparent);
+}
+table.data tbody tr.org-row--trial,
+table.data tbody tr.org-row--pending_payment {
+  background: color-mix(in srgb, #d97706 8%, transparent);
+}
+table.data tbody tr.org-row--paused,
+table.data tbody tr.org-row--expired {
+  background: color-mix(in srgb, #dc2626 8%, transparent);
+}
+table.data tbody tr.org-row--archived {
+  background: color-mix(in srgb, #64748b 10%, transparent);
+}
+table.data tbody tr.org-row--deleted {
+  background: color-mix(in srgb, #0f172a 8%, transparent);
+  opacity: 0.92;
+}
+table.data tbody tr.org-row--active.is-active,
+table.data tbody tr.org-row--active:hover {
+  background: color-mix(in srgb, #16a34a 14%, transparent);
+}
+table.data tbody tr.org-row--trial.is-active,
+table.data tbody tr.org-row--trial:hover,
+table.data tbody tr.org-row--pending_payment.is-active,
+table.data tbody tr.org-row--pending_payment:hover {
+  background: color-mix(in srgb, #d97706 16%, transparent);
+}
+table.data tbody tr.org-row--paused.is-active,
+table.data tbody tr.org-row--paused:hover,
+table.data tbody tr.org-row--expired.is-active,
+table.data tbody tr.org-row--expired:hover {
+  background: color-mix(in srgb, #dc2626 16%, transparent);
+}
+table.data tbody tr.org-row--archived.is-active,
+table.data tbody tr.org-row--archived:hover {
+  background: color-mix(in srgb, #64748b 18%, transparent);
+}
+table.data tbody tr.org-row--deleted.is-active,
+table.data tbody tr.org-row--deleted:hover {
+  background: color-mix(in srgb, #0f172a 14%, transparent);
+}
 table.data a {
   color: var(--navy);
   font-weight: 600;
