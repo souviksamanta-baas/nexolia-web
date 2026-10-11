@@ -1,11 +1,13 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import {
   checkOrgName,
+  fetchPublicPlans,
   submitPublicLead,
   type BillingCycle,
+  type PublicPlan,
   ApiError,
 } from "@/lib/api";
 import { formatARS, formatDateAR } from "@/lib/formatters";
@@ -77,8 +79,8 @@ function annualFromMonthly(monthly: number): number {
 const LAUNCH_DISCOUNT_PERCENT = 50;
 const LAUNCH_DISCOUNT_MONTHS = 6;
 
-/** Suscripciones con precio de lista; Enterprise a medida. */
-const PLANS: Plan[] = [
+/** Fallback if /public/plans is unavailable; admin /planes is the source of truth. */
+const DEFAULT_PLANS: Plan[] = [
   {
     id: "basico",
     name: "Básico",
@@ -109,6 +111,33 @@ const PLANS: Plan[] = [
     copi: [...COPI_PRO_BULLETS],
   },
 ];
+
+function mapPublicPlan(plan: PublicPlan): Plan | null {
+  const slug = (plan.slug ?? "").trim().toLowerCase();
+  if (slug !== "basico" && slug !== "pro" && slug !== "enterprise") {
+    return null;
+  }
+  const customPriceLabel = plan.customPriceLabel?.trim() || undefined;
+  return {
+    id: slug,
+    name: plan.name,
+    monthly: customPriceLabel ? null : (plan.priceMonthly ?? null),
+    annual: customPriceLabel ? null : (plan.priceAnnual ?? null),
+    tagline: plan.tagline ?? "",
+    featured: Boolean(plan.featured),
+    customPriceLabel,
+    servicios:
+      plan.servicios && plan.servicios.length > 0
+        ? plan.servicios
+        : [...PLAN_SERVICIOS],
+    copi:
+      plan.copi && plan.copi.length > 0
+        ? plan.copi
+        : slug === "basico"
+          ? [...COPI_BASIC_PLAN_FEATURES]
+          : [...COPI_PRO_BULLETS],
+  };
+}
 
 const INACTIVITY_NOTE =
   "Si tu organización permanece inactiva durante 30 días, puede eliminarse automáticamente.";
@@ -196,10 +225,31 @@ export function OnboardingWizard() {
   const [error, setError] = useState<string | null>(null);
   const [leadId, setLeadId] = useState<string | null>(null);
   const [submitted, setSubmitted] = useState(false);
+  const [plans, setPlans] = useState<Plan[]>(DEFAULT_PLANS);
+
+  useEffect(() => {
+    let cancelled = false;
+    void (async () => {
+      try {
+        const rows = await fetchPublicPlans();
+        const mapped = rows
+          .map(mapPublicPlan)
+          .filter((p): p is Plan => p != null);
+        if (!cancelled && mapped.length > 0) {
+          setPlans(mapped);
+        }
+      } catch {
+        /* keep DEFAULT_PLANS */
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   const selectedPlan = useMemo(
-    () => PLANS.find((p) => p.id === form.plan) ?? PLANS[0],
-    [form.plan],
+    () => plans.find((p) => p.id === form.plan) ?? plans[0] ?? DEFAULT_PLANS[0],
+    [form.plan, plans],
   );
 
   const toggleService = (id: FeatureFlagKey) => {
@@ -333,6 +383,7 @@ export function OnboardingWizard() {
             {step === 4 && (
               <StepPlan
                 form={form}
+                plans={plans}
                 setPlan={setPlan}
                 setCiclo={(ciclo) => setForm((f) => ({ ...f, ciclo }))}
                 onBack={() => setStep(3)}
@@ -812,12 +863,14 @@ function StepCopi({
 
 function StepPlan({
   form,
+  plans,
   setPlan,
   setCiclo,
   onBack,
   onNext,
 }: {
   form: FormState;
+  plans: Plan[];
   setPlan: (plan: Plan["id"]) => void;
   setCiclo: (ciclo: BillingCycle) => void;
   onBack: () => void;
@@ -860,7 +913,7 @@ function StepPlan({
         }}
       >
         <div className="onboard-plans">
-          {PLANS.map((plan) => {
+          {plans.map((plan) => {
             const selected = form.plan === plan.id;
             const price =
               form.ciclo === "annual" ? plan.annual : plan.monthly;

@@ -146,6 +146,12 @@ export function checkOrgName(input: { email: string; name: string }) {
   });
 }
 
+export function fetchPublicPlans() {
+  return apiFetch<PublicPlan[]>("/api/public/plans", {
+    cache: "no-store",
+  });
+}
+
 /* ------------------------------------------------------------------ */
 /* Admin                                                               */
 /* ------------------------------------------------------------------ */
@@ -234,12 +240,19 @@ export interface AdminLlmCredentialStatus {
 
 export interface AdminPlan {
   id: string;
+  slug?: string;
   name: string;
-  priceMonthly: number;
-  priceAnnual: number;
+  priceMonthly: number | null;
+  priceAnnual: number | null;
+  tagline?: string;
+  servicios?: string[];
+  copi?: string[];
   features: string[];
   featured?: boolean;
+  customPriceLabel?: string | null;
 }
+
+export type PublicPlan = AdminPlan;
 
 export interface AdminPayment {
   id: string;
@@ -417,7 +430,19 @@ export const adminApi = {
   updatePlan: (
     token: string,
     planId: string,
-    input: Partial<Pick<AdminPlan, "name" | "priceMonthly" | "priceAnnual" | "features" | "featured">>,
+    input: Partial<
+      Pick<
+        AdminPlan,
+        | "name"
+        | "priceMonthly"
+        | "priceAnnual"
+        | "tagline"
+        | "servicios"
+        | "copi"
+        | "featured"
+        | "customPriceLabel"
+      >
+    >,
   ) =>
     apiFetch<AdminPlan>(`/admin/plans/${planId}`, {
       token,

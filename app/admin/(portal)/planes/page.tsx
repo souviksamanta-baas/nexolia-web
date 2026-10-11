@@ -1,11 +1,13 @@
 import type { Metadata } from "next";
 import { getServerAccessToken } from "@/lib/supabase/server";
 import { adminApi, type AdminPlan } from "@/lib/api";
-import { formatARS } from "@/lib/formatters";
 import { headers } from "next/headers";
 import { adminHref } from "@/lib/admin-paths";
+import { PlanesEditor } from "@/components/admin/PlanesEditor";
 
 export const metadata: Metadata = { title: "Planes y suscripciones — Admin" };
+
+export const dynamic = "force-dynamic";
 
 export default async function PlanesPage() {
   const host = (await headers()).get("host");
@@ -24,59 +26,27 @@ export default async function PlanesPage() {
 
   return (
     <>
-      <div className="page-title-row">
-        <div>
-          <h1>Planes y suscripciones</h1>
-          <p>Catálogo comercial y suscripciones activas</p>
-        </div>
-        <button className="btn btn-secondary btn-sm" type="button">
-          Editar precios
-        </button>
-      </div>
-
       {loadError ? (
         <div className="card">
           <p>No pudimos cargar los planes. Intentá de nuevo.</p>
         </div>
       ) : null}
 
-      {plans.length === 0 && !loadError ? (
+      {!loadError && plans.length === 0 ? (
         <div className="card">
           <p>No hay planes para mostrar.</p>
         </div>
-      ) : (
-        <div className="plans-grid">
-          {plans.map((plan) => (
-            <div
-              key={plan.id}
-              className={`plan-card${plan.featured ? " featured" : ""}`}
-            >
-              {plan.featured && (
-                <span
-                  className="badge badge-green"
-                  style={{ position: "absolute", top: "1rem", right: "1rem" }}
-                >
-                  Popular
-                </span>
-              )}
-              <div className="plan-name">{plan.name}</div>
-              <div className="plan-price">
-                {formatARS(plan.priceMonthly)} <span>/ mes</span>
-              </div>
-              <ul>
-                {plan.features.map((f) => (
-                  <li key={f}>{f}</li>
-                ))}
-              </ul>
-            </div>
-          ))}
-        </div>
-      )}
+      ) : null}
+
+      {!loadError && plans.length > 0 ? <PlanesEditor plans={plans} /> : null}
 
       <div className="card" style={{ padding: 0, overflow: "hidden" }}>
         <div className="panel-toolbar">
           <h2 style={{ margin: 0, flex: 1 }}>Suscripciones</h2>
-          <a className="btn btn-secondary btn-sm" href={adminHref("/organizaciones", { host })}>
+          <a
+            className="btn btn-secondary btn-sm"
+            href={adminHref("/organizaciones", { host })}
+          >
             Ver organizaciones
           </a>
         </div>
