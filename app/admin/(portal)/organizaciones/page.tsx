@@ -13,13 +13,19 @@ export default async function OrganizacionesPage() {
   const host = (await headers()).get("host");
   const token = await getServerAccessToken();
   let orgs: AdminOrganization[] = [];
+  let staffRole = "admin";
   let loadError: string | null = null;
 
   if (!token) {
     loadError = "Iniciá sesión para ver las organizaciones.";
   } else {
     try {
-      orgs = await adminApi.organizations(token);
+      const [orgRows, me] = await Promise.all([
+        adminApi.organizations(token),
+        adminApi.me(token),
+      ]);
+      orgs = orgRows;
+      staffRole = me.role || "admin";
     } catch (err) {
       loadError =
         err instanceof Error
@@ -58,6 +64,7 @@ export default async function OrganizacionesPage() {
           orgs={orgs}
           users={users}
           clientesHref={adminHref("/clientes", { host })}
+          staffRole={staffRole}
         />
       ) : null}
     </>

@@ -17,6 +17,10 @@
  *   POST   /admin/organizations
  *   POST   /admin/grok/chat
  *   PATCH  /admin/organizations/:id/license
+ *   POST   /admin/organizations/:id/pause
+ *   POST   /admin/organizations/:id/resume
+ *   POST   /admin/organizations/:id/archive
+ *   DELETE /admin/organizations/:id
  *   PATCH  /admin/plans/:id
  */
 
@@ -200,8 +204,9 @@ export interface AdminOrganization {
   plan: string;
   planSlug?: string;
   members: number;
-  status: "active" | "trial" | "suspended" | string;
+  status: "active" | "trial" | "paused" | "suspended" | string;
   licenseExpiresAt?: string;
+  archivedAt?: string | null;
 }
 
 export interface AdminLlmCredentialStatus {
@@ -312,6 +317,40 @@ export const adminApi = {
     apiFetch<AdminOrganization>(`/admin/organizations/${orgId}/license`, {
       token,
       method: "PATCH",
+      body: input,
+    }),
+
+  pauseOrganization: (token: string, orgId: string) =>
+    apiFetch<{ id: string; name: string; status: string; archivedAt: string | null }>(
+      `/admin/organizations/${orgId}/pause`,
+      { token, method: "POST" },
+    ),
+
+  resumeOrganization: (token: string, orgId: string) =>
+    apiFetch<{ id: string; name: string; status: string; archivedAt: string | null }>(
+      `/admin/organizations/${orgId}/resume`,
+      { token, method: "POST" },
+    ),
+
+  archiveOrganization: (
+    token: string,
+    orgId: string,
+    input: { confirmation: string },
+  ) =>
+    apiFetch<{ archivedAt: string }>(`/admin/organizations/${orgId}/archive`, {
+      token,
+      method: "POST",
+      body: input,
+    }),
+
+  deleteOrganization: (
+    token: string,
+    orgId: string,
+    input: { confirmation: string },
+  ) =>
+    apiFetch<{ deleted: true }>(`/admin/organizations/${orgId}`, {
+      token,
+      method: "DELETE",
       body: input,
     }),
 

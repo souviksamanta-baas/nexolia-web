@@ -4,6 +4,7 @@ import { useMemo, useState } from "react";
 import type { AdminOrganization } from "@/lib/api";
 import { initialsFrom } from "@/lib/formatters";
 import { ProvisionOpenAiKeyButton } from "@/components/admin/ProvisionOpenAiKeyButton";
+import { OrgLifecycleActions } from "@/components/admin/OrgLifecycleActions";
 import { OrganizacionesTabs } from "@/components/admin/OrganizacionesTabs";
 
 interface UserRow {
@@ -14,15 +15,26 @@ interface UserRow {
   role: string;
 }
 
-function StatusBadge({ status }: { status: string }) {
+function StatusBadge({
+  status,
+  archivedAt,
+}: {
+  status: string;
+  archivedAt?: string | null;
+}) {
+  if (archivedAt) return <span className="badge badge-muted">Archivada</span>;
   if (status === "active")
     return <span className="badge badge-green">Activa</span>;
   if (status === "trial")
     return <span className="badge badge-warn">Prueba</span>;
   if (status === "pending_payment")
     return <span className="badge badge-warn">Pendiente de pago</span>;
-  if (status === "suspended" || status === "paused")
+  if (status === "paused")
+    return <span className="badge badge-danger">Pausada</span>;
+  if (status === "suspended")
     return <span className="badge badge-danger">Suspendida</span>;
+  if (status === "expired")
+    return <span className="badge badge-danger">Vencida</span>;
   return <span className="badge badge-muted">{status}</span>;
 }
 
@@ -30,10 +42,12 @@ export function OrganizacionesWorkspace({
   orgs,
   users,
   clientesHref,
+  staffRole,
 }: {
   orgs: AdminOrganization[];
   users: UserRow[];
   clientesHref: string;
+  staffRole: string;
 }) {
   const [selectedId, setSelectedId] = useState<string | null>(orgs[0]?.id ?? null);
   const active = useMemo(
@@ -76,7 +90,10 @@ export function OrganizacionesWorkspace({
                 flexWrap: "wrap",
               }}
             >
-              <StatusBadge status={active.status} />
+              <StatusBadge
+                status={active.status}
+                archivedAt={active.archivedAt}
+              />
               <span className="badge badge-navy">{active.plan || "Sin plan"}</span>
             </div>
             <dl className="detail-meta">
@@ -99,6 +116,10 @@ export function OrganizacionesWorkspace({
                 </dd>
               </div>
             </dl>
+            <OrgLifecycleActions
+              organization={active}
+              staffRole={staffRole}
+            />
             <ProvisionOpenAiKeyButton organization={active} />
           </>
         ) : (
