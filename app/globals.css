@@ -1442,6 +1442,23 @@ table.data a:hover {
   opacity: 0.6;
   cursor: not-allowed;
 }
+.enterprise-sizing {
+  margin: 0 0 1rem;
+  padding: 1rem 1.1rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface);
+}
+.enterprise-sizing-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+}
+@media (max-width: 560px) {
+  .enterprise-sizing-grid {
+    grid-template-columns: 1fr;
+  }
+}
 .onboard-plans {
   display: grid;
   grid-template-columns: repeat(3, 1fr);

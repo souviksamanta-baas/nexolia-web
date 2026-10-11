@@ -79,6 +79,49 @@ function annualFromMonthly(monthly: number): number {
 const LAUNCH_DISCOUNT_PERCENT = 50;
 const LAUNCH_DISCOUNT_MONTHS = 6;
 
+const USERS_PER_SUCURSAL = 5;
+const SECOND_SUCURSAL_RATE = 0.6;
+const EXTRA_SUCURSAL_OR_USER_PACK_RATE = 0.3;
+
+/**
+ * Enterprise monthly list price from Pro base (B).
+ * 1st sucursal = B; 2nd = +60% B; 3rd+ = +30% B each.
+ * Each sucursal includes 5 users; extra users billed in packs of 5 at 30% B.
+ */
+function enterprisePricing(params: {
+  baseProMonthly: number;
+  sucursales: number;
+  users: number;
+}): { monthly: number; userLimit: number } {
+  const sucursales = Math.max(1, Math.floor(params.sucursales));
+  const users = Math.max(1, Math.floor(params.users));
+  const B = params.baseProMonthly;
+
+  let monthly = B;
+  if (sucursales >= 2) {
+    monthly += SECOND_SUCURSAL_RATE * B;
+  }
+  if (sucursales >= 3) {
+    monthly += EXTRA_SUCURSAL_OR_USER_PACK_RATE * B * (sucursales - 2);
+  }
+
+  const includedUsers = sucursales * USERS_PER_SUCURSAL;
+  const extraPacks = Math.max(
+    0,
+    Math.ceil((users - includedUsers) / USERS_PER_SUCURSAL),
+  );
+  monthly += extraPacks * EXTRA_SUCURSAL_OR_USER_PACK_RATE * B;
+
+  return {
+    monthly: Math.round(monthly),
+    userLimit: includedUsers + extraPacks * USERS_PER_SUCURSAL,
+  };
+}
+
+function digitsOnly(value: string): string {
+  return value.replace(/\D/g, "");
+}
+
 /** Fallback if /public/plans is unavailable; admin /planes is the source of truth. */
 const DEFAULT_PLANS: Plan[] = [
   {
@@ -206,6 +249,9 @@ interface FormState {
   plan: Plan["id"];
   ciclo: BillingCycle;
   discountCode: string;
+  /** Enterprise sizing (digits only as string for controlled inputs). */
+  enterpriseSucursales: string;
+  enterpriseUsers: string;
 }
 
 const initialState: FormState = {
@@ -216,6 +262,8 @@ const initialState: FormState = {
   plan: "basico",
   ciclo: "monthly",
   discountCode: "",
+  enterpriseSucursales: "1",
+  enterpriseUsers: "5",
 };
 
 export function OnboardingWizard() {
@@ -251,6 +299,11 @@ export function OnboardingWizard() {
     () => plans.find((p) => p.id === form.plan) ?? plans[0] ?? DEFAULT_PLANS[0],
     [form.plan, plans],
   );
+
+  const proBaseMonthly = useMemo(() => {
+    const pro = plans.find((p) => p.id === "pro");
+    return pro?.monthly && pro.monthly > 0 ? pro.monthly : 85_000;
+  }, [plans]);
 
   const toggleService = (id: FeatureFlagKey) => {
     setForm((f) => {
@@ -310,6 +363,22 @@ export function OnboardingWizard() {
     setSubmitting(true);
     setError(null);
     try {
+      if (form.plan === "enterprise") {
+        const sucursales = Number(form.enterpriseSucursales);
+        const users = Number(form.enterpriseUsers);
+        if (
+          !Number.isFinite(sucursales) ||
+          sucursales < 1 ||
+          !Number.isFinite(users) ||
+          users < 1
+        ) {
+          setError(
+            "Para Enterprise indicá sucursales y usuarios (solo números, mínimo 1).",
+          );
+          setSubmitting(false);
+          return;
+        }
+      }
       const featureFlags = buildLeadFeatureFlags(form.servicios, form.plan);
       const notesParts = [
         "source=nexolia-web/comenzar",
@@ -318,6 +387,20 @@ export function OnboardingWizard() {
       ];
       if (form.discountCode.trim()) {
         notesParts.push(`discount_code=${form.discountCode.trim()}`);
+      }
+      if (form.plan === "enterprise") {
+        const pricing = enterprisePricing({
+          baseProMonthly: proBaseMonthly,
+          sucursales: Number(form.enterpriseSucursales),
+          users: Number(form.enterpriseUsers),
+        });
+        notesParts.push(
+          `enterprise_sucursales=${form.enterpriseSucursales}`,
+          `enterprise_users=${form.enterpriseUsers}`,
+          `enterprise_user_limit=${pricing.userLimit}`,
+          `enterprise_monthly=${pricing.monthly}`,
+          `enterprise_base_pro=${proBaseMonthly}`,
+        );
       }
       const res = await submitPublicLead({
         email: form.email,
@@ -397,8 +480,12 @@ export function OnboardingWizard() {
               <StepBillingConfirm
                 form={form}
                 plan={selectedPlan}
+                proBaseMonthly={proBaseMonthly}
                 setDiscountCode={(discountCode) =>
                   setForm((f) => ({ ...f, discountCode }))
+                }
+                setEnterpriseSizing={(patch) =>
+                  setForm((f) => ({ ...f, ...patch }))
                 }
                 submitting={submitting}
                 submitted={submitted}
@@ -998,7 +1085,9 @@ function StepPlan({
 function StepBillingConfirm({
   form,
   plan,
+  proBaseMonthly,
   setDiscountCode,
+  setEnterpriseSizing,
   submitting,
   submitted,
   leadId,
@@ -1009,7 +1098,13 @@ function StepBillingConfirm({
 }: {
   form: FormState;
   plan: Plan;
+  proBaseMonthly: number;
   setDiscountCode: (code: string) => void;
+  setEnterpriseSizing: (
+    patch: Partial<
+      Pick<FormState, "enterpriseSucursales" | "enterpriseUsers">
+    >,
+  ) => void;
   submitting: boolean;
   submitted: boolean;
   leadId: string | null;
@@ -1022,19 +1117,35 @@ function StepBillingConfirm({
     () => form.discountCode.trim().length > 0,
   );
   const billingStarts = addDays(new Date(), TRIAL_DAYS);
-  const listMonthly = plan.monthly;
-  const listAnnual = plan.annual;
+  const isEnterprise = plan.id === "enterprise";
+
+  const enterpriseSucursales = Number(form.enterpriseSucursales) || 0;
+  const enterpriseUsers = Number(form.enterpriseUsers) || 0;
+  const enterpriseQuote =
+    isEnterprise && enterpriseSucursales >= 1 && enterpriseUsers >= 1
+      ? enterprisePricing({
+          baseProMonthly: proBaseMonthly,
+          sucursales: enterpriseSucursales,
+          users: enterpriseUsers,
+        })
+      : null;
+
+  const listMonthly = isEnterprise
+    ? (enterpriseQuote?.monthly ?? null)
+    : plan.monthly;
+  const listAnnual =
+    listMonthly != null ? annualFromMonthly(listMonthly) : null;
   const firstCharge = firstChargeAmount({
     ciclo: form.ciclo,
     monthly: listMonthly,
   });
-  const isCustom = Boolean(plan.customPriceLabel);
   const listPrice =
     form.ciclo === "annual" ? (listAnnual ?? null) : (listMonthly ?? null);
   const launchDiscountAmount =
     listPrice != null && firstCharge != null
       ? Math.max(0, listPrice - firstCharge)
       : null;
+  const showPricedSummary = listMonthly != null;
 
   return (
     <>
@@ -1047,18 +1158,20 @@ function StepBillingConfirm({
           <p className="secondary">
             Recibimos el alta de <strong>{form.orgName}</strong> con el plan{" "}
             <strong>{plan.name}</strong> (
-            {form.ciclo === "annual" ? "anual" : "mensual"}). Te enviamos un
-            correo a <strong>{form.email}</strong> con los detalles.
+            {form.ciclo === "annual" ? "anual" : "mensual"}
+            {isEnterprise && enterpriseQuote
+              ? ` · ${enterpriseSucursales} sucursal${enterpriseSucursales === 1 ? "" : "es"} · ${enterpriseUsers} usuarios`
+              : ""}
+            ). Te enviamos un correo a <strong>{form.email}</strong> con los
+            detalles.
           </p>
           <p className="secondary">
             Tu organización tendrá <strong>{TRIAL_DAYS} días de prueba</strong>{" "}
             desde que la activemos. La facturación comienza el{" "}
             <strong>{formatDateAR(billingStarts)}</strong>
-            {isCustom
-              ? "; el precio Enterprise se cotiza a medida."
-              : firstCharge != null
-                ? ` con un primer cobro de ${formatARS(firstCharge)} (incluye ${LAUNCH_DISCOUNT_PERCENT}% off los primeros ${LAUNCH_DISCOUNT_MONTHS} meses).`
-                : "."}{" "}
+            {firstCharge != null
+              ? ` con un primer cobro de ${formatARS(firstCharge)} (incluye ${LAUNCH_DISCOUNT_PERCENT}% off los primeros ${LAUNCH_DISCOUNT_MONTHS} meses).`
+              : "."}{" "}
             Todavía no hay pago online: te vamos a contactar para coordinarlo.
           </p>
           {leadId ? (
@@ -1077,11 +1190,85 @@ function StepBillingConfirm({
         </>
       )}
 
+      {isEnterprise && !submitted ? (
+        <div className="enterprise-sizing">
+          <p className="muted" style={{ margin: "0 0 0.75rem", fontSize: "0.85rem" }}>
+            Indicá el tamaño de tu operación. El precio se calcula sobre el Pro (
+            {formatARS(proBaseMonthly)} / mes): 2ª sucursal +60%, desde la 3ª +30%
+            c/u. Cada sucursal incluye {USERS_PER_SUCURSAL} usuarios; usuarios
+            extra se cobran en bloques de {USERS_PER_SUCURSAL} (+30% c/u).
+          </p>
+          <div className="enterprise-sizing-grid">
+            <div className="field" style={{ margin: 0 }}>
+              <label htmlFor="enterpriseSucursales">Sucursales</label>
+              <input
+                id="enterpriseSucursales"
+                type="text"
+                inputMode="numeric"
+                pattern="[0-9]*"
+                value={form.enterpriseSucursales}
+                onChange={(e) =>
+                  setEnterpriseSizing({
+                    enterpriseSucursales: digitsOnly(e.target.value),
+                  })
+                }
+                placeholder="Ej. 2"
+                autoComplete="off"
+                disabled={submitting}
+                required
+              />
+            </div>
+            <div className="field" style={{ margin: 0 }}>
+              <label htmlFor="enterpriseUsers">Usuarios</label>
+              <input
+                id="enterpriseUsers"
+                type="text"
+                inputMode="numeric"
+                pattern="[0-9]*"
+                value={form.enterpriseUsers}
+                onChange={(e) =>
+                  setEnterpriseSizing({
+                    enterpriseUsers: digitsOnly(e.target.value),
+                  })
+                }
+                placeholder="Ej. 8"
+                autoComplete="off"
+                disabled={submitting}
+                required
+              />
+            </div>
+          </div>
+          {enterpriseQuote ? (
+            <p className="muted" style={{ margin: "0.65rem 0 0", fontSize: "0.8rem" }}>
+              Límite incluido en esta cotización:{" "}
+              <strong>{enterpriseQuote.userLimit} usuarios</strong> (
+              {enterpriseSucursales} × {USERS_PER_SUCURSAL}
+              {enterpriseQuote.userLimit > enterpriseSucursales * USERS_PER_SUCURSAL
+                ? " + bloques extra"
+                : ""}
+              ).
+            </p>
+          ) : null}
+        </div>
+      ) : null}
+
       <div className="billing-summary">
         <div className="billing-summary-row">
           <span>Plan</span>
           <strong>{plan.name}</strong>
         </div>
+        {isEnterprise ? (
+          <>
+            <div className="billing-summary-row">
+              <span>Sucursales</span>
+              <strong>{form.enterpriseSucursales || "—"}</strong>
+            </div>
+            <div className="billing-summary-row">
+              <span>Usuarios</span>
+              <strong>{form.enterpriseUsers || "—"}</strong>
+            </div>
+          </>
+        ) : null}
         <div className="billing-summary-row">
           <span>Ciclo</span>
           <strong>{form.ciclo === "annual" ? "Anual" : "Mensual"}</strong>
@@ -1094,12 +1281,7 @@ function StepBillingConfirm({
           <span>Inicio de facturación</span>
           <strong>{formatDateAR(billingStarts)}</strong>
         </div>
-        {isCustom ? (
-          <div className="billing-summary-row">
-            <span>Precio</span>
-            <strong>A medida — te cotizamos</strong>
-          </div>
-        ) : (
+        {showPricedSummary ? (
           <>
             <div className="billing-summary-row">
               <span>Precio de lista</span>
@@ -1182,6 +1364,15 @@ function StepBillingConfirm({
               </p>
             ) : null}
           </>
+        ) : (
+          <div className="billing-summary-row">
+            <span>Precio</span>
+            <strong>
+              {isEnterprise
+                ? "Completá sucursales y usuarios"
+                : "A medida — te cotizamos"}
+            </strong>
+          </div>
         )}
       </div>
 
@@ -1224,7 +1415,11 @@ function StepBillingConfirm({
             <button
               className="btn btn-primary"
               type="submit"
-              disabled={submitting}
+              disabled={
+                submitting ||
+                (isEnterprise &&
+                  (enterpriseSucursales < 1 || enterpriseUsers < 1))
+              }
             >
               {submitting ? "Enviando…" : "Confirmar alta →"}
             </button>
