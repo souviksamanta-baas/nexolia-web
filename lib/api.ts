@@ -192,7 +192,7 @@ export interface AdminLead {
   servicios: string[];
   plan: string;
   ciclo: BillingCycle;
-  status: "new" | "contacted" | "converted" | "lost" | string;
+  status: "new" | "contacted" | "in_progress" | "converted" | "lost" | "closed" | "rejected" | string;
   createdAt: string;
   organizationId?: string | null;
   orgName?: string | null;
@@ -278,6 +278,12 @@ export const adminApi = {
       token,
       method: "POST",
       body: input,
+    }),
+
+  rejectLead: (token: string, leadId: string) =>
+    apiFetch<{ id: string; status: "rejected" }>(`/admin/leads/${leadId}/reject`, {
+      token,
+      method: "POST",
     }),
 
   provisionPendingLeads: (token: string) =>
