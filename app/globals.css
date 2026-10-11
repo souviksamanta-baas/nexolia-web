@@ -1371,30 +1371,72 @@ table.data a:hover {
 .billing-summary-row span {
   color: var(--text-secondary);
 }
-.billing-summary-row.is-promo strong {
+.billing-discounts {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  margin-top: 0.15rem;
+  padding: 0.7rem 0.75rem;
+  border-radius: var(--radius-sm);
+  background: rgba(34, 139, 90, 0.08);
+  border: 1px solid rgba(34, 139, 90, 0.18);
+}
+.billing-discounts-label {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
   color: var(--primary-dark);
 }
+.billing-summary-row.is-discount span {
+  color: var(--primary-dark);
+}
+.billing-summary-row.is-discount strong {
+  color: var(--primary-dark);
+  font-variant-numeric: tabular-nums;
+}
+.billing-promo-slot {
+  margin-top: 0.15rem;
+}
+.billing-promo-field {
+  margin: 0;
+}
+.billing-promo-field label {
+  font-size: 0.8rem;
+}
+.billing-promo-field input {
+  background: var(--surface);
+}
 .billing-summary-row.is-total {
-  margin-top: 0.25rem;
-  padding-top: 0.65rem;
+  margin-top: 0.35rem;
+  padding-top: 0.75rem;
   border-top: 1px solid var(--border);
   font-size: 1rem;
+}
+.billing-summary-row.is-total span {
+  color: var(--navy);
+  font-weight: 600;
+}
+.billing-summary-row.is-total strong {
+  color: var(--navy);
+  font-size: 1.15rem;
+  font-variant-numeric: tabular-nums;
 }
 .discount-code-link {
   display: inline;
   padding: 0;
   border: none;
   background: none;
-  color: var(--navy);
+  color: var(--primary-dark);
   font: inherit;
-  font-size: 0.9rem;
+  font-size: 0.85rem;
   font-weight: 600;
   text-decoration: underline;
   text-underline-offset: 0.15em;
   cursor: pointer;
 }
 .discount-code-link:hover {
-  color: var(--primary-dark);
+  color: var(--navy);
 }
 .discount-code-link:disabled {
   opacity: 0.6;

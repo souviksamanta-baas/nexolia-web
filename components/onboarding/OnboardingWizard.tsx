@@ -971,10 +971,12 @@ function StepBillingConfirm({
     monthly: listMonthly,
   });
   const isCustom = Boolean(plan.customPriceLabel);
-  const discountedMonthly =
-    listMonthly == null
-      ? null
-      : Math.round(listMonthly * (1 - LAUNCH_DISCOUNT_PERCENT / 100));
+  const listPrice =
+    form.ciclo === "annual" ? (listAnnual ?? null) : (listMonthly ?? null);
+  const launchDiscountAmount =
+    listPrice != null && firstCharge != null
+      ? Math.max(0, listPrice - firstCharge)
+      : null;
 
   return (
     <>
@@ -1055,17 +1057,56 @@ function StepBillingConfirm({
                 <strong>11 meses (1 mes gratis)</strong>
               </div>
             ) : null}
-            <div className="billing-summary-row is-promo">
-              <span>
-                Descuento {LAUNCH_DISCOUNT_PERCENT}% · primeros{" "}
-                {LAUNCH_DISCOUNT_MONTHS} meses
-              </span>
-              <strong>
-                {form.ciclo === "monthly" && discountedMonthly != null
-                  ? `${formatARS(discountedMonthly)} / mes`
-                  : `−${LAUNCH_DISCOUNT_PERCENT}%`}
-              </strong>
+
+            <div className="billing-discounts">
+              <div className="billing-discounts-label">Descuentos</div>
+              <div className="billing-summary-row is-discount">
+                <span>
+                  Descuento {LAUNCH_DISCOUNT_PERCENT}% · primeros{" "}
+                  {LAUNCH_DISCOUNT_MONTHS} meses
+                </span>
+                <strong>
+                  {launchDiscountAmount != null
+                    ? `−${formatARS(launchDiscountAmount)}`
+                    : `−${LAUNCH_DISCOUNT_PERCENT}%`}
+                </strong>
+              </div>
+              {submitted && form.discountCode.trim() ? (
+                <div className="billing-summary-row is-discount">
+                  <span>Código {form.discountCode.trim()}</span>
+                  <strong>—</strong>
+                </div>
+              ) : null}
+              {!submitted ? (
+                <div className="billing-promo-slot">
+                  {showDiscountField ? (
+                    <div className="field billing-promo-field">
+                      <label htmlFor="discountCode">Código de descuento</label>
+                      <input
+                        id="discountCode"
+                        type="text"
+                        value={form.discountCode}
+                        onChange={(e) => setDiscountCode(e.target.value)}
+                        placeholder="Ingresá tu código"
+                        autoComplete="off"
+                        disabled={submitting}
+                        autoFocus
+                      />
+                    </div>
+                  ) : (
+                    <button
+                      type="button"
+                      className="discount-code-link"
+                      onClick={() => setShowDiscountField(true)}
+                      disabled={submitting}
+                    >
+                      + Agregar código de descuento
+                    </button>
+                  )}
+                </div>
+              ) : null}
             </div>
+
             <div className="billing-summary-row is-total">
               <span>Primer cobro (después de la prueba)</span>
               <strong>{formatARS(firstCharge ?? 0)}</strong>
@@ -1107,33 +1148,6 @@ function StepBillingConfirm({
             onSubmit();
           }}
         >
-          <div style={{ marginTop: "1.25rem" }}>
-            {showDiscountField ? (
-              <div className="field">
-                <label htmlFor="discountCode">Código de descuento</label>
-                <input
-                  id="discountCode"
-                  type="text"
-                  value={form.discountCode}
-                  onChange={(e) => setDiscountCode(e.target.value)}
-                  placeholder="Ingresá tu código"
-                  autoComplete="off"
-                  disabled={submitting}
-                  autoFocus
-                />
-              </div>
-            ) : (
-              <button
-                type="button"
-                className="discount-code-link"
-                onClick={() => setShowDiscountField(true)}
-                disabled={submitting}
-              >
-                + Agregar código de descuento
-              </button>
-            )}
-          </div>
-
           <p className="hint" style={{ marginTop: "1rem" }}>
             {INACTIVITY_NOTE}
           </p>
