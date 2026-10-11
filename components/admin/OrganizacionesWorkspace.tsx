@@ -126,6 +126,14 @@ export function OrganizacionesWorkspace({
                     <dd>{active.members} usuarios</dd>
                   </div>
                   <div>
+                    <dt>Licencia hasta</dt>
+                    <dd>
+                      {formatDeletedAt(active.licenseExpiresAt) || (
+                        <span className="muted">—</span>
+                      )}
+                    </dd>
+                  </div>
+                  <div>
                     <dt>Cliente origen</dt>
                     <dd>
                       <a href={clientesHref}>Ver lead / cliente</a>

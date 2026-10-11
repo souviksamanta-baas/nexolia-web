@@ -38,10 +38,50 @@ export function OrgLifecycleActions({
 
   const archived = Boolean(organization.archivedAt);
   const paused = organization.status === "paused";
+  const canConfirmPayment =
+    !archived &&
+    (organization.status === "pending_payment" ||
+      organization.status === "trial");
   const isSuperAdmin = staffRole === "super_admin";
+  const suggestedAmount =
+    organization.billingCycle === "annual"
+      ? organization.planPriceAnnual ?? organization.planPriceMonthly ?? 0
+      : organization.planPriceMonthly ?? 0;
 
   const refresh = () => {
     router.refresh();
+  };
+
+  const onConfirmPayment = async () => {
+    const amountLabel =
+      suggestedAmount > 0
+        ? ` por $${suggestedAmount.toLocaleString("es-AR")}`
+        : "";
+    const confirmed = window.confirm(
+      `¿Confirmar el pago${amountLabel} de “${organization.name}”? El estado pasará a Activa.`,
+    );
+    if (!confirmed) return;
+
+    setBusy(true);
+    setError(null);
+    try {
+      const token = await getAccessToken();
+      await adminApi.confirmOrganizationPayment(token, organization.id, {
+        amount: suggestedAmount > 0 ? suggestedAmount : undefined,
+        method: "transfer",
+      });
+      refresh();
+    } catch (err) {
+      setError(
+        err instanceof ApiError
+          ? err.message
+          : err instanceof Error
+            ? err.message
+            : "No se pudo confirmar el pago.",
+      );
+    } finally {
+      setBusy(false);
+    }
   };
 
   const onPauseToggle = async () => {
@@ -105,6 +145,16 @@ export function OrgLifecycleActions({
     <div style={{ marginTop: "1.25rem" }}>
       <h3 style={{ margin: "0 0 0.5rem", fontSize: "0.95rem" }}>Ciclo de vida</h3>
       <div className="detail-actions" style={{ marginTop: "0.5rem" }}>
+        {canConfirmPayment ? (
+          <button
+            className="btn btn-primary btn-sm"
+            type="button"
+            disabled={busy}
+            onClick={() => void onConfirmPayment()}
+          >
+            {busy ? "Confirmando…" : "Confirmar pago"}
+          </button>
+        ) : null}
         {!archived ? (
           <button
             className="btn btn-secondary btn-sm"

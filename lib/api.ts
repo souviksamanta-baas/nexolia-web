@@ -205,8 +205,18 @@ export interface AdminOrganization {
   ownerEmail?: string;
   plan: string;
   planSlug?: string;
+  planPriceMonthly?: number | null;
+  planPriceAnnual?: number | null;
+  billingCycle?: BillingCycle;
   members: number;
-  status: "active" | "trial" | "paused" | "suspended" | "deleted" | string;
+  status:
+    | "active"
+    | "trial"
+    | "pending_payment"
+    | "paused"
+    | "suspended"
+    | "deleted"
+    | string;
   licenseExpiresAt?: string;
   archivedAt?: string | null;
   /** Present for hard-deleted tombstones reconstructed from admin audit. */
@@ -307,6 +317,27 @@ export const adminApi = {
     apiFetch<AdminPayment>(`/admin/payments/${paymentId}/confirm`, {
       token,
       method: "POST",
+    }),
+
+  confirmOrganizationPayment: (
+    token: string,
+    orgId: string,
+    input?: {
+      amount?: number;
+      method?: "transfer" | "cash";
+      reference?: string;
+      notes?: string;
+    },
+  ) =>
+    apiFetch<{
+      organizationId: string;
+      paymentId: string;
+      status: "active";
+      licensedUntil: string;
+    }>(`/admin/organizations/${orgId}/confirm-payment`, {
+      token,
+      method: "POST",
+      body: input ?? {},
     }),
 
   createOrganization: (
