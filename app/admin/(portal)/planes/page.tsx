@@ -1,22 +1,68 @@
 import type { Metadata } from "next";
 import { getServerAccessToken } from "@/lib/supabase/server";
-import { adminApi, type AdminPlan } from "@/lib/api";
+import {
+  adminApi,
+  type AdminOrganization,
+  type AdminPlan,
+} from "@/lib/api";
 import { headers } from "next/headers";
 import { adminHref } from "@/lib/admin-paths";
+import { formatARS, formatDateAR } from "@/lib/formatters";
 import { PlanesEditor } from "@/components/admin/PlanesEditor";
+import {
+  orgLifecycleBadgeClass,
+  orgLifecycleLabel,
+  resolveOrgLifecycleState,
+} from "@/lib/org-lifecycle-state";
 
 export const metadata: Metadata = { title: "Planes y suscripciones — Admin" };
 
 export const dynamic = "force-dynamic";
 
+function subscriptionAmount(org: AdminOrganization): string {
+  const cycle = org.billingCycle === "annual" ? "annual" : "monthly";
+  const amount =
+    cycle === "annual" ? org.planPriceAnnual : org.planPriceMonthly;
+  if (amount == null || amount <= 0) {
+    return "A medida";
+  }
+  return `${formatARS(amount)}${cycle === "annual" ? " / año" : " / mes"}`;
+}
+
+function cycleLabel(org: AdminOrganization): string {
+  if (org.billingCycle === "annual") return "Anual";
+  if (org.billingCycle === "monthly") return "Mensual";
+  return "—";
+}
+
+function nextChargeLabel(org: AdminOrganization): string {
+  const state = resolveOrgLifecycleState(org);
+  if (state === "pending_payment") return "Pendiente";
+  if (state === "paused" || state === "archived" || state === "deleted") {
+    return "—";
+  }
+  if (!org.licenseExpiresAt) return "—";
+  return formatDateAR(org.licenseExpiresAt);
+}
+
 export default async function PlanesPage() {
   const host = (await headers()).get("host");
   const token = await getServerAccessToken();
   let plans: AdminPlan[] = [];
+  let subscriptions: AdminOrganization[] = [];
   let loadError = false;
+
   if (token) {
     try {
-      plans = await adminApi.plans(token);
+      const [planRows, orgRows] = await Promise.all([
+        adminApi.plans(token),
+        adminApi.organizations(token),
+      ]);
+      plans = planRows;
+      subscriptions = orgRows.filter((org) => {
+        const state = resolveOrgLifecycleState(org);
+        return state !== "deleted";
+      });
     } catch {
       loadError = true;
     }
@@ -63,9 +109,31 @@ export default async function PlanesPage() {
               </tr>
             </thead>
             <tbody>
-              <tr>
-                <td colSpan={6}>No hay suscripciones para mostrar.</td>
-              </tr>
+              {subscriptions.length === 0 ? (
+                <tr>
+                  <td colSpan={6}>No hay suscripciones para mostrar.</td>
+                </tr>
+              ) : (
+                subscriptions.map((org) => {
+                  const state = resolveOrgLifecycleState(org);
+                  return (
+                    <tr key={org.id}>
+                      <td>
+                        <strong>{org.name}</strong>
+                      </td>
+                      <td>{org.plan || "—"}</td>
+                      <td>{cycleLabel(org)}</td>
+                      <td>{subscriptionAmount(org)}</td>
+                      <td>
+                        <span className={orgLifecycleBadgeClass(state)}>
+                          {orgLifecycleLabel(state)}
+                        </span>
+                      </td>
+                      <td>{nextChargeLabel(org)}</td>
+                    </tr>
+                  );
+                })
+              )}
             </tbody>
           </table>
         </div>
