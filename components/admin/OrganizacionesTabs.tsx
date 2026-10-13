@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import type { AdminOrganization } from "@/lib/api";
+import type { AdminOrganization, AdminUser } from "@/lib/api";
 import {
   orgLifecycleBadgeClass,
   orgLifecycleLabel,
@@ -9,12 +9,25 @@ import {
   resolveOrgLifecycleState,
 } from "@/lib/org-lifecycle-state";
 
-interface UserRow {
-  id: string;
-  name: string;
-  email: string;
-  org: string;
-  role: string;
+function roleLabel(role: string): string {
+  switch (role) {
+    case "owner":
+      return "Propietario";
+    case "co_owner":
+      return "Co-propietario";
+    case "manager":
+      return "Gerente";
+    case "staff":
+      return "Equipo";
+    default:
+      return role || "—";
+  }
+}
+
+function loginMethodLabel(method: string): string {
+  if (method === "email") return "Email";
+  if (method === "phone") return "Teléfono";
+  return "—";
 }
 
 /** Days since org creation for trial / pending_payment; otherwise null. */
@@ -35,7 +48,7 @@ export function OrganizacionesTabs({
   onSelectOrg,
 }: {
   orgs: AdminOrganization[];
-  users: UserRow[];
+  users: AdminUser[];
   selectedOrgId?: string;
   onSelectOrg?: (orgId: string) => void;
 }) {
@@ -131,22 +144,36 @@ export function OrganizacionesTabs({
             <thead>
               <tr>
                 <th>Usuario</th>
-                <th>Email</th>
+                <th>Contacto</th>
+                <th>Acceso</th>
                 <th>Org</th>
                 <th>Rol</th>
               </tr>
             </thead>
             <tbody>
-              {users.map((u, idx) => (
-                <tr key={u.id} className={idx === 0 ? "is-active" : undefined}>
-                  <td>
-                    <strong>{u.name}</strong>
-                  </td>
-                  <td>{u.email}</td>
-                  <td>{u.org}</td>
-                  <td>{u.role}</td>
+              {users.length === 0 ? (
+                <tr>
+                  <td colSpan={5}>No hay usuarios para mostrar.</td>
                 </tr>
-              ))}
+              ) : (
+                users.map((u) => (
+                  <tr key={u.id}>
+                    <td>
+                      <strong>{u.name}</strong>
+                      {u.status === "pending" ? (
+                        <>
+                          {" "}
+                          <span className="badge badge-warn">Pendiente</span>
+                        </>
+                      ) : null}
+                    </td>
+                    <td>{u.contact || "—"}</td>
+                    <td>{loginMethodLabel(u.loginMethod)}</td>
+                    <td>{u.org}</td>
+                    <td>{roleLabel(u.role)}</td>
+                  </tr>
+                ))
+              )}
             </tbody>
           </table>
         </div>

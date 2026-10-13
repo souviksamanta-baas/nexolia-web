@@ -230,6 +230,19 @@ export interface AdminOrganization {
   deletedAt?: string | null;
 }
 
+export interface AdminUser {
+  id: string;
+  name: string;
+  email: string | null;
+  phone: string | null;
+  contact: string;
+  loginMethod: "email" | "phone" | "unknown" | string;
+  org: string;
+  orgId: string;
+  role: string;
+  status: "active" | "pending" | string;
+}
+
 export interface AdminLlmCredentialStatus {
   lastError: string | null;
   monthlySpendLimitUsd: number | null;
@@ -286,6 +299,9 @@ export const adminApi = {
 
   organizations: (token: string) =>
     apiFetch<AdminOrganization[]>("/admin/organizations", { token, cache: "no-store" }),
+
+  users: (token: string) =>
+    apiFetch<AdminUser[]>("/admin/users", { token, cache: "no-store" }),
 
   plans: (token: string) =>
     apiFetch<AdminPlan[]>("/admin/plans", { token, cache: "no-store" }),

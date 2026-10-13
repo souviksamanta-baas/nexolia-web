@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import type { AdminOrganization } from "@/lib/api";
+import type { AdminOrganization, AdminUser } from "@/lib/api";
 import { initialsFrom } from "@/lib/formatters";
 import {
   orgLifecycleBadgeClass,
@@ -11,14 +11,6 @@ import {
 import { ProvisionOpenAiKeyButton } from "@/components/admin/ProvisionOpenAiKeyButton";
 import { OrgLifecycleActions } from "@/components/admin/OrgLifecycleActions";
 import { OrganizacionesTabs } from "@/components/admin/OrganizacionesTabs";
-
-interface UserRow {
-  id: string;
-  name: string;
-  email: string;
-  org: string;
-  role: string;
-}
 
 function StatusBadge({ org }: { org: AdminOrganization }) {
   const state = resolveOrgLifecycleState(org);
@@ -49,7 +41,7 @@ export function OrganizacionesWorkspace({
   staffRole,
 }: {
   orgs: AdminOrganization[];
-  users: UserRow[];
+  users: AdminUser[];
   clientesHref: string;
   staffRole: string;
 }) {

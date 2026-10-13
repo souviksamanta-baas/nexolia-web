@@ -4,10 +4,13 @@ import { getServerAccessToken } from "@/lib/supabase/server";
 import { adminApi, type DashboardResponse } from "@/lib/api";
 import { headers } from "next/headers";
 import { adminHref } from "@/lib/admin-paths";
+import { formatARS } from "@/lib/formatters";
 
 export const metadata: Metadata = {
   title: "Dashboard — Admin",
 };
+
+export const dynamic = "force-dynamic";
 
 const EMPTY: DashboardResponse = {
   kpis: [],
@@ -31,6 +34,8 @@ export default async function DashboardPage() {
     loadError = true;
   }
   const view = data ?? EMPTY;
+  const maxPayment = Math.max(0, ...view.paymentsByDay.map((p) => p.total));
+  const hasPaymentActivity = view.paymentsByDay.some((p) => p.total > 0);
 
   return (
     <>
@@ -81,16 +86,38 @@ export default async function DashboardPage() {
             aria-label="Gráfico de pagos confirmados"
           >
             <div className="chart-label">Pagos confirmados (últimos 30 días)</div>
-            {view.paymentsByDay.length === 0 ? (
-              <p>No hay pagos para mostrar.</p>
+            {!hasPaymentActivity ? (
+              <p>No hay pagos confirmados en los últimos 30 días.</p>
             ) : (
-              view.paymentsByDay.map((point, idx) => (
-                <div
-                  key={`${point.day}-${idx}`}
-                  className="bar"
-                  style={{ height: `${Math.min(100, Math.max(10, point.total))}%` }}
-                />
-              ))
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "flex-end",
+                  gap: 4,
+                  height: 140,
+                  marginTop: 12,
+                }}
+              >
+                {view.paymentsByDay.map((point, idx) => {
+                  const heightPct =
+                    maxPayment > 0
+                      ? Math.max(4, Math.round((point.total / maxPayment) * 100))
+                      : 4;
+                  return (
+                    <div
+                      key={`${point.day}-${idx}`}
+                      className="bar"
+                      title={`${point.day}: ${formatARS(point.total)}`}
+                      style={{
+                        height: `${heightPct}%`,
+                        flex: 1,
+                        minWidth: 2,
+                        opacity: point.total > 0 ? 1 : 0.25,
+                      }}
+                    />
+                  );
+                })}
+              </div>
             )}
           </div>
         </div>
@@ -125,8 +152,11 @@ export default async function DashboardPage() {
       <div className="card" style={{ padding: 0, overflow: "hidden" }}>
         <div className="panel-toolbar">
           <h2 style={{ margin: 0, flex: 1 }}>Clientes recientes</h2>
-          <Link className="btn btn-secondary btn-sm" href={adminHref("/clientes", { host })}>
-            Ver todos
+          <Link
+            className="btn btn-secondary btn-sm"
+            href={adminHref("/organizaciones", { host })}
+          >
+            Ver organizaciones
           </Link>
         </div>
         <div className="table-wrap">
@@ -148,7 +178,9 @@ export default async function DashboardPage() {
                 view.recentClients.map((client) => (
                   <tr key={client.id}>
                     <td>
-                      <Link href={adminHref("/clientes", { host })}>{client.name}</Link>
+                      <Link href={adminHref("/organizaciones", { host })}>
+                        {client.name}
+                      </Link>
                     </td>
                     <td>{client.plan}</td>
                     <td>
@@ -171,7 +203,7 @@ function StatusBadge({ status }: { status: string }) {
   if (s.includes("activo")) return <span className="badge badge-green">{status}</span>;
   if (s.includes("pend") || s.includes("prueba") || s.includes("vencer"))
     return <span className="badge badge-warn">{status}</span>;
-  if (s.includes("susp") || s.includes("baja"))
+  if (s.includes("susp") || s.includes("baja") || s.includes("paus"))
     return <span className="badge badge-danger">{status}</span>;
   return <span className="badge badge-navy">{status}</span>;
 }

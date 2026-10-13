@@ -1,6 +1,10 @@
 import type { Metadata } from "next";
 import { getServerAccessToken } from "@/lib/supabase/server";
-import { adminApi, type AdminOrganization } from "@/lib/api";
+import {
+  adminApi,
+  type AdminOrganization,
+  type AdminUser,
+} from "@/lib/api";
 import { OrganizacionesWorkspace } from "@/components/admin/OrganizacionesWorkspace";
 import { headers } from "next/headers";
 import { adminHref } from "@/lib/admin-paths";
@@ -13,6 +17,7 @@ export default async function OrganizacionesPage() {
   const host = (await headers()).get("host");
   const token = await getServerAccessToken();
   let orgs: AdminOrganization[] = [];
+  let users: AdminUser[] = [];
   let staffRole = "admin";
   let loadError: string | null = null;
 
@@ -20,11 +25,13 @@ export default async function OrganizacionesPage() {
     loadError = "Iniciá sesión para ver las organizaciones.";
   } else {
     try {
-      const [orgRows, me] = await Promise.all([
+      const [orgRows, userRows, me] = await Promise.all([
         adminApi.organizations(token),
+        adminApi.users(token),
         adminApi.me(token),
       ]);
       orgs = orgRows;
+      users = userRows;
       staffRole = me.role || "admin";
     } catch (err) {
       loadError =
@@ -33,20 +40,6 @@ export default async function OrganizacionesPage() {
           : "No pudimos cargar las organizaciones desde la API.";
     }
   }
-
-  const users = orgs.flatMap((org) =>
-    org.deletedAt || org.status === "deleted" || !org.ownerEmail
-      ? []
-      : [
-          {
-            id: `${org.id}-owner`,
-            name: org.ownerName || org.ownerEmail.split("@")[0],
-            email: org.ownerEmail,
-            org: org.name,
-            role: "Owner",
-          },
-        ],
-  );
 
   return (
     <>
