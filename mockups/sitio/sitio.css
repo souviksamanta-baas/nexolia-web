@@ -901,6 +901,10 @@ a.footer-icon:hover {
 
 .footer-icon-threads svg {
   display: block;
+  width: 18px;
+  height: 18px;
+  overflow: visible;
+  flex-shrink: 0;
 }
 
 .footer-social-icons {
