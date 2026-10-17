@@ -68,8 +68,7 @@ img {
   position: sticky;
   top: 0;
   z-index: 40;
-  display: grid;
-  grid-template-columns: 1fr auto 1fr;
+  display: flex;
   align-items: center;
   gap: 1rem;
   padding: 1rem 2.5rem;
@@ -80,11 +79,12 @@ img {
 }
 
 .sitio-header .brand {
-  grid-column: 1;
-  justify-self: start;
+  position: relative;
+  z-index: 1;
   display: inline-flex;
   align-items: center;
   min-width: 0;
+  flex-shrink: 0;
 }
 
 .sitio-header .logo {
@@ -93,55 +93,13 @@ img {
   display: block;
 }
 
-.sitio-menu {
-  display: contents;
-}
-
-.sitio-nav {
-  grid-column: 2;
-  display: flex;
-  gap: 1.75rem;
-  justify-self: center;
-}
-
-.sitio-nav a {
-  color: var(--navy);
-  font-weight: 500;
-  font-size: 0.94rem;
-  text-decoration: none;
-}
-
-.sitio-nav a:hover,
-.sitio-nav a.is-active {
-  color: var(--navy);
-  text-decoration: underline;
-  text-underline-offset: 0.28em;
-}
-
-.sitio-actions {
-  grid-column: 3;
-  justify-self: end;
-  display: flex;
-  align-items: center;
-  gap: 0.65rem;
-}
-
-.sitio-header .btn-ghost:disabled,
-.sitio-header .btn-ghost[aria-disabled="true"] {
-  opacity: 0.55;
-  color: var(--navy);
-}
-
-.sitio-header .btn-primary {
-  border-radius: 8px;
-}
-
 .sitio-menu-toggle {
   display: none;
   align-items: center;
   justify-content: center;
   width: 44px;
   height: 44px;
+  margin-left: auto;
   padding: 0;
   border: 1px solid rgba(16, 25, 53, 0.12);
   border-radius: 10px;
@@ -200,17 +158,59 @@ img {
   transform: rotate(-45deg);
 }
 
+.sitio-menu {
+  display: flex;
+  align-items: center;
+  flex: 1;
+  min-width: 0;
+  justify-content: flex-end;
+}
+
+.sitio-nav {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 1.75rem;
+}
+
+.sitio-nav a {
+  color: var(--navy);
+  font-weight: 500;
+  font-size: 0.94rem;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.sitio-nav a:hover,
+.sitio-nav a.is-active {
+  color: var(--navy);
+  text-decoration: underline;
+  text-underline-offset: 0.28em;
+}
+
+.sitio-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  flex-shrink: 0;
+}
+
+.sitio-header .btn-ghost:disabled,
+.sitio-header .btn-ghost[aria-disabled="true"] {
+  opacity: 0.55;
+  color: var(--navy);
+}
+
+.sitio-header .btn-primary {
+  border-radius: 8px;
+}
+
 @media (max-width: 960px) {
   .sitio-header {
-    display: flex;
     flex-wrap: wrap;
-    align-items: center;
     gap: 0;
     padding: 0.75rem 1rem;
-  }
-
-  .sitio-header .brand {
-    justify-self: unset;
   }
 
   .sitio-header .logo {
@@ -219,19 +219,20 @@ img {
 
   .sitio-menu-toggle {
     display: inline-flex;
-    margin-left: auto;
   }
 
   .sitio-menu {
     display: none;
     flex-direction: column;
     align-items: stretch;
+    flex: none;
     flex-basis: 100%;
     width: 100%;
     margin-top: 0.75rem;
     padding: 0.35rem 0 0.65rem;
     border-top: 1px solid rgba(228, 235, 239, 0.9);
     gap: 0.35rem;
+    justify-content: flex-start;
   }
 
   .sitio-header.is-menu-open .sitio-menu {
@@ -239,11 +240,12 @@ img {
   }
 
   .sitio-nav {
-    grid-column: unset;
+    position: static;
+    left: auto;
+    transform: none;
     flex-direction: column;
     align-items: stretch;
     gap: 0.15rem;
-    justify-self: unset;
     width: 100%;
   }
 
@@ -253,6 +255,7 @@ img {
     font-size: 1.05rem;
     font-weight: 600;
     border-radius: 10px;
+    white-space: normal;
   }
 
   .sitio-nav a:hover,
@@ -262,12 +265,10 @@ img {
   }
 
   .sitio-actions {
-    grid-column: unset;
-    justify-self: unset;
     flex-direction: column;
     align-items: stretch;
     gap: 0.55rem;
-    margin: 0.5rem 0 0;
+    margin-top: 0.5rem;
     padding-top: 0.65rem;
     border-top: 1px solid rgba(228, 235, 239, 0.9);
     width: 100%;
