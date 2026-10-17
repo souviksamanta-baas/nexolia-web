@@ -102,6 +102,23 @@
   });
 
   /* Billing toggle */
+  function planCtaHref(slug, period) {
+    var s = String(slug || "").toLowerCase();
+    if (s === "enterprise") return "/contacto";
+    if (s !== "basico" && s !== "pro") return "/comenzar";
+    var ciclo = period === "annual" ? "annual" : "monthly";
+    return "/comenzar?plan=" + encodeURIComponent(s) + "&ciclo=" + ciclo;
+  }
+
+  function syncPlanCtas(period) {
+    qsa("[data-plans-row] [data-plan-slug]").forEach(function (card) {
+      var cta = qs("[data-plan-cta]", card);
+      if (!cta) return;
+      var slug = card.getAttribute("data-plan-slug") || "";
+      cta.href = planCtaHref(slug, period);
+    });
+  }
+
   function applyBillingPeriod(period) {
     qsa("[data-price]").forEach(function (el) {
       el.textContent =
@@ -112,6 +129,7 @@
     qsa("[data-period-label]").forEach(function (el) {
       el.textContent = period === "annual" ? "/ año" : "/ mes";
     });
+    syncPlanCtas(period);
   }
 
   var toggle = qs("[data-billing-toggle]");
@@ -253,10 +271,10 @@
 
       if (cta) {
         if (slug === "enterprise") {
-          cta.href = "contacto.html";
+          cta.href = planCtaHref(slug, activePeriod());
           cta.textContent = "Consultá Enterprise →";
         } else {
-          cta.href = "../comenzar/paso-1.html";
+          cta.href = planCtaHref(slug, activePeriod());
           cta.textContent = "Elegir plan →";
         }
       }

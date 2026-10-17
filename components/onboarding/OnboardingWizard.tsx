@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import {
   checkOrgName,
   fetchPublicPlans,
@@ -207,14 +208,56 @@ function firstChargeAmount(params: {
   return Math.round(params.monthly * (discountedMonths + fullMonths));
 }
 
+type PlanId = Plan["id"];
+
+function parsePlanId(raw: string | null): PlanId | null {
+  const slug = (raw ?? "").trim().toLowerCase();
+  if (slug === "basico" || slug === "pro" || slug === "enterprise") return slug;
+  return null;
+}
+
+function parseCiclo(raw: string | null): BillingCycle | null {
+  const ciclo = (raw ?? "").trim().toLowerCase();
+  if (ciclo === "monthly" || ciclo === "annual") return ciclo;
+  return null;
+}
+
 /**
  * Keep Copi tier / Multisucursal and plan in sync:
  * - Copi Pro → at least plan Pro (keep Enterprise if already chosen)
  * - Plan Pro / Enterprise → Copi Pro (plan entitlement)
  * - Varias sucursales ↔ Enterprise
+ * When lockPlan is set (from /suscripciones), never change the plan — align Copi/modules instead.
  */
-function syncPlanAndCopi(form: FormState): FormState {
-  let next = form;
+function syncPlanAndCopi(
+  form: FormState,
+  opts?: { lockPlan?: PlanId | null },
+): FormState {
+  const lock = opts?.lockPlan ?? null;
+  let next = lock ? { ...form, plan: lock } : form;
+
+  if (lock) {
+    if (planIncludesCopiPro(lock)) {
+      if (!hasCopiProSelection(next.servicios)) {
+        next = {
+          ...next,
+          servicios: applyCopiTierSelection(next.servicios, "pro"),
+        };
+      }
+    } else if (hasCopiProSelection(next.servicios)) {
+      next = {
+        ...next,
+        servicios: applyCopiTierSelection(next.servicios, "basic"),
+      };
+    }
+    if (!planIncludesMultiSucursales(lock)) {
+      next = {
+        ...next,
+        servicios: next.servicios.filter((key) => key !== "multi_sucursales"),
+      };
+    }
+    return next;
+  }
 
   if (hasCopiProSelection(next.servicios)) {
     if (next.plan !== "pro" && next.plan !== "enterprise") {
@@ -240,6 +283,15 @@ function syncPlanAndCopi(form: FormState): FormState {
 }
 
 type Step = 1 | 2 | 3 | 4 | 5;
+
+function stepProgress(step: Step, skipPlanStep: boolean): {
+  current: number;
+  total: number;
+} {
+  if (!skipPlanStep) return { current: step, total: 5 };
+  const map: Record<Step, number> = { 1: 1, 2: 2, 3: 3, 4: 3, 5: 4 };
+  return { current: map[step], total: 4 };
+}
 
 interface FormState {
   email: string;
@@ -267,13 +319,36 @@ const initialState: FormState = {
 };
 
 export function OnboardingWizard() {
+  const searchParams = useSearchParams();
+  const lockedPlan = useMemo(
+    () => parsePlanId(searchParams.get("plan")),
+    [searchParams],
+  );
+  const skipPlanStep = lockedPlan != null;
+  const urlCiclo = useMemo(
+    () => parseCiclo(searchParams.get("ciclo")),
+    [searchParams],
+  );
+
   const [step, setStep] = useState<Step>(1);
-  const [form, setForm] = useState<FormState>(initialState);
+  const [form, setForm] = useState<FormState>(() =>
+    syncPlanAndCopi(
+      {
+        ...initialState,
+        plan: lockedPlan ?? initialState.plan,
+        ciclo: urlCiclo ?? initialState.ciclo,
+      },
+      { lockPlan: lockedPlan },
+    ),
+  );
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [leadId, setLeadId] = useState<string | null>(null);
   const [submitted, setSubmitted] = useState(false);
   const [plans, setPlans] = useState<Plan[]>(DEFAULT_PLANS);
+
+  const syncForm = (next: FormState) =>
+    syncPlanAndCopi(next, { lockPlan: lockedPlan });
 
   useEffect(() => {
     let cancelled = false;
@@ -295,6 +370,10 @@ export function OnboardingWizard() {
     };
   }, []);
 
+  useEffect(() => {
+    if (skipPlanStep && step === 4) setStep(5);
+  }, [skipPlanStep, step]);
+
   const selectedPlan = useMemo(
     () => plans.find((p) => p.id === form.plan) ?? plans[0] ?? DEFAULT_PLANS[0],
     [form.plan, plans],
@@ -305,12 +384,14 @@ export function OnboardingWizard() {
     return pro?.monthly && pro.monthly > 0 ? pro.monthly : 85_000;
   }, [plans]);
 
+  const progress = stepProgress(step, skipPlanStep);
+
   const toggleService = (id: FeatureFlagKey) => {
     setForm((f) => {
       const servicios = f.servicios.includes(id)
         ? f.servicios.filter((s) => s !== id)
         : [...f.servicios, id];
-      return syncPlanAndCopi({ ...f, servicios });
+      return syncForm({ ...f, servicios });
     });
   };
 
@@ -321,7 +402,7 @@ export function OnboardingWizard() {
         if (selected) set.add(key);
         else set.delete(key);
       }
-      return syncPlanAndCopi({
+      return syncForm({
         ...f,
         servicios: Array.from(set),
       });
@@ -332,14 +413,15 @@ export function OnboardingWizard() {
     setForm((f) => {
       // Choosing Copi básico while on Pro/Enterprise keeps the plan but Copi
       // stays Pro (plan entitlement). Downgrade plan first if they want básico.
-      if (tier === "basic" && planIncludesCopiPro(f.plan)) {
-        return syncPlanAndCopi({
+      // When the plan is locked from Suscripciones, never change the plan.
+      if (tier === "basic" && planIncludesCopiPro(f.plan) && !lockedPlan) {
+        return syncForm({
           ...f,
           plan: "basico",
           servicios: applyCopiTierSelection(f.servicios, "basic"),
         });
       }
-      return syncPlanAndCopi({
+      return syncForm({
         ...f,
         servicios: applyCopiTierSelection(f.servicios, tier),
       });
@@ -347,6 +429,7 @@ export function OnboardingWizard() {
   };
 
   const setPlan = (plan: Plan["id"]) => {
+    if (lockedPlan) return;
     setForm((f) => {
       let next: FormState = { ...f, plan };
       if (!planIncludesMultiSucursales(plan)) {
@@ -355,7 +438,7 @@ export function OnboardingWizard() {
           servicios: next.servicios.filter((key) => key !== "multi_sucursales"),
         };
       }
-      return syncPlanAndCopi(next);
+      return syncForm(next);
     });
   };
 
@@ -429,10 +512,15 @@ export function OnboardingWizard() {
 
   return (
     <>
-      <StepsBar step={step} />
+      <StepsBar step={step} skipPlanStep={skipPlanStep} />
 
       <div className="onboard-layout">
-        <RailList step={step} form={form} selectedPlan={selectedPlan} />
+        <RailList
+          step={step}
+          form={form}
+          selectedPlan={selectedPlan}
+          skipPlanStep={skipPlanStep}
+        />
 
         <div className="onboard-main-inner">
           <div className="onboard-card">
@@ -440,6 +528,7 @@ export function OnboardingWizard() {
               <StepBusiness
                 form={form}
                 setForm={setForm}
+                progress={progress}
                 onNext={() => setStep(2)}
               />
             )}
@@ -448,6 +537,7 @@ export function OnboardingWizard() {
                 form={form}
                 toggleService={toggleService}
                 setServiceSelection={setServiceSelection}
+                progress={progress}
                 onBack={() => setStep(1)}
                 onNext={() => setStep(3)}
               />
@@ -456,19 +546,22 @@ export function OnboardingWizard() {
               <StepCopi
                 form={form}
                 setCopiTier={setCopiTier}
+                progress={progress}
+                lockedPlan={lockedPlan}
                 onBack={() => setStep(2)}
                 onNext={() => {
-                  setForm((f) => syncPlanAndCopi(f));
-                  setStep(4);
+                  setForm((f) => syncForm(f));
+                  setStep(skipPlanStep ? 5 : 4);
                 }}
               />
             )}
-            {step === 4 && (
+            {step === 4 && !skipPlanStep && (
               <StepPlan
                 form={form}
                 plans={plans}
                 setPlan={setPlan}
                 setCiclo={(ciclo) => setForm((f) => ({ ...f, ciclo }))}
+                progress={progress}
                 onBack={() => setStep(3)}
                 onNext={() => {
                   setError(null);
@@ -481,6 +574,7 @@ export function OnboardingWizard() {
                 form={form}
                 plan={selectedPlan}
                 proBaseMonthly={proBaseMonthly}
+                progress={progress}
                 setDiscountCode={(discountCode) =>
                   setForm((f) => ({ ...f, discountCode }))
                 }
@@ -491,10 +585,19 @@ export function OnboardingWizard() {
                 submitted={submitted}
                 leadId={leadId}
                 error={error}
-                onBack={() => setStep(4)}
+                onBack={() => setStep(skipPlanStep ? 3 : 4)}
                 onSubmit={submit}
                 onReset={() => {
-                  setForm(initialState);
+                  setForm(
+                    syncPlanAndCopi(
+                      {
+                        ...initialState,
+                        plan: lockedPlan ?? initialState.plan,
+                        ciclo: urlCiclo ?? initialState.ciclo,
+                      },
+                      { lockPlan: lockedPlan },
+                    ),
+                  );
                   setStep(1);
                   setLeadId(null);
                   setError(null);
@@ -509,12 +612,18 @@ export function OnboardingWizard() {
   );
 }
 
-function StepsBar({ step }: { step: Step }) {
+function StepsBar({
+  step,
+  skipPlanStep,
+}: {
+  step: Step;
+  skipPlanStep: boolean;
+}) {
   const items: { label: string; index: Step }[] = [
     { label: "Tu negocio", index: 1 },
     { label: "Servicios", index: 2 },
     { label: "Copi", index: 3 },
-    { label: "Plan", index: 4 },
+    ...(skipPlanStep ? [] : [{ label: "Plan", index: 4 as Step }]),
     { label: "Facturación", index: 5 },
   ];
   return (
@@ -537,10 +646,12 @@ function RailList({
   step,
   form,
   selectedPlan,
+  skipPlanStep,
 }: {
   step: Step;
   form: FormState;
   selectedPlan: Plan;
+  skipPlanStep: boolean;
 }) {
   const serviceKeys = form.servicios.filter((k) =>
     selectableServiceKeys().includes(k),
@@ -558,18 +669,20 @@ function RailList({
   const copiLabel =
     copiTier === "pro" ? "Copi · Copi Pro" : "Copi · Copi básico";
 
+  const planDone = skipPlanStep || step >= 4;
+  const planCurrent = !skipPlanStep && step === 4;
   const planLabel =
-    step >= 5
+    planDone || planCurrent
       ? selectedPlan.customPriceLabel
         ? `Plan ${selectedPlan.name} · a medida`
-        : `Plan ${selectedPlan.name} · ${formatARS(
-            form.ciclo === "annual"
-              ? (selectedPlan.annual ?? 0)
-              : (selectedPlan.monthly ?? 0),
-          )}${form.ciclo === "annual" ? "/año" : "/mes"}`
-      : step >= 4
-        ? `Plan ${selectedPlan.name}`
-        : "Plan · pendiente";
+        : step >= 5 || skipPlanStep
+          ? `Plan ${selectedPlan.name} · ${formatARS(
+              form.ciclo === "annual"
+                ? (selectedPlan.annual ?? 0)
+                : (selectedPlan.monthly ?? 0),
+            )}${form.ciclo === "annual" ? "/año" : "/mes"}`
+          : `Plan ${selectedPlan.name}`
+      : "Plan · pendiente";
 
   return (
     <aside className="onboard-rail">
@@ -591,10 +704,22 @@ function RailList({
         <li className={step >= 3 ? "is-done" : step === 2 ? "is-current" : ""}>
           {step >= 2 ? serviciosLabel : "Servicios · pendiente"}
         </li>
-        <li className={step >= 4 ? "is-done" : step === 3 ? "is-current" : ""}>
+        <li
+          className={
+            step >= 4 || (skipPlanStep && step >= 3)
+              ? "is-done"
+              : step === 3
+                ? "is-current"
+                : ""
+          }
+        >
           {step >= 3 ? copiLabel : "Copi · pendiente"}
         </li>
-        <li className={step === 5 ? "is-done" : step === 4 ? "is-current" : ""}>
+        <li
+          className={
+            step === 5 ? "is-done" : planCurrent ? "is-current" : planDone ? "is-done" : ""
+          }
+        >
           {planLabel}
         </li>
       </ul>
@@ -605,10 +730,12 @@ function RailList({
 function StepBusiness({
   form,
   setForm,
+  progress,
   onNext,
 }: {
   form: FormState;
   setForm: React.Dispatch<React.SetStateAction<FormState>>;
+  progress: { current: number; total: number };
   onNext: () => void;
 }) {
   const [checking, setChecking] = useState(false);
@@ -650,7 +777,8 @@ function StepBusiness({
     <>
       <h1>Contanos sobre tu negocio</h1>
       <p className="secondary">
-        Paso 1 de 5 — empezamos con lo básico para armar tu cuenta.
+        Paso {progress.current} de {progress.total} — empezamos con lo básico
+        para armar tu cuenta.
       </p>
       <form onSubmit={(e) => void handleNext(e)}>
         <div className="field">
@@ -792,12 +920,14 @@ function StepServices({
   form,
   toggleService,
   setServiceSelection,
+  progress,
   onBack,
   onNext,
 }: {
   form: FormState;
   toggleService: (id: FeatureFlagKey) => void;
   setServiceSelection: (keys: FeatureFlagKey[], selected: boolean) => void;
+  progress: { current: number; total: number };
   onBack: () => void;
   onNext: () => void;
 }) {
@@ -808,8 +938,8 @@ function StepServices({
     <>
       <h1>¿Qué módulos necesitás?</h1>
       <p className="secondary">
-        Paso 2 de 5 — elegí los servicios para tu negocio. Podés cambiar estas
-        selecciones más adelante.
+        Paso {progress.current} de {progress.total} — elegí los servicios para tu
+        negocio. Podés cambiar estas selecciones más adelante.
       </p>
 
       <label
@@ -867,22 +997,28 @@ function StepServices({
 function StepCopi({
   form,
   setCopiTier,
+  progress,
+  lockedPlan,
   onBack,
   onNext,
 }: {
   form: FormState;
   setCopiTier: (tier: CopiTierId) => void;
+  progress: { current: number; total: number };
+  lockedPlan: PlanId | null;
   onBack: () => void;
   onNext: () => void;
 }) {
   const selectedTier = copiTierFromSelection(form.servicios);
+  const lockRequiresPro = lockedPlan != null && planIncludesCopiPro(lockedPlan);
+  const lockForbidsPro = lockedPlan != null && !planIncludesCopiPro(lockedPlan);
 
   return (
     <>
       <h1>Copi, tu asistente</h1>
       <p className="secondary">
-        Paso 3 de 5 — elegí cómo querés que Copi te ayude. Después lo podés
-        cambiar.
+        Paso {progress.current} de {progress.total} — elegí cómo querés que Copi
+        te ayude. Después lo podés cambiar.
       </p>
       <p className="hint" style={{ marginBottom: "1.25rem", maxWidth: "42rem" }}>
         Copi es el asistente de Nexolia: te responde sobre tu negocio (ventas,
@@ -899,17 +1035,26 @@ function StepCopi({
         <div className="service-grid">
           {COPI_TIER_OPTIONS.map((option) => {
             const selected = selectedTier === option.id;
+            const disabled =
+              (option.id === "pro" && lockForbidsPro) ||
+              (option.id === "basic" && lockRequiresPro);
             return (
               <label
                 key={option.id}
-                className={`service-card${selected ? " is-selected" : ""}`}
+                className={`service-card${selected ? " is-selected" : ""}${
+                  disabled ? " is-disabled" : ""
+                }`}
+                aria-disabled={disabled || undefined}
               >
                 <input
                   type="radio"
                   name="copi-tier"
                   value={option.id}
                   checked={selected}
-                  onChange={() => setCopiTier(option.id)}
+                  disabled={disabled}
+                  onChange={() => {
+                    if (!disabled) setCopiTier(option.id);
+                  }}
                 />
                 <div>
                   <strong>{option.title}</strong>
@@ -953,6 +1098,7 @@ function StepPlan({
   plans,
   setPlan,
   setCiclo,
+  progress,
   onBack,
   onNext,
 }: {
@@ -960,6 +1106,7 @@ function StepPlan({
   plans: Plan[];
   setPlan: (plan: Plan["id"]) => void;
   setCiclo: (ciclo: BillingCycle) => void;
+  progress: { current: number; total: number };
   onBack: () => void;
   onNext: () => void;
 }) {
@@ -967,8 +1114,9 @@ function StepPlan({
     <>
       <h1>Elegí tu plan</h1>
       <p className="secondary">
-        Paso 4 de 5 — incluye <strong>{TRIAL_DAYS} días de prueba</strong> al
-        crear tu organización. Enterprise se cotiza según tus requisitos.
+        Paso {progress.current} de {progress.total} — incluye{" "}
+        <strong>{TRIAL_DAYS} días de prueba</strong> al crear tu organización.
+        Enterprise se cotiza según tus requisitos.
       </p>
 
       <div
@@ -1086,6 +1234,7 @@ function StepBillingConfirm({
   form,
   plan,
   proBaseMonthly,
+  progress,
   setDiscountCode,
   setEnterpriseSizing,
   submitting,
@@ -1099,6 +1248,7 @@ function StepBillingConfirm({
   form: FormState;
   plan: Plan;
   proBaseMonthly: number;
+  progress: { current: number; total: number };
   setDiscountCode: (code: string) => void;
   setEnterpriseSizing: (
     patch: Partial<
@@ -1184,8 +1334,9 @@ function StepBillingConfirm({
         <>
           <h1>Facturación y confirmación</h1>
           <p className="secondary">
-            Paso 5 de 5 — revisá el resumen. Todavía no hay pago online: te
-            contactamos para coordinar la facturación después de la prueba.
+            Paso {progress.current} de {progress.total} — revisá el resumen.
+            Todavía no hay pago online: te contactamos para coordinar la
+            facturación después de la prueba.
           </p>
         </>
       )}
