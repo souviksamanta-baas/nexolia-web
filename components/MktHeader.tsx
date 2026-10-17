@@ -12,9 +12,23 @@ const NAV: { key: NavKey; href: string; label: string }[] = [
   { key: "contacto", href: "/contacto", label: "Contacto" },
 ];
 
+const MOBILE_MQ = "(max-width: 960px)";
+
 export function MktHeader({ active }: { active?: NavKey }) {
   const navId = useId();
   const [open, setOpen] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const mq = window.matchMedia(MOBILE_MQ);
+    const sync = () => {
+      setIsMobile(mq.matches);
+      if (!mq.matches) setOpen(false);
+    };
+    sync();
+    mq.addEventListener("change", sync);
+    return () => mq.removeEventListener("change", sync);
+  }, []);
 
   useEffect(() => {
     if (!open) return;
@@ -28,15 +42,6 @@ export function MktHeader({ active }: { active?: NavKey }) {
       document.body.classList.remove("is-menu-open");
     };
   }, [open]);
-
-  useEffect(() => {
-    const mq = window.matchMedia("(min-width: 961px)");
-    const onChange = () => {
-      if (mq.matches) setOpen(false);
-    };
-    mq.addEventListener("change", onChange);
-    return () => mq.removeEventListener("change", onChange);
-  }, []);
 
   return (
     <header className={`sitio-header${open ? " is-menu-open" : ""}`}>
@@ -72,16 +77,18 @@ export function MktHeader({ active }: { active?: NavKey }) {
           Comenzar
         </Link>
       </div>
-      <button
-        type="button"
-        className="sitio-menu-toggle"
-        aria-expanded={open}
-        aria-controls={navId}
-        aria-label={open ? "Cerrar menú" : "Abrir menú"}
-        onClick={() => setOpen((v) => !v)}
-      >
-        <span className="sitio-menu-toggle-bars" aria-hidden="true" />
-      </button>
+      {isMobile ? (
+        <button
+          type="button"
+          className="sitio-menu-toggle"
+          aria-expanded={open}
+          aria-controls={navId}
+          aria-label={open ? "Cerrar menú" : "Abrir menú"}
+          onClick={() => setOpen((v) => !v)}
+        >
+          <span className="sitio-menu-toggle-bars" aria-hidden="true" />
+        </button>
+      ) : null}
     </header>
   );
 }

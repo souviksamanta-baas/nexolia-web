@@ -6,27 +6,51 @@
     return Array.prototype.slice.call((root || document).querySelectorAll(sel));
   }
 
-  /* Mobile header menu */
+  /* Mobile header menu — toggle exists only on small screens */
   (function () {
     var header = qs(".sitio-header");
-    var toggle = qs("[data-sitio-menu-toggle]", header);
-    if (!header || !toggle) return;
+    if (!header) return;
+
+    var mq = window.matchMedia("(max-width: 960px)");
+    var toggle = null;
 
     function setOpen(open) {
       header.classList.toggle("is-menu-open", open);
       document.body.classList.toggle("is-menu-open", open);
-      toggle.setAttribute("aria-expanded", open ? "true" : "false");
-      toggle.setAttribute(
-        "aria-label",
-        open ? "Cerrar menú" : "Abrir menú"
-      );
+      if (toggle) {
+        toggle.setAttribute("aria-expanded", open ? "true" : "false");
+        toggle.setAttribute(
+          "aria-label",
+          open ? "Cerrar menú" : "Abrir menú"
+        );
+      }
     }
 
-    toggle.addEventListener("click", function (e) {
-      e.preventDefault();
-      e.stopPropagation();
-      setOpen(!header.classList.contains("is-menu-open"));
-    });
+    function ensureToggle() {
+      if (!mq.matches) {
+        if (toggle && toggle.parentNode) toggle.parentNode.removeChild(toggle);
+        toggle = null;
+        setOpen(false);
+        return;
+      }
+      if (toggle) return;
+
+      toggle = document.createElement("button");
+      toggle.type = "button";
+      toggle.className = "sitio-menu-toggle";
+      toggle.setAttribute("data-sitio-menu-toggle", "");
+      toggle.setAttribute("aria-expanded", "false");
+      toggle.setAttribute("aria-controls", "sitio-nav");
+      toggle.setAttribute("aria-label", "Abrir menú");
+      toggle.innerHTML =
+        '<span class="sitio-menu-toggle-bars" aria-hidden="true"></span>';
+      toggle.addEventListener("click", function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        setOpen(!header.classList.contains("is-menu-open"));
+      });
+      header.appendChild(toggle);
+    }
 
     qsa(".sitio-nav a, .sitio-actions a", header).forEach(function (link) {
       link.addEventListener("click", function () {
@@ -38,9 +62,12 @@
       if (e.key === "Escape") setOpen(false);
     });
 
-    window.addEventListener("resize", function () {
-      if (window.matchMedia("(min-width: 961px)").matches) setOpen(false);
-    });
+    ensureToggle();
+    if (typeof mq.addEventListener === "function") {
+      mq.addEventListener("change", ensureToggle);
+    } else if (typeof mq.addListener === "function") {
+      mq.addListener(ensureToggle);
+    }
   })();
 
   /* Product slider */
