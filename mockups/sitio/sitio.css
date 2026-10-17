@@ -84,6 +84,7 @@ img {
   justify-self: start;
   display: inline-flex;
   align-items: center;
+  min-width: 0;
 }
 
 .sitio-header .logo {
@@ -131,13 +132,160 @@ img {
   border-radius: 8px;
 }
 
+.sitio-menu-toggle {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 42px;
+  height: 42px;
+  padding: 0;
+  border: 1px solid rgba(16, 25, 53, 0.12);
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.72);
+  color: var(--navy);
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.sitio-menu-toggle:hover {
+  background: #fff;
+}
+
+.sitio-menu-toggle-bars,
+.sitio-menu-toggle-bars::before,
+.sitio-menu-toggle-bars::after {
+  display: block;
+  width: 18px;
+  height: 2px;
+  border-radius: 1px;
+  background: currentColor;
+  transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+.sitio-menu-toggle-bars {
+  position: relative;
+}
+
+.sitio-menu-toggle-bars::before,
+.sitio-menu-toggle-bars::after {
+  content: "";
+  position: absolute;
+  left: 0;
+}
+
+.sitio-menu-toggle-bars::before {
+  top: -6px;
+}
+
+.sitio-menu-toggle-bars::after {
+  top: 6px;
+}
+
+.sitio-header.is-menu-open .sitio-menu-toggle-bars {
+  background: transparent;
+}
+
+.sitio-header.is-menu-open .sitio-menu-toggle-bars::before {
+  top: 0;
+  transform: rotate(45deg);
+}
+
+.sitio-header.is-menu-open .sitio-menu-toggle-bars::after {
+  top: 0;
+  transform: rotate(-45deg);
+}
+
+.sitio-nav-mobile-login {
+  display: none;
+}
+
 @media (max-width: 960px) {
   .sitio-header {
-    padding: 0.85rem 1.25rem;
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-areas:
+      "brand actions"
+      "nav nav";
+    gap: 0.65rem 0.75rem;
+    padding: 0.75rem 1rem;
   }
 
-  .sitio-header .sitio-nav {
+  .sitio-header .brand {
+    grid-area: brand;
+  }
+
+  .sitio-header .logo {
+    height: 28px;
+  }
+
+  .sitio-actions {
+    grid-area: actions;
+    gap: 0.45rem;
+  }
+
+  .sitio-actions .sitio-login {
     display: none;
+  }
+
+  .sitio-menu-toggle {
+    display: inline-flex;
+  }
+
+  .sitio-header .btn-primary.btn-sm {
+    padding: 0.5rem 0.85rem;
+    font-size: 0.86rem;
+  }
+
+  .sitio-nav {
+    grid-area: nav;
+    display: none;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.15rem;
+    width: 100%;
+    padding: 0.35rem 0 0.5rem;
+    border-top: 1px solid rgba(228, 235, 239, 0.9);
+    justify-self: stretch;
+  }
+
+  .sitio-header.is-menu-open .sitio-nav {
+    display: flex;
+  }
+
+  .sitio-nav a {
+    display: block;
+    padding: 0.85rem 0.35rem;
+    font-size: 1.02rem;
+    font-weight: 600;
+    border-radius: 10px;
+  }
+
+  .sitio-nav a:hover,
+  .sitio-nav a.is-active {
+    background: var(--primary-soft);
+    text-decoration: none;
+  }
+
+  .sitio-nav-mobile-login {
+    display: block;
+    margin-top: 0.35rem;
+    padding-top: 0.55rem;
+    border-top: 1px solid rgba(228, 235, 239, 0.9);
+  }
+
+  .sitio-nav-mobile-login .btn {
+    width: 100%;
+    justify-content: flex-start;
+    padding-left: 0.35rem;
+  }
+
+  body.is-menu-open {
+    overflow: hidden;
+  }
+}
+
+@media (max-width: 420px) {
+  .sitio-header .btn-primary.btn-sm {
+    padding: 0.48rem 0.7rem;
   }
 }
 

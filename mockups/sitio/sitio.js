@@ -6,6 +6,42 @@
     return Array.prototype.slice.call((root || document).querySelectorAll(sel));
   }
 
+  /* Mobile header menu */
+  (function () {
+    var header = qs(".sitio-header");
+    var toggle = qs("[data-sitio-menu-toggle]", header);
+    var nav = qs(".sitio-nav", header);
+    if (!header || !toggle || !nav) return;
+
+    function setOpen(open) {
+      header.classList.toggle("is-menu-open", open);
+      document.body.classList.toggle("is-menu-open", open);
+      toggle.setAttribute("aria-expanded", open ? "true" : "false");
+      toggle.setAttribute(
+        "aria-label",
+        open ? "Cerrar menú" : "Abrir menú"
+      );
+    }
+
+    toggle.addEventListener("click", function () {
+      setOpen(!header.classList.contains("is-menu-open"));
+    });
+
+    qsa("a", nav).forEach(function (link) {
+      link.addEventListener("click", function () {
+        setOpen(false);
+      });
+    });
+
+    document.addEventListener("keydown", function (e) {
+      if (e.key === "Escape") setOpen(false);
+    });
+
+    window.addEventListener("resize", function () {
+      if (window.matchMedia("(min-width: 961px)").matches) setOpen(false);
+    });
+  })();
+
   /* Product slider */
   var rail = qs("[data-feature-rail]");
   if (rail) {

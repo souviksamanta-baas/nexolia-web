@@ -18,15 +18,28 @@
     <a class="brand" href="/">
       <img class="logo" src="../../public/nexolia-logo.png" alt="Nexolia" />
     </a>
-    <nav class="sitio-nav" aria-label="Principal">
+    <nav class="sitio-nav" id="sitio-nav" aria-label="Principal">
       <a href="/#producto">Producto</a>
       <a href="/copi">Copi</a>
       <a href="/suscripciones">Suscripciones</a>
       <a class="is-active" href="/contacto">Contacto</a>
+      <div class="sitio-nav-mobile-login">
+        <button class="btn btn-ghost btn-sm" type="button" disabled aria-disabled="true">Ingresar</button>
+      </div>
     </nav>
     <div class="sitio-actions">
-      <button class="btn btn-ghost btn-sm" type="button" disabled aria-disabled="true">Ingresar</button>
+      <button class="btn btn-ghost btn-sm sitio-login" type="button" disabled aria-disabled="true">Ingresar</button>
       <a class="btn btn-primary btn-sm" href="/comenzar">Comenzar</a>
+      <button
+        type="button"
+        class="sitio-menu-toggle"
+        data-sitio-menu-toggle
+        aria-expanded="false"
+        aria-controls="sitio-nav"
+        aria-label="Abrir menú"
+      >
+        <span class="sitio-menu-toggle-bars" aria-hidden="true"></span>
+      </button>
     </div>
   </header>
 
