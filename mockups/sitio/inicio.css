@@ -6,22 +6,7 @@ body.home {
   font-size: 16px;
 }
 
-/* home-header uses shared .sitio-header layout from sitio.css */
-.home-header .btn-ghost:disabled,
-.home-header .btn-ghost[aria-disabled="true"] {
-  opacity: 0.55;
-  color: var(--navy);
-}
-
-.home-header .btn-primary {
-  border-radius: 8px;
-}
-
-.home-header .logo {
-  height: 25px;
-  width: auto;
-  display: block;
-}
+/* Header/footer chrome: shared via .sitio-header / .sitio-footer in sitio.css */
 
 .home-eyebrow {
   margin: 0 0 1rem;
@@ -3677,71 +3662,8 @@ body.is-presenting {
   margin: 1.25rem 0 0;
 }
 
-/* ——— Footer (navy, as mockup) ——— */
-.home-footer {
-  background: #0a1428;
-  color: rgba(255, 255, 255, 0.88);
-  padding: 3rem 0 1.5rem;
-}
-
-.home-footer a {
-  color: #fff;
-  text-decoration: none;
-  opacity: 0.9;
-}
-
-.home-footer a:hover {
-  opacity: 1;
-  text-decoration: underline;
-}
-
-.home-footer-grid {
-  display: grid;
-  grid-template-columns: 1.5fr 1fr 1fr 1fr;
-  gap: 2rem;
-}
-
-.home-footer-brand .logo {
-  height: 64px;
-  width: auto;
-  display: block;
-  margin-bottom: 0.85rem;
-}
-
-.home-footer-brand p {
-  margin: 0;
-  font-size: 0.92rem;
-  opacity: 0.85;
-}
-
-.home-footer .footer-col h4 {
-  margin: 0 0 0.85rem;
-  font-size: 0.72rem;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  opacity: 0.7;
-  color: #fff;
-}
-
-.home-footer .footer-col ul {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 0.55rem;
-  font-size: 0.92rem;
-}
-
-/* bottom row styles live in sitio.css (.home-footer-bottom) */
-
 @media (max-width: 960px) {
-  .home-header {
-    padding: 0.75rem 1rem;
-  }
-
-  .home-faq-grid,
-  .home-footer-grid {
+  .home-faq-grid {
     grid-template-columns: 1fr;
   }
 

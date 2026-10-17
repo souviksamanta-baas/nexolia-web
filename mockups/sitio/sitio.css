@@ -227,7 +227,7 @@ img {
   }
 
   .sitio-header .logo {
-    height: 28px;
+    height: 25px;
   }
 
   .sitio-menu-toggle {
@@ -763,45 +763,39 @@ img {
   flex-shrink: 0;
 }
 
-/* ——— Footer (navy, shared with homepage) ——— */
-.sitio-footer,
-.home-footer {
+/* ——— Footer ——— */
+.sitio-footer {
   background: #0a1428;
   color: rgba(255, 255, 255, 0.88);
   padding: 3rem 0 1.5rem;
   margin-top: 0;
 }
 
-.sitio-footer a,
-.home-footer a {
+.sitio-footer a {
   color: #fff;
   text-decoration: none;
   opacity: 0.9;
 }
 
-.sitio-footer a:hover,
-.home-footer a:hover {
+.sitio-footer a:hover {
   opacity: 1;
   text-decoration: underline;
 }
 
-.footer-grid,
-.home-footer-grid {
+.footer-grid {
   display: grid;
   grid-template-columns: 1.5fr 1fr 1fr 1fr;
   gap: 2rem;
 }
 
-.footer-brand .logo,
-.home-footer-brand .logo {
+.footer-brand .logo {
   height: 64px;
   width: auto;
   display: block;
   margin-bottom: 0.85rem;
 }
 
-.footer-brand p,
-.home-footer-brand p {
+.footer-brand p {
   margin: 0;
   font-size: 0.92rem;
   opacity: 0.85;
@@ -835,8 +829,7 @@ img {
   font-size: 0.92rem;
 }
 
-.footer-bottom,
-.home-footer-bottom {
+.footer-bottom {
   margin-top: 2.5rem;
   padding-top: 1.25rem;
   border-top: 1px solid rgba(255, 255, 255, 0.12);
@@ -924,13 +917,11 @@ a.footer-icon:hover {
 }
 
 @media (max-width: 960px) {
-  .footer-grid,
-  .home-footer-grid {
+  .footer-grid {
     grid-template-columns: 1fr;
   }
 
-  .footer-bottom,
-  .home-footer-bottom {
+  .footer-bottom {
     flex-direction: column;
     align-items: flex-start;
   }
