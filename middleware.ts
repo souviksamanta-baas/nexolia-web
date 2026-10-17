@@ -112,5 +112,6 @@ export function middleware(req: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/((?!_next/static|_next/image|favicon.ico).*)"],
+  // Explicit `/` — the catch-all alone often skips the apex homepage.
+  matcher: ["/", "/((?!_next/static|_next/image|favicon.ico).*)"],
 };

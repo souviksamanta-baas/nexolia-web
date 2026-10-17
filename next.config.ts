@@ -8,9 +8,23 @@ const nextConfig: NextConfig = {
   // `../../public/nexolia-logo.svg`, so we alias `/public/*` → `/*` so those
   // references keep working without touching the QA HTML.
   async rewrites() {
-    return [
-      { source: "/public/:path*", destination: "/:path*" },
-    ];
+    return {
+      // beforeFiles so commercial HTML wins over app/page.tsx on `/`.
+      beforeFiles: [
+        { source: "/", destination: "/mockups/sitio/inicio.html" },
+        { source: "/copi", destination: "/mockups/sitio/copi.html" },
+        {
+          source: "/suscripciones",
+          destination: "/mockups/sitio/suscripciones.html",
+        },
+        { source: "/contacto", destination: "/mockups/sitio/contacto.html" },
+        {
+          source: "/preguntas-frecuentes",
+          destination: "/mockups/sitio/preguntas-frecuentes.html",
+        },
+      ],
+      afterFiles: [{ source: "/public/:path*", destination: "/:path*" }],
+    };
   },
   async redirects() {
     return [
