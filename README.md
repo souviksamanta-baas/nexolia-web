@@ -6,12 +6,13 @@ Next.js App Router rebuild of the Nexolia website. Hosts both the public marketi
 
 | Host / path | Description |
 | --- | --- |
-| `/` (apex) | Coming soon + CTA to `/comenzar` |
+| `/` (apex) | Coming soon + CTA to `/comenzar` (commercial homepage mockups in `mockups/sitio/`) |
 | `/comenzar` | 3-step onboarding wizard → `POST {API}/public/leads` → gracias |
 | `/onboarding` | Permanent redirect → `/comenzar` |
 | `/guia`, `/guide` | Guía de la app Owner (alta, QR, recorridos de funciones) |
 | `/privacidad`, `/privacy` | Política de privacidad (es-AR) |
 | `/eliminacion-de-cuenta`, `/account-deletion` | Baja de cuenta (Play/App Store) |
+| `mockups/sitio/*` | Commercial site HTML mockups (Inicio, Copi, Suscripciones, Contacto, FAQ) — see [docs/commercial-site.md](docs/commercial-site.md) |
 | `admin.nexolia.com.ar/login` (or `?admin=1` on localhost) | Staff login (Supabase email/password; Google later) |
 | `admin.nexolia.com.ar/reset-password` | Password recovery landing (email link) |
 | `admin.nexolia.com.ar/dashboard` | KPIs + Grok assistant |

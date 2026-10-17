@@ -30,12 +30,15 @@ export async function GET(
   _req: Request,
   ctx: { params: Promise<{ slug?: string[] }> },
 ) {
-  if (!isMockupsEnabled()) {
+  const { slug = [] } = await ctx.params;
+  const relative = slug.join("/");
+  // Commercial marketing site is always public; other mockups stay gated.
+  const isCommercialSitio =
+    relative === "sitio" || relative.startsWith("sitio/");
+  if (!isCommercialSitio && !isMockupsEnabled()) {
     return new NextResponse("Not Found", { status: 404 });
   }
 
-  const { slug = [] } = await ctx.params;
-  const relative = slug.join("/");
   const target = normalize(join(ROOT, relative));
 
   // Prevent path traversal escapes out of `mockups/`.

@@ -1,0 +1,1205 @@
+<!DOCTYPE html>
+<html lang="es-AR">
+<head>
+  <base href="/mockups/sitio/" />
+    <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Nexolia - Tu negocio, más inteligente</title>
+  <meta name="description" content="Nexolia - Tu negocio, más inteligente" />
+  <link rel="icon" href="../../public/favicon.png" type="image/png" />
+  <link rel="apple-touch-icon" href="../../public/apple-touch-icon.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;600&family=Inter:ital,wght@0,400;0,500;0,600;0,700;0,800;1,500;1,600;1,700&family=Playfair+Display:ital,wght@1,400;1,500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="sitio.css" />
+  <link rel="stylesheet" href="inicio.css" />
+</head>
+<body class="sitio home">
+  <header class="sitio-header home-header">
+    <a class="brand" href="/">
+      <img class="logo" src="../../public/nexolia-logo.png" alt="Nexolia" />
+    </a>
+    <nav class="sitio-nav" aria-label="Principal">
+      <a href="/#producto">Producto</a>
+      <a href="/copi">Copi</a>
+      <a href="/suscripciones">Suscripciones</a>
+      <a href="/contacto">Contacto</a>
+    </nav>
+    <div class="sitio-actions">
+      <button class="btn btn-ghost btn-sm" type="button" disabled aria-disabled="true">Ingresar</button>
+      <a class="btn btn-primary btn-sm" href="/comenzar">Comenzar</a>
+    </div>
+  </header>
+
+  <main>
+    <!-- 1. Hero — centered, matches mockup composition -->
+    <section class="home-hero">
+      <div class="sitio-wrap home-hero-inner">
+        <p class="home-eyebrow">Para comercios y servicios profesionales</p>
+        <h1 class="home-h1">
+          <span class="home-h1-lead">Todo tu negocio.</span><br />
+          <em>En un mismo lugar.</em>
+        </h1>
+        <p class="home-sub">Mensajes, ventas y caja impulsados por IA — en tu celular, donde estés.</p>
+        <div class="home-hero-ctas">
+          <a class="btn btn-primary home-btn" href="/comenzar">Comenzar tu negocio</a>
+          <a class="home-text-link" href="#producto">
+            Ver la app
+            <svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true"><path d="M3 7h8M7 3l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </a>
+        </div>
+
+        <div class="home-hero-art" data-hero-art>
+          <svg class="hero-connectors" data-hero-connectors aria-hidden="true">
+            <g data-connector-group="chat">
+              <path data-connector="chat" fill="none"/>
+              <circle data-connector-dot="chat" r="3.2" fill="#6b7388"/>
+              <path data-connector-arrow="chat" fill="none"/>
+            </g>
+            <g data-connector-group="sale">
+              <path data-connector="sale" fill="none"/>
+              <circle data-connector-dot="sale" r="3.2" fill="#6b7388"/>
+              <path data-connector-arrow="sale" fill="none"/>
+            </g>
+            <g data-connector-group="caja">
+              <path data-connector="caja" fill="none"/>
+              <circle data-connector-dot="caja" r="3.2" fill="#6b7388"/>
+              <path data-connector-arrow="caja" fill="none"/>
+            </g>
+            <g data-connector-group="copi">
+              <path data-connector="copi" fill="none"/>
+              <circle data-connector-dot="copi" r="3.2" fill="#6b7388"/>
+              <path data-connector-arrow="copi" fill="none"/>
+            </g>
+          </svg>
+
+          <div class="hero-float hero-float-chat" data-hero-float data-hero-key="chat" tabindex="0" role="img" aria-label="Mensaje de Ana García">
+            <img class="hero-avatar-img" src="assets/ana-garcia.jpg" alt="" width="44" height="44" draggable="false" />
+            <div>
+              <strong>Ana García</strong>
+              <span>Hola! ¿Tenés stock del shampoo anti-frizz 500ml? Lo necesito para mañana.</span>
+            </div>
+          </div>
+
+          <div class="hero-float hero-float-sale" data-hero-float data-hero-key="sale" tabindex="0" role="img" aria-label="Presupuesto listo">
+            <div class="hero-sale-top">
+              <strong>Presupuesto listo</strong>
+              <span class="hero-share" title="Compartir" aria-hidden="true">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                  <circle cx="18" cy="5" r="2.5" stroke="currentColor" stroke-width="1.7"/>
+                  <circle cx="6" cy="12" r="2.5" stroke="currentColor" stroke-width="1.7"/>
+                  <circle cx="18" cy="19" r="2.5" stroke="currentColor" stroke-width="1.7"/>
+                  <path d="M8.4 13.2l7.2 4.2M15.6 6.6l-7.2 4.2" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/>
+                </svg>
+              </span>
+            </div>
+            <ul class="hero-sale-list">
+              <li><span>1× Shampoo anti-frizz 500ml</span><span>$ 9.500</span></li>
+              <li><span>1× Acondicionador 500ml</span><span>$ 8.200</span></li>
+              <li><span>1× Serum reparador</span><span>$ 6.800</span></li>
+            </ul>
+            <div class="hero-sale-total"><span>Total</span><em>$ 24.500</em></div>
+          </div>
+
+          <div class="hero-center" data-hero-center>
+            <div class="hero-resumen">
+              <p class="hero-resumen-title">Resumen del día</p>
+              <p class="hero-resumen-sub">¡Así va tu negocio hasta ahora. Sigue así! 💚</p>
+              <div class="hero-resumen-grid">
+                <div class="hero-resumen-cell">
+                  <span class="hero-resumen-icon is-green" aria-hidden="true">
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none"><path d="M4 6.5A2.5 2.5 0 0 1 6.5 4h11A2.5 2.5 0 0 1 20 6.5v7a2.5 2.5 0 0 1-2.5 2.5H10l-4 4v-4H6.5A2.5 2.5 0 0 1 4 13.5v-7z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></svg>
+                  </span>
+                  <strong class="is-green">18</strong>
+                  <span>Mensajes hoy</span>
+                </div>
+                <div class="hero-resumen-cell">
+                  <span class="hero-resumen-icon is-orange" aria-hidden="true">
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none"><path d="M15 17h5l-1.4-1.4A2 2 0 0 1 18 14.2V11a6 6 0 1 0-12 0v3.2a2 2 0 0 1-.6 1.4L4 17h5m6 0a3 3 0 1 1-6 0m6 0H9" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                  </span>
+                  <strong class="is-orange">7</strong>
+                  <span>Seguimientos pendientes</span>
+                </div>
+                <div class="hero-resumen-cell">
+                  <span class="hero-resumen-icon is-red" aria-hidden="true">
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none"><path d="M7 8.5 12 6l5 2.5v7L12 18.5 7 16v-7.5z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="M12 6v12.5M7 8.5l5 2.5 5-2.5" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></svg>
+                  </span>
+                  <strong class="is-red">4</strong>
+                  <span>Productos con bajo stock</span>
+                </div>
+                <div class="hero-resumen-cell">
+                  <span class="hero-resumen-icon is-green-fill" aria-hidden="true">$</span>
+                  <strong class="is-green">$ 248.500</strong>
+                  <span>Ventas (Semana)</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="hero-float hero-float-copi" data-hero-float data-hero-key="copi" tabindex="0" role="img" aria-label="Copi — Tu asistente IA">
+            <img class="hero-copi-avatar" src="assets/copi-avatar.png" alt="" width="56" height="56" draggable="false" />
+            <div class="hero-copi-copy">
+              <strong>Copi - Tu asistente IA</strong>
+              <span>Preguntame sobre tus ventas, stock, clientes...</span>
+            </div>
+            <span class="hero-copi-badge" aria-hidden="true">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+                <path d="M5 6.5A2.5 2.5 0 0 1 7.5 4h9A2.5 2.5 0 0 1 19 6.5v7a2.5 2.5 0 0 1-2.5 2.5H11l-4 3.5V16H7.5A2.5 2.5 0 0 1 5 13.5v-7z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/>
+                <path d="M9 9h6M9 12h4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/>
+              </svg>
+            </span>
+          </div>
+
+          <div class="hero-float hero-float-caja" data-hero-float data-hero-key="caja" tabindex="0" role="img" aria-label="Caja de hoy">
+            <strong>Caja hoy</strong>
+            <div class="hero-caja-row">
+              <span>Ingresos</span>
+              <em class="is-in">$ 186.500</em>
+            </div>
+            <div class="hero-caja-row">
+              <span>Egresos</span>
+              <em class="is-out">$ 42.300</em>
+            </div>
+            <div class="hero-caja-row hero-caja-net">
+              <span>Saldo</span>
+              <em class="is-in">$ 144.200</em>
+            </div>
+          </div>
+        </div>
+
+        <p class="home-hero-tagline">Tu negocio, <em>más inteligente.</em></p>
+      </div>
+    </section>
+
+    <!-- Rubros — infinite scrolling ribbon -->
+    <section class="home-ribbon" aria-label="Rubros que usamos">
+      <div class="home-ribbon-viewport">
+        <div class="home-ribbon-track">
+          <div class="home-ribbon-group" data-ribbon-source>
+            <div class="home-ribbon-item">
+              <span class="home-ribbon-icon" aria-hidden="true">
+                <svg viewBox="0 0 32 32" fill="none"><path d="M15.6 5.8c.9-.15 1.85.15 2.45.95.45.6.4 1.45-.15 1.95-.35.35-.85.5-1.35.45" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round"/><path d="M15.4 9.1c-4.35.55-7.55 4.55-7.2 9.15.3 4.15 3.55 7.35 7.75 7.35 4.35 0 7.7-3.55 7.7-8 0-4.75-3.55-8.15-8.25-8.5z" stroke="currentColor" stroke-width="1.65" stroke-linejoin="round"/></svg>
+              </span>
+              <span>Dietéticas</span>
+            </div>
+            <div class="home-ribbon-item">
+              <span class="home-ribbon-icon" aria-hidden="true">
+                <svg viewBox="0 0 32 32" fill="none"><path d="M19.9 6.2a4.55 4.55 0 0 0-5.85 5.85L6.5 19.6a2.05 2.05 0 0 0 0 2.9l1.55 1.55c.8.8 2.1.8 2.9 0l7.55-7.55a4.55 4.55 0 0 0 5.85-5.85l-2.65 2.65-2.25-2.25 2.65-2.65z" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </span>
+              <span>Ferreterias</span>
+            </div>
+            <div class="home-ribbon-item">
+              <span class="home-ribbon-icon" aria-hidden="true">
+                <svg viewBox="0 0 32 32" fill="none"><path d="M11 7.4 16 9.1l5-1.7 4.35 3.25-2.5 2.7v11.4c0 .9-.75 1.65-1.65 1.65h-10.4c-.9 0-1.65-.75-1.65-1.65V13.35L6.65 10.65 11 7.4z" stroke="currentColor" stroke-width="1.65" stroke-linejoin="round"/><path d="M11 7.4c.65 1.55 2.4 2.55 5 2.55s4.35-1 5-2.55" stroke="currentColor" stroke-width="1.65" stroke-linecap="round"/></svg>
+              </span>
+              <span>Indumentaria</span>
+            </div>
+            <div class="home-ribbon-item">
+              <span class="home-ribbon-icon" aria-hidden="true">
+                <svg viewBox="0 0 32 32" fill="none"><path d="M16 5.2 25.2 9v6.7c0 5.55-3.7 9.65-9.2 11.5C10.5 25.35 6.8 21.25 6.8 15.7V9L16 5.2z" stroke="currentColor" stroke-width="1.65" stroke-linejoin="round"/><circle cx="16" cy="13.1" r="1.2" fill="currentColor"/><circle cx="13.15" cy="17.35" r="1.2" fill="currentColor"/><circle cx="18.85" cy="17.35" r="1.2" fill="currentColor"/></svg>
+              </span>
+              <span>Salud y bienestar</span>
+            </div>
+            <div class="home-ribbon-item">
+              <span class="home-ribbon-icon" aria-hidden="true">
+                <svg viewBox="0 0 32 32" fill="none"><circle cx="12" cy="10.1" r="3.15" stroke="currentColor" stroke-width="1.65"/><path d="M6.6 22.9c.45-3.45 2.7-5.25 5.4-5.25s4.95 1.8 5.4 5.25" stroke="currentColor" stroke-width="1.65" stroke-linecap="round"/><path d="M16.4 8.1h8.8c.85 0 1.55.7 1.55 1.55v11.3c0 .85-.7 1.55-1.55 1.55h-8.8" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round"/><path d="M18.9 6.6h3.8" stroke="currentColor" stroke-width="1.65" stroke-linecap="round"/><path d="M18.6 12h4.6M18.6 15.1h4.6M18.6 18.2h3.1" stroke="currentColor" stroke-width="1.65" stroke-linecap="round"/></svg>
+              </span>
+              <span>Servicios profesionales</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 2. Producto — scroll-linked slides, then video below -->
+    <section class="home-producto" id="producto" data-producto>
+      <div class="home-producto-pin" data-producto-pin>
+        <div class="home-producto-sticky">
+          <div class="home-producto-row" data-producto-row>
+            <div class="home-producto-copy">
+              <h2 class="home-h2">Mirá lo que podés hacer<br />con Nexolia.</h2>
+            </div>
+
+            <div class="home-producto-stage">
+              <div class="home-producto-cue" aria-hidden="true">
+                <span class="home-producto-cue-text">Explorar algunas funciones</span>
+                <svg class="home-producto-cue-arrow" viewBox="0 0 40 52" fill="none" aria-hidden="true">
+                  <path d="M18 1.5c1.8 9.5 2.2 20.5.6 33.5" stroke="currentColor" stroke-width="2.15" stroke-linecap="round"/>
+                  <path d="M7.5 27.5c3.6 5.5 7.8 9.2 12.2 11.8" stroke="currentColor" stroke-width="2.15" stroke-linecap="round"/>
+                  <path d="M29.5 28c-3.2 5.2-6.7 8.8-11.2 11.5" stroke="currentColor" stroke-width="2.15" stroke-linecap="round"/>
+                </svg>
+              </div>
+
+              <div class="home-slides-toolbar" data-slides-toolbar>
+                <span class="home-slides-toolbar-label">
+                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><rect x="1.5" y="3" width="13" height="10" rx="1.5" stroke="#e11d48" stroke-width="1.4"/><path d="M4 6.5h8M4 9.5h5" stroke="#e11d48" stroke-width="1.4" stroke-linecap="round"/></svg>
+                  Diapositivas
+                </span>
+                <span class="home-slides-toolbar-actions">
+                  <button type="button" aria-label="Reproducir diapositivas" class="home-slides-play" data-slides-play>
+                    <svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="M4.2 2.4v11.2L13.4 8 4.2 2.4z" fill="currentColor"/></svg>
+                  </button>
+                </span>
+              </div>
+
+              <div class="home-slides" data-producto-slides>
+                <div class="home-slides-rail" data-producto-rail>
+                  <article class="home-slide home-slide-filled home-slide-copi" data-slide>
+                    <div class="home-slide-visual home-slide-filled-visual" aria-hidden="true">
+                      <div class="slide-copi-ui">
+                        <header class="slide-copi-ui-head">
+                          <span class="slide-copi-ui-brand">
+                            <span class="slide-copi-ui-avatar">
+                              <img src="assets/copi-avatar.png" alt="" width="34" height="34" />
+                            </span>
+                            <strong>Copi</strong>
+                          </span>
+                          <span class="slide-copi-ui-more">⋮</span>
+                        </header>
+                        <div class="slide-copi-ui-thread">
+                          <img class="slide-copi-ui-mark" src="assets/copi-robot.png" alt="" />
+                          <div class="slide-copi-ui-msg is-out">
+                            <div class="slide-copi-ui-bubble is-ask">¿Qué tengo que reponer?</div>
+                            <div class="slide-copi-ui-meta">
+                              <span>10:24</span>
+                              <svg width="13" height="9" viewBox="0 0 14 10" aria-hidden="true"><path d="M1.2 5.2l2.2 2.2L7.8 2.4M5.4 5.2l2.2 2.2 4.4-5" fill="none" stroke="#3b82f6" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                            </div>
+                          </div>
+                          <div class="slide-copi-ui-msg is-in">
+                            <span class="slide-copi-ui-mini">
+                              <img src="assets/copi-avatar.png" alt="" width="22" height="22" />
+                            </span>
+                            <div class="slide-copi-ui-in">
+                              <div class="slide-copi-ui-bubble is-reply">Hay 2 productos con stock bajo. ¿Creo una tarea para revisarlos mañana?</div>
+                              <div class="slide-copi-ui-meta">10:25</div>
+                            </div>
+                          </div>
+                          <div class="slide-copi-ui-msg is-out">
+                            <div class="slide-copi-ui-bubble is-ok">Sí, creala.</div>
+                            <div class="slide-copi-ui-meta">
+                              <span>10:26</span>
+                              <svg width="13" height="9" viewBox="0 0 14 10" aria-hidden="true"><path d="M1.2 5.2l2.2 2.2L7.8 2.4M5.4 5.2l2.2 2.2 4.4-5" fill="none" stroke="#3b82f6" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                            </div>
+                          </div>
+                          <div class="slide-copi-ui-msg is-out">
+                            <div class="slide-copi-ui-bubble is-ask">Agendame una reunión mañana a las 11.</div>
+                            <div class="slide-copi-ui-meta">
+                              <span>10:27</span>
+                              <svg width="13" height="9" viewBox="0 0 14 10" aria-hidden="true"><path d="M1.2 5.2l2.2 2.2L7.8 2.4M5.4 5.2l2.2 2.2 4.4-5" fill="none" stroke="#3b82f6" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                            </div>
+                          </div>
+                          <div class="slide-copi-ui-msg is-in">
+                            <span class="slide-copi-ui-mini">
+                              <img src="assets/copi-avatar.png" alt="" width="22" height="22" />
+                            </span>
+                            <div class="slide-copi-ui-in">
+                              <div class="slide-copi-ui-bubble is-reply">¿Con quién y de cuánto tiempo? Puedo crear el turno en la agenda.</div>
+                              <div class="slide-copi-ui-meta">10:27</div>
+                            </div>
+                          </div>
+                          <div class="slide-copi-ui-msg is-out">
+                            <div class="slide-copi-ui-bubble is-ok">Con Sandra, 1 hora.</div>
+                            <div class="slide-copi-ui-meta">
+                              <span>10:28</span>
+                              <svg width="13" height="9" viewBox="0 0 14 10" aria-hidden="true"><path d="M1.2 5.2l2.2 2.2L7.8 2.4M5.4 5.2l2.2 2.2 4.4-5" fill="none" stroke="#3b82f6" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                            </div>
+                          </div>
+                          <div class="slide-copi-ui-msg is-in">
+                            <span class="slide-copi-ui-mini">
+                              <img src="assets/copi-avatar.png" alt="" width="22" height="22" />
+                            </span>
+                            <div class="slide-copi-ui-in">
+                              <div class="slide-copi-ui-bubble is-reply">Listo. Creé “Reunión con Sandra” mañana de 11:00 a 12:00.</div>
+                              <div class="slide-copi-ui-meta">10:28</div>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="slide-copi-ui-composer">
+                          <svg width="16" height="16" viewBox="0 0 18 18" fill="none" aria-hidden="true"><rect x="6.2" y="2.2" width="5.6" height="9" rx="2.8" stroke="#9aa3b5" stroke-width="1.4"/><path d="M4.2 8.5a4.8 4.8 0 0 0 9.6 0M9 13.4v2.2" stroke="#9aa3b5" stroke-width="1.4" stroke-linecap="round"/></svg>
+                          <span>Preguntale a Copi...</span>
+                          <span class="slide-copi-ui-send" aria-hidden="true">
+                            <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M2.2 8.1l11.2-5.1-5 11.3-.7-4.7-5.5-1.5z" fill="#fff"/></svg>
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                    <h3 class="home-slide-title">Copi</h3>
+                    <p class="home-slide-desc">Tu asistente IA: preguntale por stock, ventas o tareas y actuá en un toque.</p>
+                    <a class="home-slide-cta" href="/copi">Conocé a Copi</a>
+                  </article>
+
+                  <article class="home-slide home-slide-filled home-slide-chats" data-slide>
+                    <div class="home-slide-visual home-slide-filled-visual" aria-hidden="true">
+                      <div class="slide-chats-ui">
+                        <header class="slide-chats-ui-head">
+                          <div class="slide-chats-ui-title">
+                            <span class="slide-chats-ui-icon" aria-hidden="true">
+                              <svg width="24" height="24" viewBox="0 0 16 16" fill="none"><path d="M2.5 3.2h11a1.2 1.2 0 0 1 1.2 1.2v6.2a1.2 1.2 0 0 1-1.2 1.2H7.2L4 14.2v-2.4H2.5A1.2 1.2 0 0 1 1.3 10.6V4.4A1.2 1.2 0 0 1 2.5 3.2z" fill="#08bd66"/><circle cx="5.2" cy="7.4" r="0.85" fill="#fff"/><circle cx="8" cy="7.4" r="0.85" fill="#fff"/><circle cx="10.8" cy="7.4" r="0.85" fill="#fff"/></svg>
+                            </span>
+                            <strong>Chats</strong>
+                          </div>
+                          <div class="slide-chats-ui-platforms">
+                            <span class="slide-logo-wa" title="WhatsApp" aria-label="WhatsApp">
+                              <svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"><path fill="#fff" d="M12.04 2C6.58 2 2.15 6.37 2.15 11.75c0 1.94.52 3.76 1.44 5.34L2 22l5.1-1.53a10.1 10.1 0 0 0 4.94 1.27h.01c5.46 0 9.89-4.37 9.89-9.75S17.5 2 12.04 2zm5.77 13.86c-.24.68-1.4 1.25-1.93 1.33-.5.07-1.13.1-1.82-.11-.42-.13-.96-.31-1.65-.61-2.9-1.26-4.79-4.18-4.93-4.38-.14-.2-1.17-1.56-1.17-2.97 0-1.41.74-2.1 1-2.39.26-.29.57-.36.76-.36h.55c.17 0 .41-.07.64.49.24.58.81 2 .88 2.14.07.14.12.31.02.5-.1.2-.14.31-.29.48-.14.17-.31.38-.44.51-.14.14-.29.29-.12.56.17.28.74 1.22 1.59 1.97 1.09.97 2.01 1.27 2.29 1.41.28.14.45.12.61-.07.17-.2.7-.81.89-1.09.19-.28.38-.23.64-.14.26.1 1.65.78 1.93.92.28.14.47.21.54.33.07.12.07.68-.17 1.36z"/></svg>
+                            </span>
+                            <span class="slide-logo-fb" title="Messenger" aria-label="Messenger">
+                              <svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"><path fill="#fff" d="M12 2C6.36 2 2 6.13 2 11.7c0 2.91 1.19 5.43 3.14 7.17V22l3.05-1.67c.99.27 2.04.42 3.14.42 5.64 0 10.17-4.13 10.17-9.05C21.5 6.13 17.64 2 12 2zm1.01 12.18-2.55-2.72-4.98 2.72 5.48-5.82 2.61 2.72 4.92-2.72-5.48 5.82z"/></svg>
+                            </span>
+                            <span class="slide-logo-ig" title="Instagram" aria-label="Instagram">
+                              <svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"><path fill="#fff" d="M7.8 2h8.4C19.4 2 22 4.6 22 7.8v8.4a5.8 5.8 0 0 1-5.8 5.8H7.8C4.6 22 2 19.4 2 16.2V7.8A5.8 5.8 0 0 1 7.8 2zm-.2 2A3.6 3.6 0 0 0 4 7.6v8.8A3.6 3.6 0 0 0 7.6 20h8.8a3.6 3.6 0 0 0 3.6-3.6V7.6A3.6 3.6 0 0 0 16.4 4H7.6zm9.65 1.5a1.25 1.25 0 1 1 0 2.5 1.25 1.25 0 0 1 0-2.5zM12 7a5 5 0 1 1 0 10 5 5 0 0 1 0-10zm0 2a3 3 0 1 0 0 6 3 3 0 0 0 0-6z"/></svg>
+                            </span>
+                          </div>
+                        </header>
+
+                        <nav class="slide-chats-ui-tabs">
+                          <span class="is-active">Todos</span>
+                          <span>WhatsApp</span>
+                          <span>Messenger</span>
+                          <span>Instagram</span>
+                        </nav>
+
+                        <div class="slide-chats-ui-body">
+                          <aside class="slide-chats-ui-list">
+                            <div class="slide-chats-ui-search">Buscar conversaciones...</div>
+                            <div class="slide-chats-ui-row is-active">
+                              <span class="slide-chats-ui-avatar">
+                                <img src="assets/ana-garcia.jpg" alt="" width="36" height="36" />
+                                <span class="slide-chats-ui-badge slide-logo-wa" aria-hidden="true">
+                                  <svg viewBox="0 0 24 24" width="12" height="12" fill="none"><path d="M5.2 19.2 6.3 15.6a7.3 7.3 0 1 1 2.8 2.7l-3.9.9Z" fill="#e9f8ef" stroke="#08bd66" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.1"/><path d="M9.5 8.6c.2-.5.4-.5.8-.5h.5c.2 0 .4.1.5.4l.7 1.6c.1.3.1.5-.1.7l-.5.6c.8 1.3 1.8 2.2 3.2 2.8l.6-.7c.2-.2.4-.3.7-.2l1.6.7c.3.1.4.3.4.6v.4c0 .5-.2.8-.6 1-1 .5-3.1-.1-5.2-1.9-2.3-2-3.3-4.4-2.6-5.5Z" fill="#08bd66"/></svg>
+                                </span>
+                              </span>
+                              <div class="slide-chats-ui-row-copy">
+                                <div class="slide-chats-ui-row-top">
+                                  <strong>Ana García</strong>
+                                  <span>10:24</span>
+                                </div>
+                                <div class="slide-chats-ui-row-bot">
+                                  <em>¿Tenés stock de shampoo?</em>
+                                  <b>2</b>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="slide-chats-ui-row">
+                              <span class="slide-chats-ui-avatar">
+                                <img src="assets/carlos-perez.jpg" alt="" width="36" height="36" />
+                                <span class="slide-chats-ui-badge slide-logo-fb" aria-hidden="true">
+                                  <svg viewBox="0 0 24 24" width="12" height="12" fill="none"><path d="M14.4 8.5h2V5.2h-2.7c-3 0-4.4 1.8-4.4 4.6v2H6.6v3.7h2.7V22h3.9v-6.5h3l.6-3.7h-3.6V10c0-1 .4-1.5 1.2-1.5Z" fill="#1877f2"/></svg>
+                                </span>
+                              </span>
+                              <div class="slide-chats-ui-row-copy">
+                                <div class="slide-chats-ui-row-top">
+                                  <strong>Carlos Pérez</strong>
+                                  <span>10:20</span>
+                                </div>
+                                <div class="slide-chats-ui-row-bot">
+                                  <em>¿A qué hora cierran?</em>
+                                  <b>1</b>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="slide-chats-ui-row">
+                              <span class="slide-chats-ui-avatar">
+                                <img src="assets/maria-lopez.jpg" alt="" width="36" height="36" />
+                                <span class="slide-chats-ui-badge slide-logo-ig" aria-hidden="true">
+                                  <svg viewBox="0 0 24 24" width="12" height="12" fill="none"><rect height="15" rx="4" stroke="#e13b8d" stroke-width="2.1" width="15" x="4.5" y="4.5"/><circle cx="12" cy="12" r="3.1" stroke="#e13b8d" stroke-width="2.1"/><circle cx="16.5" cy="7.6" fill="#e13b8d" r="1"/></svg>
+                                </span>
+                              </span>
+                              <div class="slide-chats-ui-row-copy">
+                                <div class="slide-chats-ui-row-top">
+                                  <strong>María López</strong>
+                                  <span>10:15</span>
+                                </div>
+                                <div class="slide-chats-ui-row-bot">
+                                  <em>¿Me pasás el precio?</em>
+                                  <b>1</b>
+                                </div>
+                              </div>
+                            </div>
+                          </aside>
+
+                          <div class="slide-chats-ui-thread">
+                            <header class="slide-chats-ui-thread-head">
+                              <span class="slide-chats-ui-avatar is-sm">
+                                <img src="assets/ana-garcia.jpg" alt="" width="28" height="28" />
+                                <span class="slide-chats-ui-badge slide-logo-wa" aria-hidden="true">
+                                  <svg viewBox="0 0 24 24" width="10" height="10" fill="none"><path d="M5.2 19.2 6.3 15.6a7.3 7.3 0 1 1 2.8 2.7l-3.9.9Z" fill="#e9f8ef" stroke="#08bd66" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.1"/><path d="M9.5 8.6c.2-.5.4-.5.8-.5h.5c.2 0 .4.1.5.4l.7 1.6c.1.3.1.5-.1.7l-.5.6c.8 1.3 1.8 2.2 3.2 2.8l.6-.7c.2-.2.4-.3.7-.2l1.6.7c.3.1.4.3.4.6v.4c0 .5-.2.8-.6 1-1 .5-3.1-.1-5.2-1.9-2.3-2-3.3-4.4-2.6-5.5Z" fill="#08bd66"/></svg>
+                                </span>
+                              </span>
+                              <div>
+                                <strong>Ana García</strong>
+                                <span>WhatsApp</span>
+                              </div>
+                              <em>⋮</em>
+                            </header>
+                            <div class="slide-chats-ui-msgs">
+                              <div class="slide-chats-ui-bubble is-in">Hola, ¿tenés shampoo de 500 ml?<small>10:24</small></div>
+                              <div class="slide-chats-ui-bubble is-out">¡Hola, Ana! Sí, tenemos. ¿Cuántos necesitás?<small>10:25</small></div>
+                              <div class="slide-chats-ui-bubble is-in">Dos, por favor.<small>10:26</small></div>
+                            </div>
+                            <div class="slide-chats-ui-composer">
+                              <span>Escribí un mensaje...</span>
+                              <span class="slide-chats-ui-send" aria-hidden="true">
+                                <svg width="13" height="13" viewBox="0 0 16 16" fill="none"><path d="M2.2 8.1l11.2-5.1-5 11.3-.7-4.7-5.5-1.5z" fill="#fff"/></svg>
+                              </span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <h3 class="home-slide-title">Chats</h3>
+                    <p class="home-slide-desc">Todas tus conversaciones de WhatsApp, Messenger e Instagram, en un solo lugar.</p>
+                    <a class="home-slide-cta" href="/guia#chats">Más información</a>
+                  </article>
+                  <article class="home-slide home-slide-filled home-slide-stock" data-slide>
+                    <div class="home-slide-visual home-slide-filled-visual" aria-hidden="true">
+                      <div class="slide-stock-ui">
+                        <header class="slide-stock-ui-head">
+                          <div class="slide-stock-ui-title">
+                            <span class="slide-stock-ui-icon" aria-hidden="true">
+                              <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M4.2 8.2 12 3.8l7.8 4.4v8.8L12 21.4l-7.8-4.4V8.2z" stroke="#08bd66" stroke-width="1.7" stroke-linejoin="round"/><path d="M12 12.2V21.2M12 12.2 4.4 8M12 12.2l7.6-4.2" stroke="#08bd66" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                            </span>
+                            <strong>Gestionar stock</strong>
+                          </div>
+                          <div class="slide-stock-ui-actions">
+                            <span class="slide-stock-ui-branch">Sucursal Centro</span>
+                            <span class="slide-stock-ui-add">+ Agregar</span>
+                          </div>
+                        </header>
+
+                        <div class="slide-stock-ui-toolbar">
+                          <span class="slide-stock-ui-search">Buscar por producto o categoría...</span>
+                          <span class="slide-stock-ui-tool">Escanear</span>
+                          <span class="slide-stock-ui-tool">Filtros</span>
+                        </div>
+
+                        <nav class="slide-stock-ui-tabs">
+                          <span class="is-active">Todos</span>
+                          <span>En stock</span>
+                          <span>Bajo stock</span>
+                          <span>Sin stock</span>
+                        </nav>
+
+                        <div class="slide-stock-ui-body">
+                          <div class="slide-stock-ui-table">
+                            <div class="slide-stock-ui-cols">
+                              <span>Producto</span>
+                              <span>Stock</span>
+                              <span>Estado</span>
+                            </div>
+
+                            <div class="slide-stock-ui-row is-active">
+                              <div class="slide-stock-ui-prod">
+                                <img src="assets/stock-harina.jpg" alt="" width="28" height="28" />
+                                <div>
+                                  <strong>Harina granel</strong>
+                                  <em>Producto base · Almacén</em>
+                                </div>
+                              </div>
+                              <b>100 kg</b>
+                              <span class="slide-stock-ui-badge is-ok">En stock</span>
+                            </div>
+                            <div class="slide-stock-ui-child">
+                              <img src="assets/stock-harina-1kg.jpg" alt="" width="22" height="22" />
+                              <div>
+                                <span>Harina 1 kg</span>
+                                <em>Usa stock del producto base</em>
+                              </div>
+                            </div>
+                            <div class="slide-stock-ui-child">
+                              <img src="assets/stock-harina-1kg.jpg" alt="" width="22" height="22" />
+                              <div>
+                                <span>Harina 2 kg</span>
+                                <em>Usa stock del producto base</em>
+                              </div>
+                            </div>
+
+                            <div class="slide-stock-ui-row">
+                              <div class="slide-stock-ui-prod">
+                                <img src="assets/stock-yerba.jpg" alt="" width="28" height="28" />
+                                <div>
+                                  <strong>Yerba mate 1 kg</strong>
+                                </div>
+                              </div>
+                              <b>24 u</b>
+                              <span class="slide-stock-ui-badge is-ok">En stock</span>
+                            </div>
+
+                            <div class="slide-stock-ui-row">
+                              <div class="slide-stock-ui-prod">
+                                <img src="assets/stock-leche.jpg" alt="" width="28" height="28" />
+                                <div>
+                                  <strong>Leche entera 1 L</strong>
+                                </div>
+                              </div>
+                              <b>2 u</b>
+                              <span class="slide-stock-ui-badge is-low">Bajo stock</span>
+                            </div>
+
+                            <div class="slide-stock-ui-row">
+                              <div class="slide-stock-ui-prod">
+                                <img src="assets/stock-arroz.jpg" alt="" width="28" height="28" />
+                                <div>
+                                  <strong>Arroz 1 kg</strong>
+                                  <em class="is-link">+ Crear código</em>
+                                </div>
+                              </div>
+                              <b>0 u</b>
+                              <span class="slide-stock-ui-badge is-out">Sin stock</span>
+                            </div>
+                          </div>
+
+                          <aside class="slide-stock-ui-detail">
+                            <div class="slide-stock-ui-detail-head">
+                              <img src="assets/stock-harina.jpg" alt="" width="36" height="36" />
+                              <div>
+                                <strong>Harina granel</strong>
+                                <em>Producto base</em>
+                              </div>
+                            </div>
+                            <div class="slide-stock-ui-meta">
+                              <div><em>SKU</em><b>HAR-GRA</b></div>
+                              <div><em>Categoría</em><b>Almacén</b></div>
+                              <div><em>Unidad</em><b>kg</b></div>
+                              <div><em>Proveedor</em><b>Molino Central</b></div>
+                            </div>
+                            <div class="slide-stock-ui-metrics">
+                              <div><em>Stock</em><b>100 kg</b></div>
+                              <div><em>Costo</em><b>$1.250/kg</b></div>
+                              <div><em>Venta</em><b>$1.900/kg</b></div>
+                              <div><em>Margen</em><b>34,2%</b></div>
+                            </div>
+                            <p class="slide-stock-ui-alert">Alerta de reposición: 10 kg</p>
+                            <div class="slide-stock-ui-section">
+                              <strong>Lotes y vencimientos</strong>
+                              <div class="slide-stock-ui-lot">
+                                <span>L-161026 · 25 kg</span>
+                                <em>Ingreso 16/10/2026 · Vence 16/04/2027</em>
+                              </div>
+                            </div>
+                            <div class="slide-stock-ui-section">
+                              <strong>Movimientos recientes</strong>
+                              <div class="slide-stock-ui-move is-in">+25 kg Ingreso de lote</div>
+                              <div class="slide-stock-ui-move is-out">−2 kg Fraccionado a Harina 1 kg</div>
+                            </div>
+                          </aside>
+                        </div>
+                      </div>
+                    </div>
+                    <h3 class="home-slide-title">Stock</h3>
+                    <p class="home-slide-desc">Buscá, escaneá y actualizá tu inventario en cada sucursal.</p>
+                    <a class="home-slide-cta" href="/guia#inventario">Más información</a>
+                  </article>
+                  <article class="home-slide home-slide-filled home-slide-agenda" data-slide>
+                    <div class="home-slide-visual home-slide-filled-visual" aria-hidden="true">
+                      <div class="slide-agenda-ui">
+                        <header class="slide-agenda-ui-head">
+                          <div class="slide-agenda-ui-title">
+                            <span class="slide-agenda-ui-icon" aria-hidden="true">
+                              <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><rect x="3.5" y="5" width="17" height="15.5" rx="3" fill="#08bd66"/><path d="M8 3.5v3M16 3.5v3M3.5 9.5h17" stroke="#fff" stroke-width="1.6" stroke-linecap="round"/><circle cx="8.2" cy="13.2" r="1.1" fill="#fff"/><circle cx="12" cy="13.2" r="1.1" fill="#fff"/><circle cx="15.8" cy="13.2" r="1.1" fill="#fff"/><circle cx="8.2" cy="16.8" r="1.1" fill="#fff"/><circle cx="12" cy="16.8" r="1.1" fill="#fff"/></svg>
+                            </span>
+                            <strong>Agenda</strong>
+                          </div>
+                          <div class="slide-agenda-ui-actions">
+                            <span class="slide-agenda-ui-branch">Sucursal Centro</span>
+                            <span class="slide-agenda-ui-tool" aria-hidden="true">
+                              <svg width="12" height="12" viewBox="0 0 16 16" fill="none"><circle cx="7" cy="7" r="4.2" stroke="#7b86a0" stroke-width="1.4"/><path d="M10.4 10.4 13.2 13.2" stroke="#7b86a0" stroke-width="1.4" stroke-linecap="round"/></svg>
+                            </span>
+                            <span class="slide-agenda-ui-more">⋮</span>
+                          </div>
+                        </header>
+
+                        <div class="slide-agenda-ui-nav">
+                          <span class="slide-agenda-ui-month">Octubre 2026</span>
+                          <div class="slide-agenda-ui-views">
+                            <span class="slide-agenda-ui-today">Hoy</span>
+                            <span>Día</span>
+                            <span class="is-active">3 días</span>
+                            <span>Mes</span>
+                          </div>
+                        </div>
+
+                        <div class="slide-agenda-ui-week">
+                          <span><em>LUN</em><b>12</b><i class="is-blue"></i></span>
+                          <span><em>MAR</em><b>13</b></span>
+                          <span><em>MIÉ</em><b>14</b><i class="is-blue"></i></span>
+                          <span><em>JUE</em><b>15</b><i class="is-purple"></i></span>
+                          <span class="is-today"><em>VIE</em><b>16</b></span>
+                          <span><em>SÁB</em><b>17</b><i class="is-blue"></i></span>
+                          <span><em>DOM</em><b>18</b></span>
+                        </div>
+
+                        <div class="slide-agenda-ui-grid">
+                          <div class="slide-agenda-ui-times" aria-hidden="true">
+                            <span>09:00</span>
+                            <span>10:00</span>
+                            <span>11:00</span>
+                            <span>12:00</span>
+                            <span>13:00</span>
+                            <span>14:00</span>
+                            <span>15:00</span>
+                          </div>
+                          <div class="slide-agenda-ui-days">
+                            <div class="slide-agenda-ui-day">
+                              <strong>Jue 15</strong>
+                              <div class="slide-agenda-ui-lane">
+                                <div class="slide-agenda-ui-event is-blue" style="--top:0%;--h:14%">
+                                  <em>09:00 – 10:00</em>
+                                  <b>Consulta · Carlos Pérez</b>
+                                </div>
+                                <div class="slide-agenda-ui-event is-purple" style="--top:57%;--h:14%">
+                                  <em>13:00 – 14:00</em>
+                                  <b>Reunión de equipo</b>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="slide-agenda-ui-day is-current">
+                              <strong>Vie 16</strong>
+                              <div class="slide-agenda-ui-lane">
+                                <div class="slide-agenda-ui-now" style="--top:21%">
+                                  <span>10:30</span>
+                                </div>
+                                <div class="slide-agenda-ui-event is-green is-open" style="--top:28.5%;--h:14%">
+                                  <em>11:00 – 12:00</em>
+                                  <b>Consulta inicial</b>
+                                  <small>Ana García · Sandra</small>
+                                </div>
+                                <div class="slide-agenda-ui-event is-orange" style="--top:71%;--h:14%">
+                                  <em>14:00 – 15:00</em>
+                                  <b>Seguimiento · María López</b>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="slide-agenda-ui-day">
+                              <strong>Sáb 17</strong>
+                              <div class="slide-agenda-ui-lane">
+                                <div class="slide-agenda-ui-event is-blue" style="--top:14%;--h:14%">
+                                  <em>10:00 – 11:00</em>
+                                  <b>Turno · Juan Díaz</b>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+
+                          <div class="slide-agenda-ui-popover">
+                            <strong>Consulta inicial</strong>
+                            <span>Vie 16 · 11:00 — 12:00</span>
+                            <ul>
+                              <li>Para: Ana García</li>
+                              <li>Responsable: Sandra</li>
+                              <li>Recordatorio: 15 min antes</li>
+                            </ul>
+                            <div class="slide-agenda-ui-popover-actions">
+                              <em>Editar</em>
+                              <em>Reprogramar</em>
+                              <b>⋮</b>
+                            </div>
+                          </div>
+
+                          <div class="slide-agenda-ui-fab">
+                            <span>+</span>
+                            <em>Nuevo turno</em>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <h3 class="home-slide-title">Agenda</h3>
+                    <p class="home-slide-desc">Tus turnos y reuniones, en orden.</p>
+                    <a class="home-slide-cta" href="/guia#tareas">Más información</a>
+                  </article>
+                  <article class="home-slide home-slide-filled home-slide-caja" data-slide>
+                    <div class="home-slide-visual home-slide-filled-visual" aria-hidden="true">
+                      <div class="slide-caja-ui">
+                        <header class="slide-caja-ui-head">
+                          <div class="slide-caja-ui-title">
+                            <span class="slide-caja-ui-icon" aria-hidden="true">
+                              <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><rect x="3.5" y="6" width="17" height="13.5" rx="2.5" stroke="#08bd66" stroke-width="1.7"/><path d="M7 6V4.8A1.8 1.8 0 0 1 8.8 3h6.4A1.8 1.8 0 0 1 17 4.8V6" stroke="#08bd66" stroke-width="1.7"/><path d="M7.5 12h9M7.5 15.2h5.5" stroke="#08bd66" stroke-width="1.7" stroke-linecap="round"/></svg>
+                            </span>
+                            <strong>Caja</strong>
+                          </div>
+                          <span class="slide-caja-ui-branch">Sucursal Centro</span>
+                        </header>
+
+                        <div class="slide-caja-ui-body">
+                          <aside class="slide-caja-ui-cal">
+                            <div class="slide-caja-ui-cal-head">
+                              <span aria-hidden="true">‹</span>
+                              <strong>Octubre de 2026</strong>
+                              <span aria-hidden="true">›</span>
+                            </div>
+                            <div class="slide-caja-ui-cal-days">
+                              <em>Lun</em><em>Mar</em><em>Mié</em><em>Jue</em><em>Vie</em><em>Sáb</em><em>Dom</em>
+                            </div>
+                            <div class="slide-caja-ui-cal-grid">
+                              <span></span><span></span><span></span>
+                              <span class="is-zero">1</span>
+                              <span class="is-zero">2</span>
+                              <span class="is-zero">3</span>
+                              <span class="is-zero">4</span>
+                              <span class="is-pos">5</span>
+                              <span class="is-pos">6</span>
+                              <span class="is-pos">7</span>
+                              <span class="is-pos">8</span>
+                              <span class="is-pos">9</span>
+                              <span class="is-neg">10</span>
+                              <span class="is-zero">11</span>
+                              <span class="is-pos">12</span>
+                              <span class="is-pos">13</span>
+                              <span class="is-pos">14</span>
+                              <span class="is-pos is-selected">15</span>
+                              <span class="is-focus">16</span>
+                              <span class="is-muted">17</span>
+                              <span class="is-muted">18</span>
+                              <span class="is-muted">19</span>
+                              <span class="is-muted">20</span>
+                              <span class="is-muted">21</span>
+                              <span class="is-muted">22</span>
+                              <span class="is-muted">23</span>
+                              <span class="is-muted">24</span>
+                              <span class="is-muted">25</span>
+                              <span class="is-muted">26</span>
+                              <span class="is-muted">27</span>
+                              <span class="is-muted">28</span>
+                              <span class="is-muted">29</span>
+                              <span class="is-muted">30</span>
+                              <span class="is-muted">31</span>
+                            </div>
+                            <div class="slide-caja-ui-legend">
+                              <span><i class="is-pos"></i>Saldo positivo</span>
+                              <span><i class="is-neg"></i>Saldo negativo</span>
+                              <span><i class="is-zero"></i>Saldo cero</span>
+                            </div>
+                          </aside>
+
+                          <div class="slide-caja-ui-main">
+                            <div class="slide-caja-ui-balances">
+                              <div>
+                                <em>Saldo inicial</em>
+                                <b>$87.000,00</b>
+                              </div>
+                              <div class="is-final">
+                                <em>Saldo final</em>
+                                <b>$107.000,00</b>
+                              </div>
+                            </div>
+
+                            <div class="slide-caja-ui-actions">
+                              <span class="is-in">
+                                <b>+</b>
+                                <em>Ingreso</em>
+                              </span>
+                              <span class="is-out">
+                                <b>−</b>
+                                <em>Egreso</em>
+                              </span>
+                              <span class="is-report">
+                                <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true"><rect x="3.2" y="2.2" width="9.6" height="11.6" rx="1.5" stroke="#fff" stroke-width="1.3"/><path d="M5.4 5.5h5.2M5.4 8h5.2M5.4 10.5h3.2" stroke="#fff" stroke-width="1.3" stroke-linecap="round"/></svg>
+                                <em>Reportes · Balances</em>
+                              </span>
+                            </div>
+
+                            <div class="slide-caja-ui-moves">
+                              <strong>Últimos movimientos</strong>
+                              <div class="slide-caja-ui-move">
+                                <span class="slide-caja-ui-move-icon is-in" aria-hidden="true">↑</span>
+                                <div>
+                                  <b>Venta #0048</b>
+                                  <em>15 Oct · 10:24 · Automático</em>
+                                </div>
+                                <strong class="is-in">+ $35.000,00</strong>
+                                <svg width="11" height="11" viewBox="0 0 16 16" fill="none" aria-hidden="true"><rect x="3.5" y="7" width="9" height="6.5" rx="1.4" stroke="#9aa3b5" stroke-width="1.3"/><path d="M5.4 7V5.4a2.6 2.6 0 0 1 5.2 0V7" stroke="#9aa3b5" stroke-width="1.3"/></svg>
+                              </div>
+                              <div class="slide-caja-ui-move">
+                                <span class="slide-caja-ui-move-icon is-out" aria-hidden="true">↓</span>
+                                <div>
+                                  <b>Compra de mercadería</b>
+                                  <em>15 Oct · 11:10 · Automático</em>
+                                </div>
+                                <strong class="is-out">− $20.000,00</strong>
+                                <svg width="11" height="11" viewBox="0 0 16 16" fill="none" aria-hidden="true"><rect x="3.5" y="7" width="9" height="6.5" rx="1.4" stroke="#9aa3b5" stroke-width="1.3"/><path d="M5.4 7V5.4a2.6 2.6 0 0 1 5.2 0V7" stroke="#9aa3b5" stroke-width="1.3"/></svg>
+                              </div>
+                              <div class="slide-caja-ui-move">
+                                <span class="slide-caja-ui-move-icon is-in" aria-hidden="true">↑</span>
+                                <div>
+                                  <b>Ingreso manual</b>
+                                  <em>15 Oct · 12:05 · Manual</em>
+                                </div>
+                                <strong class="is-in">+ $5.000,00</strong>
+                                <svg width="11" height="11" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M10.8 3.4 12.6 5.2 6.1 12.7H4.2v-1.9L10.8 3.4z" stroke="#9aa3b5" stroke-width="1.3" stroke-linejoin="round"/></svg>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <h3 class="home-slide-title">Caja</h3>
+                    <p class="home-slide-desc">Ingresos, egresos y saldos de tu negocio.</p>
+                    <a class="home-slide-cta" href="/guia#caja">Más información</a>
+                  </article>
+                  <article class="home-slide home-slide-filled home-slide-presupuestos" data-slide>
+                    <div class="home-slide-visual home-slide-filled-visual" aria-hidden="true">
+                      <div class="slide-pres-ui">
+                        <header class="slide-pres-ui-head">
+                          <div class="slide-pres-ui-title">
+                            <span class="slide-pres-ui-icon" aria-hidden="true">
+                              <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><rect x="5" y="3" width="14" height="18" rx="2.2" stroke="#08bd66" stroke-width="1.7"/><path d="M8.5 8h7M8.5 11.5h7M8.5 15h4.5" stroke="#08bd66" stroke-width="1.7" stroke-linecap="round"/></svg>
+                            </span>
+                            <strong>Presupuestos y facturas</strong>
+                          </div>
+                          <span class="slide-pres-ui-add">+ Nuevo presupuesto</span>
+                        </header>
+
+                        <div class="slide-pres-ui-bar">
+                          <nav class="slide-pres-ui-tabs">
+                            <span class="is-active">Presupuestos</span>
+                            <span>Facturas ARCA</span>
+                          </nav>
+                          <span class="slide-pres-ui-search">Buscar presupuesto o factura...</span>
+                        </div>
+
+                        <div class="slide-pres-ui-body">
+                          <aside class="slide-pres-ui-list">
+                            <strong class="slide-pres-ui-list-title">Tus presupuestos</strong>
+
+                            <div class="slide-pres-ui-card is-open">
+                              <div class="slide-pres-ui-card-top">
+                                <div>
+                                  <b>PRES-0048</b>
+                                  <em class="slide-pres-ui-badge is-paid">Cobrado</em>
+                                </div>
+                                <span>$18.500,00</span>
+                              </div>
+                              <p>28 de ago de 2026 · 2 ítems</p>
+                              <a class="slide-pres-ui-link">Factura: 00003-00000007</a>
+                              <div class="slide-pres-ui-lines">
+                                <div><em>Shampoo 500 ml</em><span>2 × $6.000,00</span><b>$12.000,00</b></div>
+                                <div><em>Acondicionador 500 ml</em><span>1 × $6.500,00</span><b>$6.500,00</b></div>
+                              </div>
+                              <div class="slide-pres-ui-total">
+                                <em>Total del presupuesto</em>
+                                <b>$18.500,00</b>
+                              </div>
+                            </div>
+
+                            <div class="slide-pres-ui-card">
+                              <div class="slide-pres-ui-card-top">
+                                <div>
+                                  <b>PRES-0049</b>
+                                  <em class="slide-pres-ui-badge is-saved">Guardado</em>
+                                </div>
+                                <span>$12.800,00</span>
+                              </div>
+                              <p>27 de ago de 2026 · 1 ítem</p>
+                              <em class="slide-pres-ui-nofact">Sin factura</em>
+                            </div>
+
+                            <div class="slide-pres-ui-card">
+                              <div class="slide-pres-ui-card-top">
+                                <div>
+                                  <b>PRES-0047</b>
+                                  <em class="slide-pres-ui-badge is-paid">Cobrado</em>
+                                </div>
+                                <span>$9.500,00</span>
+                              </div>
+                              <p>26 de ago de 2026 · 2 ítems</p>
+                              <em class="slide-pres-ui-nofact">Sin factura</em>
+                            </div>
+                          </aside>
+
+                          <div class="slide-pres-ui-detail">
+                            <em class="slide-pres-ui-kind">Factura C</em>
+                            <strong>00003-00000007</strong>
+                            <span class="slide-pres-ui-issued">Emitida el 28 de ago de 2026</span>
+                            <b class="slide-pres-ui-amount">$18.500,00</b>
+
+                            <div class="slide-pres-ui-meta">
+                              <div><em>Cliente</em><b>Consumidor final</b></div>
+                              <div><em>Estado ARCA</em><b class="is-ok">Autorizada</b></div>
+                              <div><em>CAE</em><b>86350826116640</b></div>
+                              <div><em>Vencimiento</em><b>07 de sept de 2026</b></div>
+                            </div>
+
+                            <span class="slide-pres-ui-btn is-primary">Descargar / compartir PDF</span>
+                            <span class="slide-pres-ui-btn is-secondary">Abrir constancia ARCA (QR)</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <h3 class="home-slide-title">Presupuestos y facturas</h3>
+                    <p class="home-slide-desc">Prepará presupuestos y consultá tus facturas.</p>
+                    <a class="home-slide-cta" href="/guia#integraciones">Más información</a>
+                  </article>
+                  <article class="home-slide home-slide-filled home-slide-compras" data-slide>
+                    <div class="home-slide-visual home-slide-filled-visual" aria-hidden="true">
+                      <div class="slide-cv-ui">
+                        <header class="slide-cv-ui-head">
+                          <div class="slide-cv-ui-title">
+                            <span class="slide-cv-ui-icon" aria-hidden="true">
+                              <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M4.5 6.2h2.1l1.1 9.4h10.2l1.5-6.8H8" stroke="#08bd66" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/><circle cx="10.2" cy="18.5" r="1.2" fill="#08bd66"/><circle cx="16.3" cy="18.5" r="1.2" fill="#08bd66"/></svg>
+                            </span>
+                            <strong>Compras y ventas</strong>
+                          </div>
+                          <span class="slide-cv-ui-branch">Sucursal Centro</span>
+                        </header>
+
+                        <div class="slide-cv-ui-body">
+                          <section class="slide-cv-ui-panel">
+                            <div class="slide-cv-ui-panel-head">
+                              <strong>Compras</strong>
+                            </div>
+                            <div class="slide-cv-ui-comp-meta">
+                              <b>Compra COMP-0042</b>
+                              <em class="slide-cv-ui-badge">Pendiente de confirmación</em>
+                            </div>
+                            <div class="slide-cv-ui-fields">
+                              <div>
+                                <em>Fecha</em>
+                                <span>22/09/2026</span>
+                              </div>
+                              <div>
+                                <em>Proveedor</em>
+                                <span>Distribuidora Centro</span>
+                              </div>
+                            </div>
+                            <a class="slide-cv-ui-link">Ver historial de compras →</a>
+
+                            <div class="slide-cv-ui-line">
+                              <img src="assets/compras-aceite.jpg" alt="" width="28" height="28" />
+                              <div>
+                                <b>Aceite de girasol 900 ml</b>
+                                <em>10 botellas × $2.200,00</em>
+                              </div>
+                              <strong>$22.000,00</strong>
+                            </div>
+
+                            <span class="slide-cv-ui-add">+ Agregar producto</span>
+
+                            <div class="slide-cv-ui-sum">
+                              <div><em>Subtotal</em><b>$22.000,00</b></div>
+                              <div><em>Ajuste</em><span class="slide-cv-ui-chips"><i>Descuento</i><i>Recargo</i></span><b class="is-muted">Sin ajuste</b></div>
+                              <div class="slide-cv-ui-iva">
+                                <em>✓ Aplicar IVA</em>
+                                <span class="slide-cv-ui-chips">
+                                  <i>0%</i><i>10,5%</i><i class="is-on">21%</i><i>27%</i>
+                                </span>
+                              </div>
+                              <div><em>IVA (21%)</em><b>$4.620,00</b></div>
+                            </div>
+                            <div class="slide-cv-ui-total">
+                              <em>Total</em>
+                              <b>$26.620,00</b>
+                            </div>
+                            <span class="slide-cv-ui-cta">Confirmar compra</span>
+                          </section>
+
+                          <section class="slide-cv-ui-panel">
+                            <div class="slide-cv-ui-panel-head">
+                              <strong>Ventas</strong>
+                              <a class="slide-cv-ui-link">Ventas y presupuestos →</a>
+                            </div>
+                            <em class="slide-cv-ui-subhead">Nueva venta</em>
+                            <div class="slide-cv-ui-search">Buscar producto o categoría...</div>
+
+                            <div class="slide-cv-ui-line">
+                              <img src="assets/compras-aceite.jpg" alt="" width="28" height="28" />
+                              <div>
+                                <b>Aceite de girasol 900 ml</b>
+                                <em>$3.000,00 / botella</em>
+                              </div>
+                              <span class="slide-cv-ui-qty">− 2 +</span>
+                              <strong>$6.000,00</strong>
+                            </div>
+                            <div class="slide-cv-ui-line">
+                              <img src="assets/compras-almendras.jpg" alt="" width="28" height="28" />
+                              <div>
+                                <b>Almendras a granel</b>
+                                <em>$8.000,00 / kg</em>
+                              </div>
+                              <span class="slide-cv-ui-qty">− 0,5 +</span>
+                              <strong>$4.000,00</strong>
+                            </div>
+
+                            <span class="slide-cv-ui-add">+ Agregar producto</span>
+
+                            <div class="slide-cv-ui-sum">
+                              <div><em>Subtotal</em><b>$10.000,00</b></div>
+                              <div><em>Descuento (10%)</em><b class="is-disc">− $1.000,00</b></div>
+                            </div>
+                            <div class="slide-cv-ui-total">
+                              <em>Total</em>
+                              <b>$9.000,00</b>
+                            </div>
+
+                            <div class="slide-cv-ui-pay">
+                              <em>Método de cobro</em>
+                              <span class="slide-cv-ui-chips">
+                                <i class="is-on">Efectivo</i>
+                                <i>Transferencia</i>
+                                <i>Tarjeta</i>
+                              </span>
+                            </div>
+                            <span class="slide-cv-ui-cta">Confirmar cobro</span>
+                            <a class="slide-cv-ui-link is-center">Guardar presupuesto</a>
+                          </section>
+                        </div>
+                      </div>
+                    </div>
+                    <h3 class="home-slide-title">Compras y ventas</h3>
+                    <p class="home-slide-desc">Registrá compras, vendé y seguí cada operación.</p>
+                    <a class="home-slide-cta" href="/guia#compras">Más información</a>
+                  </article>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 2b. Producto video (below slides; zooms in after the rail) -->
+    <section class="home-producto-video" data-producto-video>
+      <div class="sitio-wrap home-producto-video-inner" data-producto-video-inner>
+        <h2 class="home-h2 home-producto-video-title">Mirá Nexolia en acción.</h2>
+        <p class="home-producto-video-lead">
+          Mensajes, ventas, presupuesto y caja — juntos en un solo lugar, impulsados por IA para que avances más rápido.
+        </p>
+        <div class="home-producto-video-frame is-soon" aria-label="Video del producto — próximamente">
+          <p class="home-producto-video-soon" aria-hidden="true">Pronto te vamos a presentar un video comercial increíble.</p>
+          <button class="home-producto-video-play" type="button" tabindex="-1" disabled aria-hidden="true">
+            <svg viewBox="0 0 48 48" width="48" height="48" aria-hidden="true"><path d="M15 10v28L38 24 15 10z" fill="#fff"/></svg>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- FAQ teaser -->
+    <section class="home-faq">
+      <div class="sitio-wrap home-faq-grid">
+        <h2 class="home-h2">Antes de empezar.</h2>
+        <div>
+          <div class="home-accordion" data-accordion="single">
+            <div class="accordion-item">
+              <button type="button">¿Qué es Nexolia? <span class="icon">+</span></button>
+              <div class="panel">Nexolia es la app para operar tu negocio desde el celular, pensada para comercios y servicios profesionales. Centralizás chats con clientes (WhatsApp, Instagram y Messenger), ventas y presupuestos, stock, agenda y caja en un mismo lugar. Incluye a Copi, un asistente con IA que te ayuda a consultar y resolver el día a día sin saltar entre herramientas.</div>
+            </div>
+            <div class="accordion-item">
+              <button type="button">¿Qué puede hacer Copi? <span class="icon">+</span></button>
+              <div class="panel">Copi usa los datos de tu negocio para responder en español: ventas, stock, caja, mensajes y tareas. También puede proponerte crear tareas, armar turnos o preparar borradores de respuesta a clientes. Las acciones que escriben o envían algo (mensajes, tareas, cambios sensibles) solo se ejecutan cuando vos confirmás en el chat; la decisión siempre queda en tus manos.</div>
+            </div>
+            <div class="accordion-item">
+              <button type="button">¿Cómo solicito acceso? <span class="icon">+</span></button>
+              <div class="panel">Entrá a <a href="/comenzar">Comenzar</a>, contanos sobre tu negocio, elegí las herramientas que necesitás y el plan que mejor te cierre. Si preferís ver una demo antes de registrarte, escribinos desde <a href="/contacto">Contacto</a>. Al crear tu organización tenés 15 días de prueba sin cobro, para probar Nexolia con calma.</div>
+            </div>
+          </div>
+          <p class="home-faq-more">
+            <a class="home-text-link" href="/preguntas-frecuentes">
+              Todas las preguntas
+              <svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true"><path d="M3 7h8M7 3l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </a>
+          </p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="home-footer">
+    <div class="sitio-wrap home-footer-grid">
+      <div class="home-footer-brand">
+        <img class="logo" src="../../public/nexolia-logo-footer.png" alt="Nexolia" />
+        <p>Tu negocio, más inteligente.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Producto</h4>
+        <ul>
+          <li><a href="/#producto">Producto</a></li>
+          <li><a href="/copi">Copi</a></li>
+          <li><a href="/suscripciones">Suscripciones</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Ayuda</h4>
+        <ul>
+          <li><a href="/preguntas-frecuentes">Preguntas frecuentes</a></li>
+          <li><a href="/contacto">Contacto</a></li>
+          <li><a href="/guia">Guía</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Legal</h4>
+        <ul>
+          <li><a href="/privacidad">Privacidad</a></li>
+          <li><a href="/eliminacion-de-cuenta">Eliminación de cuenta</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="sitio-wrap home-footer-bottom">
+      <p class="footer-copy">© 2026 Nexolia.</p>
+      <div class="footer-bottom-actions">
+        <div class="footer-contact-icons">
+          <a class="footer-contact-link" href="mailto:hola@nexolia.com.ar">
+            <span class="footer-icon" aria-hidden="true">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+                <rect x="3" y="5" width="18" height="14" rx="2.5" stroke="currentColor" stroke-width="1.7"/>
+                <path d="M4.5 7.5 12 13l7.5-5.5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </span>
+            <span>hola@nexolia.com.ar</span>
+          </a>
+          <a class="footer-contact-link" href="https://wa.me/543546517096" target="_blank" rel="noopener noreferrer">
+            <span class="footer-icon" aria-hidden="true">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12.04 2.5c-5.23 0-9.48 4.2-9.48 9.37 0 1.65.44 3.26 1.27 4.68L2.5 21.5l5.12-1.33a9.5 9.5 0 0 0 4.42 1.07h.01c5.23 0 9.48-4.2 9.48-9.37S17.27 2.5 12.04 2.5zm5.54 13.3c-.23.65-1.35 1.2-1.87 1.28-.48.07-1.09.1-1.76-.11-.4-.13-.92-.3-1.58-.59-2.78-1.2-4.58-3.98-4.72-4.16-.14-.18-1.14-1.51-1.14-2.88 0-1.37.72-2.04.97-2.32.26-.28.56-.35.75-.35h.54c.17 0 .4-.06.63.48.23.55.78 1.9.85 2.04.07.14.11.3.02.49-.09.18-.13.3-.26.46-.13.16-.28.36-.4.48-.13.13-.26.27-.11.53.14.26.64 1.05 1.37 1.7.94.84 1.73 1.1 1.97 1.22.24.13.39.11.53-.06.14-.18.6-.7.76-.94.16-.24.32-.2.54-.12.22.08 1.4.66 1.64.78.24.12.4.18.46.28.06.1.06.58-.17 1.23z"/>
+              </svg>
+            </span>
+            <span>03546 - 51 - 7096</span>
+          </a>
+        </div>
+        <div class="footer-social-icons" aria-label="Redes sociales (próximamente)">
+          <span class="footer-icon is-disabled" aria-disabled="true" title="Instagram">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <rect x="3.5" y="3.5" width="17" height="17" rx="5" stroke="currentColor" stroke-width="1.7"/>
+              <circle cx="12" cy="12" r="4" stroke="currentColor" stroke-width="1.7"/>
+              <circle cx="17.2" cy="6.8" r="1.1" fill="currentColor"/>
+            </svg>
+          </span>
+          <span class="footer-icon is-disabled" aria-disabled="true" title="YouTube">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+              <path d="M22 12.2c0-2.2-.2-3.7-.5-4.5-.3-.8-.9-1.4-1.7-1.7C18.3 5.5 12 5.5 12 5.5s-6.3 0-7.8.5c-.8.3-1.4.9-1.7 1.7C2.2 8.5 2 10 2 12.2s.2 3.7.5 4.5c.3.8.9 1.4 1.7 1.7 1.5.5 7.8.5 7.8.5s6.3 0 7.8-.5c.8-.3 1.4-.9 1.7-1.7.3-.8.5-2.3.5-4.5zM10 15.2V9.2l5.2 3-5.2 3z"/>
+            </svg>
+          </span>
+          <span class="footer-icon is-disabled" aria-disabled="true" title="X">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+              <path d="M18.9 2.5h3.2l-7 8 8.2 11H16.7l-5.1-6.7L5.8 21.5H2.6l7.5-8.6L2.1 2.5h6.7l4.6 6.1 5.5-6.1zm-1.1 17h1.8L6.4 4.4H4.5l13.3 15.1z"/>
+            </svg>
+          </span>
+          <span class="footer-icon is-disabled footer-icon-threads" aria-disabled="true" title="Threads" aria-label="Threads">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path d="M15.8 8.2c-.2-2-1.6-3.3-3.7-3.3-2.3 0-3.9 1.5-3.9 3.8 0 4.2 6.5 3.1 6.5 6.9 0 1.8-1.5 3.2-3.6 3.2-1.9 0-3.3-1-3.8-2.6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+              <path d="M9.2 12.2h5.2" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+          </span>
+        </div>
+      </div>
+    </div>
+  </footer>
+  <div class="home-present" data-present hidden>
+    <div class="home-present-backdrop" data-present-close tabindex="-1" aria-hidden="true"></div>
+    <div class="home-present-shell" role="dialog" aria-modal="true" aria-label="Presentación de diapositivas">
+      <div class="home-present-stage">
+        <div class="home-present-frame" data-present-frame></div>
+      </div>
+      <div class="home-present-bar">
+        <button type="button" class="home-present-nav" data-present-prev aria-label="Diapositiva anterior">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M10 3.5L5.5 8 10 12.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <span class="home-present-count" data-present-count>1/7</span>
+        <button type="button" class="home-present-nav" data-present-next aria-label="Diapositiva siguiente">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M6 3.5L10.5 8 6 12.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <button type="button" class="home-present-stop" data-present-stop>Stop</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="sitio.js"></script>
+</body>
+</html>

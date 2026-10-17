@@ -16,3 +16,6 @@ next-env.d.ts.bak
 
 # TypeScript build info
 tsconfig.tsbuildinfo
+
+# Working refs for commercial mockups (not shipped)
+mockups/sitio/assets/_producto-ref/

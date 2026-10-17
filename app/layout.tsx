@@ -21,18 +21,17 @@ const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://nexolia.com.ar";
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
-    default: "Nexolia — Tu negocio, más inteligente",
+    default: "Nexolia - Tu negocio, más inteligente",
     template: "%s · Nexolia",
   },
-  description:
-    "Nexolia es el asistente inteligente para dueños de negocios: unifica tu bandeja de WhatsApp, CRM e inventario en una sola app.",
+  description: "Nexolia - Tu negocio, más inteligente",
   icons: {
-    icon: "/favicon.svg",
+    icon: [{ url: "/favicon.png", type: "image/png" }],
+    apple: [{ url: "/apple-touch-icon.png" }],
   },
   openGraph: {
-    title: "Nexolia — Tu negocio, más inteligente",
-    description:
-      "Unificá WhatsApp, CRM e inventario. Onboarding en minutos para tu comercio o servicio.",
+    title: "Nexolia - Tu negocio, más inteligente",
+    description: "Nexolia - Tu negocio, más inteligente",
     url: siteUrl,
     siteName: "Nexolia",
     locale: "es_AR",

@@ -19,7 +19,20 @@ const PUBLIC_PATHS = [
   "/eliminacion-de-cuenta",
   "/account-deletion",
   "/mockups",
+  "/copi",
+  "/suscripciones",
+  "/contacto",
+  "/preguntas-frecuentes",
 ];
+
+/** Apex marketing pages → static HTML under mockups/sitio (URL stays clean). */
+const SITIO_REWRITES: Record<string, string> = {
+  "/": "/mockups/sitio/inicio.html",
+  "/copi": "/mockups/sitio/copi.html",
+  "/suscripciones": "/mockups/sitio/suscripciones.html",
+  "/contacto": "/mockups/sitio/contacto.html",
+  "/preguntas-frecuentes": "/mockups/sitio/preguntas-frecuentes.html",
+};
 
 function isPublicPath(pathname: string): boolean {
   return PUBLIC_PATHS.some(
@@ -84,6 +97,15 @@ export function middleware(req: NextRequest) {
   if (adminCookie && !pathIsAdmin && !isPublicPath(pathname)) {
     url.pathname = "/admin" + (pathname === "/" ? "" : pathname);
     return NextResponse.rewrite(url);
+  }
+
+  // Apex commercial site (replace coming-soon homepage).
+  if (!isAdminHost) {
+    const sitioDest = SITIO_REWRITES[pathname];
+    if (sitioDest) {
+      url.pathname = sitioDest;
+      return NextResponse.rewrite(url);
+    }
   }
 
   return NextResponse.next();

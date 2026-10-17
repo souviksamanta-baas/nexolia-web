@@ -42,6 +42,7 @@ flowchart LR
 ```mermaid
 flowchart TB
   subgraph apex [nexolia.com.ar]
+    Mkt["Commercial site mockups then Next.js"]
     Onboard["/comenzar public"]
     Legal["/privacidad etc"]
   end
@@ -57,12 +58,15 @@ flowchart TB
     Webapp["web.nexolia.com.ar QR desktop"]
   end
   Onboard --> API
+  Mkt -.->|"later Contacto demo → POST /public/leads"| API
   Admin --> API
   App --> API
   App --> DB
   API --> DB
   Webapp -.-> API
 ```
+
+Commercial homepage / Copi / Suscripciones / Contacto / FAQ: see [commercial-site.md](./commercial-site.md). Apex middleware rewrites those paths to `mockups/sitio/*.html` (always public). No new Nest endpoints or webhooks for the marketing site; Suscripciones reads the same public plans catalog as Comenzar. Ingresar on the apex stays disabled (staff login remains on `admin.nexolia.com.ar` only).
 
 ## Lead → staff convert → app attach
 

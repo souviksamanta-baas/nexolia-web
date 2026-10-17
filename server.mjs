@@ -31,12 +31,37 @@ async function serveFile(res, filePath) {
   res.end(data);
 }
 
+const NEST_API = (
+  process.env.BAAS_API_URL ||
+  process.env.NEXT_PUBLIC_BAAS_API_URL ||
+  'https://baas-project-production.up.railway.app'
+).replace(/\/$/, '');
+
 const server = createServer(async (req, res) => {
   try {
     const url = new URL(req.url, `http://${req.headers.host}`);
     let pathname = url.pathname;
     if (pathname !== '/' && pathname.endsWith('/')) pathname = pathname.slice(0, -1);
     if (pathname === '/') pathname = '/mockups/index.html';
+
+    // Same-origin proxy so Suscripciones can read Admin → Planes.
+    if (pathname === '/api/public/plans') {
+      try {
+        const upstream = await fetch(`${NEST_API}/public/plans`, {
+          headers: { Accept: 'application/json' },
+        });
+        const body = await upstream.text();
+        res.writeHead(upstream.status, {
+          'Content-Type': 'application/json; charset=utf-8',
+          'Cache-Control': 'no-store',
+        });
+        res.end(body);
+      } catch {
+        res.writeHead(502, { 'Content-Type': 'application/json; charset=utf-8' });
+        res.end(JSON.stringify({ message: 'No pudimos cargar los planes.' }));
+      }
+      return;
+    }
 
     // /public/* → repo `public/` (mockups reference logos there).
     if (pathname.startsWith('/public/')) {
