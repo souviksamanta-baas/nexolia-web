@@ -10,8 +10,7 @@
   (function () {
     var header = qs(".sitio-header");
     var toggle = qs("[data-sitio-menu-toggle]", header);
-    var menu = qs(".sitio-menu", header);
-    if (!header || !toggle || !menu) return;
+    if (!header || !toggle) return;
 
     function setOpen(open) {
       header.classList.toggle("is-menu-open", open);
@@ -29,7 +28,7 @@
       setOpen(!header.classList.contains("is-menu-open"));
     });
 
-    qsa("a", menu).forEach(function (link) {
+    qsa(".sitio-nav a, .sitio-actions a", header).forEach(function (link) {
       link.addEventListener("click", function () {
         setOpen(false);
       });

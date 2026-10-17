@@ -14,32 +14,30 @@
   <link rel="stylesheet" href="sitio.css" />
 </head>
 <body class="sitio">
-    <header class="sitio-header">
+      <header class="sitio-header">
     <a class="brand" href="/">
       <img class="logo" src="../../public/nexolia-logo.png" alt="Nexolia" />
     </a>
+    <nav class="sitio-nav" id="sitio-nav" aria-label="Principal">
+      <a href="/#producto">Producto</a>
+      <a href="/copi">Copi</a>
+      <a class="is-active" href="/suscripciones">Suscripciones</a>
+      <a href="/contacto">Contacto</a>
+    </nav>
+    <div class="sitio-actions">
+      <button class="btn btn-ghost btn-sm sitio-login" type="button" disabled aria-disabled="true">Ingresar</button>
+      <a class="btn btn-primary btn-sm" href="/comenzar">Comenzar</a>
+    </div>
     <button
       type="button"
       class="sitio-menu-toggle"
       data-sitio-menu-toggle
       aria-expanded="false"
-      aria-controls="sitio-menu"
+      aria-controls="sitio-nav"
       aria-label="Abrir menú"
     >
       <span class="sitio-menu-toggle-bars" aria-hidden="true"></span>
     </button>
-    <div class="sitio-menu" id="sitio-menu">
-      <nav class="sitio-nav" aria-label="Principal">
-      <a href="/#producto">Producto</a>
-      <a href="/copi">Copi</a>
-      <a class="is-active" href="/suscripciones">Suscripciones</a>
-      <a href="/contacto">Contacto</a>
-      </nav>
-      <div class="sitio-actions">
-        <button class="btn btn-ghost btn-sm sitio-login" type="button" disabled aria-disabled="true">Ingresar</button>
-        <a class="btn btn-primary btn-sm" href="/comenzar">Comenzar</a>
-      </div>
-    </div>
   </header>
 
   <main>

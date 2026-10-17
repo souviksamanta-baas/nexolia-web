@@ -13,7 +13,7 @@ const NAV: { key: NavKey; href: string; label: string }[] = [
 ];
 
 export function MktHeader({ active }: { active?: NavKey }) {
-  const menuId = useId();
+  const navId = useId();
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
@@ -43,47 +43,45 @@ export function MktHeader({ active }: { active?: NavKey }) {
       <Link className="brand" href="/">
         <img className="logo" src="/nexolia-logo.png" alt="Nexolia" />
       </Link>
+      <nav className="sitio-nav" id={navId} aria-label="Principal">
+        {NAV.map((item) => (
+          <Link
+            key={item.key}
+            href={item.href}
+            className={active === item.key ? "is-active" : undefined}
+            onClick={() => setOpen(false)}
+          >
+            {item.label}
+          </Link>
+        ))}
+      </nav>
+      <div className="sitio-actions">
+        <button
+          className="btn btn-ghost btn-sm sitio-login"
+          type="button"
+          disabled
+          aria-disabled="true"
+        >
+          Ingresar
+        </button>
+        <Link
+          className="btn btn-primary btn-sm"
+          href="/comenzar"
+          onClick={() => setOpen(false)}
+        >
+          Comenzar
+        </Link>
+      </div>
       <button
         type="button"
         className="sitio-menu-toggle"
         aria-expanded={open}
-        aria-controls={menuId}
+        aria-controls={navId}
         aria-label={open ? "Cerrar menú" : "Abrir menú"}
         onClick={() => setOpen((v) => !v)}
       >
         <span className="sitio-menu-toggle-bars" aria-hidden="true" />
       </button>
-      <div className="sitio-menu" id={menuId}>
-        <nav className="sitio-nav" aria-label="Principal">
-          {NAV.map((item) => (
-            <Link
-              key={item.key}
-              href={item.href}
-              className={active === item.key ? "is-active" : undefined}
-              onClick={() => setOpen(false)}
-            >
-              {item.label}
-            </Link>
-          ))}
-        </nav>
-        <div className="sitio-actions">
-          <button
-            className="btn btn-ghost btn-sm sitio-login"
-            type="button"
-            disabled
-            aria-disabled="true"
-          >
-            Ingresar
-          </button>
-          <Link
-            className="btn btn-primary btn-sm"
-            href="/comenzar"
-            onClick={() => setOpen(false)}
-          >
-            Comenzar
-          </Link>
-        </div>
-      </div>
     </header>
   );
 }

@@ -68,9 +68,10 @@ img {
   position: sticky;
   top: 0;
   z-index: 40;
-  display: flex;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
   align-items: center;
-  gap: 1rem;
+  column-gap: 1rem;
   padding: 1rem 2.5rem;
   background: rgba(255, 255, 255, 0.5);
   backdrop-filter: blur(12px) saturate(1.15);
@@ -79,12 +80,11 @@ img {
 }
 
 .sitio-header .brand {
-  position: relative;
-  z-index: 1;
+  grid-column: 1;
+  justify-self: start;
   display: inline-flex;
   align-items: center;
   min-width: 0;
-  flex-shrink: 0;
 }
 
 .sitio-header .logo {
@@ -93,20 +93,60 @@ img {
   display: block;
 }
 
+.sitio-nav {
+  grid-column: 2;
+  justify-self: center;
+  display: flex;
+  gap: 1.75rem;
+}
+
+.sitio-nav a {
+  color: var(--navy);
+  font-weight: 500;
+  font-size: 0.94rem;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.sitio-nav a:hover,
+.sitio-nav a.is-active {
+  color: var(--navy);
+  text-decoration: underline;
+  text-underline-offset: 0.28em;
+}
+
+.sitio-actions {
+  grid-column: 3;
+  justify-self: end;
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+}
+
+.sitio-header .btn-ghost:disabled,
+.sitio-header .btn-ghost[aria-disabled="true"] {
+  opacity: 0.55;
+  color: var(--navy);
+}
+
+.sitio-header .btn-primary {
+  border-radius: 8px;
+}
+
 .sitio-menu-toggle {
-  display: none;
+  display: none !important;
+  grid-column: 3;
+  justify-self: end;
   align-items: center;
   justify-content: center;
   width: 44px;
   height: 44px;
-  margin-left: auto;
   padding: 0;
   border: 1px solid rgba(16, 25, 53, 0.12);
   border-radius: 10px;
   background: rgba(255, 255, 255, 0.85);
   color: var(--navy);
   cursor: pointer;
-  flex-shrink: 0;
   -webkit-tap-highlight-color: transparent;
 }
 
@@ -158,59 +198,17 @@ img {
   transform: rotate(-45deg);
 }
 
-.sitio-menu {
-  display: flex;
-  align-items: center;
-  flex: 1;
-  min-width: 0;
-  justify-content: flex-end;
-}
-
-.sitio-nav {
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
-  display: flex;
-  gap: 1.75rem;
-}
-
-.sitio-nav a {
-  color: var(--navy);
-  font-weight: 500;
-  font-size: 0.94rem;
-  text-decoration: none;
-  white-space: nowrap;
-}
-
-.sitio-nav a:hover,
-.sitio-nav a.is-active {
-  color: var(--navy);
-  text-decoration: underline;
-  text-underline-offset: 0.28em;
-}
-
-.sitio-actions {
-  display: flex;
-  align-items: center;
-  gap: 0.65rem;
-  flex-shrink: 0;
-}
-
-.sitio-header .btn-ghost:disabled,
-.sitio-header .btn-ghost[aria-disabled="true"] {
-  opacity: 0.55;
-  color: var(--navy);
-}
-
-.sitio-header .btn-primary {
-  border-radius: 8px;
-}
-
 @media (max-width: 960px) {
   .sitio-header {
+    display: flex;
     flex-wrap: wrap;
+    align-items: center;
     gap: 0;
     padding: 0.75rem 1rem;
+  }
+
+  .sitio-header .brand {
+    order: 1;
   }
 
   .sitio-header .logo {
@@ -218,35 +216,30 @@ img {
   }
 
   .sitio-menu-toggle {
-    display: inline-flex;
+    display: inline-flex !important;
+    order: 2;
+    margin-left: auto;
   }
 
-  .sitio-menu {
+  .sitio-nav,
+  .sitio-actions {
     display: none;
-    flex-direction: column;
-    align-items: stretch;
-    flex: none;
-    flex-basis: 100%;
     width: 100%;
-    margin-top: 0.75rem;
-    padding: 0.35rem 0 0.65rem;
-    border-top: 1px solid rgba(228, 235, 239, 0.9);
-    gap: 0.35rem;
-    justify-content: flex-start;
+    order: 3;
   }
 
-  .sitio-header.is-menu-open .sitio-menu {
+  .sitio-header.is-menu-open .sitio-nav,
+  .sitio-header.is-menu-open .sitio-actions {
     display: flex;
-  }
-
-  .sitio-nav {
-    position: static;
-    left: auto;
-    transform: none;
     flex-direction: column;
     align-items: stretch;
+  }
+
+  .sitio-header.is-menu-open .sitio-nav {
+    margin-top: 0.75rem;
+    padding-top: 0.5rem;
+    border-top: 1px solid rgba(228, 235, 239, 0.9);
     gap: 0.15rem;
-    width: 100%;
   }
 
   .sitio-nav a {
@@ -264,14 +257,12 @@ img {
     text-decoration: none;
   }
 
-  .sitio-actions {
-    flex-direction: column;
-    align-items: stretch;
+  .sitio-header.is-menu-open .sitio-actions {
+    order: 4;
     gap: 0.55rem;
-    margin-top: 0.5rem;
+    margin-top: 0.35rem;
     padding-top: 0.65rem;
     border-top: 1px solid rgba(228, 235, 239, 0.9);
-    width: 100%;
   }
 
   .sitio-actions .btn {
