@@ -17,12 +17,10 @@ const MOBILE_MQ = "(max-width: 960px)";
 export function MktHeader({ active }: { active?: NavKey }) {
   const navId = useId();
   const [open, setOpen] = useState(false);
-  const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
     const mq = window.matchMedia(MOBILE_MQ);
     const sync = () => {
-      setIsMobile(mq.matches);
       if (!mq.matches) setOpen(false);
     };
     sync();
@@ -31,7 +29,10 @@ export function MktHeader({ active }: { active?: NavKey }) {
   }, []);
 
   useEffect(() => {
-    if (!open) return;
+    if (!open) {
+      document.body.classList.remove("is-menu-open");
+      return;
+    }
     const onKey = (e: KeyboardEvent) => {
       if (e.key === "Escape") setOpen(false);
     };
@@ -77,18 +78,21 @@ export function MktHeader({ active }: { active?: NavKey }) {
           Comenzar
         </Link>
       </div>
-      {isMobile ? (
-        <button
-          type="button"
-          className="sitio-menu-toggle"
-          aria-expanded={open}
-          aria-controls={navId}
-          aria-label={open ? "Cerrar menú" : "Abrir menú"}
-          onClick={() => setOpen((v) => !v)}
-        >
-          <span className="sitio-menu-toggle-bars" aria-hidden="true" />
-        </button>
-      ) : null}
+      <button
+        type="button"
+        className="sitio-menu-toggle"
+        aria-expanded={open}
+        aria-controls={navId}
+        aria-label={open ? "Cerrar menú" : "Abrir menú"}
+        onClick={() => {
+          if (typeof window !== "undefined" && !window.matchMedia(MOBILE_MQ).matches) {
+            return;
+          }
+          setOpen((v) => !v);
+        }}
+      >
+        <span className="sitio-menu-toggle-bars" aria-hidden="true" />
+      </button>
     </header>
   );
 }

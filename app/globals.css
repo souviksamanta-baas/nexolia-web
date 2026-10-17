@@ -1209,23 +1209,8 @@ table.data a:hover {
 .sitio-header .btn-primary {
   border-radius: 8px;
 }
-@media (min-width: 961px) {
-  .sitio-menu-toggle {
-    display: none !important;
-    visibility: hidden !important;
-    position: absolute !important;
-    width: 0 !important;
-    height: 0 !important;
-    margin: 0 !important;
-    padding: 0 !important;
-    border: 0 !important;
-    overflow: hidden !important;
-    clip: rect(0, 0, 0, 0) !important;
-    pointer-events: none !important;
-  }
-}
 .sitio-menu-toggle {
-  display: inline-flex;
+  display: none;
   align-items: center;
   justify-content: center;
   width: 44px;
@@ -1237,6 +1222,12 @@ table.data a:hover {
   color: var(--navy);
   cursor: pointer;
   -webkit-tap-highlight-color: transparent;
+}
+@media (min-width: 961px) {
+  .sitio-menu-toggle {
+    display: none !important;
+    pointer-events: none !important;
+  }
 }
 .sitio-menu-toggle-bars,
 .sitio-menu-toggle-bars::before,
@@ -1289,9 +1280,10 @@ table.data a:hover {
     height: 25px;
   }
   .sitio-menu-toggle {
-    display: inline-flex;
+    display: inline-flex !important;
     order: 2;
     margin-left: auto;
+    flex-shrink: 0;
   }
   .sitio-nav,
   .sitio-actions {
