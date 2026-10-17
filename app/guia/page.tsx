@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { MktFooter } from "@/components/MktFooter";
+import { MktHeader } from "@/components/MktHeader";
 import { ScrollToTopButton } from "@/components/ScrollToTopButton";
 
 export const metadata: Metadata = {
@@ -59,11 +61,7 @@ const HEADERS: [string, string, string, string] = [
 export default function GuiaPage() {
   return (
     <div className="site-layout policy-page guide-page">
-      <header className="site-header">
-        <Link href="/">
-          <img src="/nexolia-logo.svg" alt="Nexolia" width={180} height={40} />
-        </Link>
-      </header>
+      <MktHeader />
 
       <main className="site-main">
         <Link className="back-link" href="/">
@@ -907,15 +905,7 @@ export default function GuiaPage() {
         </p>
       </main>
 
-      <footer className="site-footer">
-        <Link href="/">Inicio</Link>
-        {" · "}
-        <Link href="/comenzar">Comenzar</Link>
-        {" · "}
-        <Link href="/privacidad">Privacidad</Link>
-        {" · "}
-        <Link href="/eliminacion-de-cuenta">Eliminación de cuenta</Link>
-      </footer>
+      <MktFooter />
 
       <ScrollToTopButton />
     </div>

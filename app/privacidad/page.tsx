@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { MktFooter } from "@/components/MktFooter";
+import { MktHeader } from "@/components/MktHeader";
 
 export const metadata: Metadata = {
   title: "Política de Privacidad",
@@ -10,11 +12,7 @@ export const metadata: Metadata = {
 export default function PrivacidadPage() {
   return (
     <div className="site-layout policy-page">
-      <header className="site-header">
-        <Link href="/">
-          <img src="/nexolia-logo.svg" alt="Nexolia" width={180} height={40} />
-        </Link>
-      </header>
+      <MktHeader />
 
       <main className="site-main">
         <Link className="back-link" href="/">
@@ -300,13 +298,7 @@ export default function PrivacidadPage() {
         </p>
       </main>
 
-      <footer className="site-footer">
-        <Link href="/">Inicio</Link>
-        {" · "}
-        <Link href="/eliminacion-de-cuenta">Eliminación de cuenta</Link>
-        {" · "}
-        <a href="mailto:privacidad@nexolia.com.ar">privacidad@nexolia.com.ar</a>
-      </footer>
+      <MktFooter />
     </div>
   );
 }

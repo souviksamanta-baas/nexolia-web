@@ -10,8 +10,8 @@
   (function () {
     var header = qs(".sitio-header");
     var toggle = qs("[data-sitio-menu-toggle]", header);
-    var nav = qs(".sitio-nav", header);
-    if (!header || !toggle || !nav) return;
+    var menu = qs(".sitio-menu", header);
+    if (!header || !toggle || !menu) return;
 
     function setOpen(open) {
       header.classList.toggle("is-menu-open", open);
@@ -23,11 +23,13 @@
       );
     }
 
-    toggle.addEventListener("click", function () {
+    toggle.addEventListener("click", function (e) {
+      e.preventDefault();
+      e.stopPropagation();
       setOpen(!header.classList.contains("is-menu-open"));
     });
 
-    qsa("a", nav).forEach(function (link) {
+    qsa("a", menu).forEach(function (link) {
       link.addEventListener("click", function () {
         setOpen(false);
       });

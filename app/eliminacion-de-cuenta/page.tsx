@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { MktFooter } from "@/components/MktFooter";
+import { MktHeader } from "@/components/MktHeader";
 
 export const metadata: Metadata = {
   title: "Eliminación de cuenta y datos",
@@ -11,11 +13,7 @@ export const metadata: Metadata = {
 export default function EliminacionDeCuentaPage() {
   return (
     <div className="site-layout policy-page">
-      <header className="site-header">
-        <Link href="/">
-          <img src="/nexolia-logo.svg" alt="Nexolia" width={180} height={40} />
-        </Link>
-      </header>
+      <MktHeader />
 
       <main className="site-main">
         <Link className="back-link" href="/">
@@ -130,13 +128,7 @@ export default function EliminacionDeCuentaPage() {
         </p>
       </main>
 
-      <footer className="site-footer">
-        <Link href="/">Inicio</Link>
-        {" · "}
-        <Link href="/privacidad">Política de privacidad</Link>
-        {" · "}
-        <a href="mailto:privacidad@nexolia.com.ar">privacidad@nexolia.com.ar</a>
-      </footer>
+      <MktFooter />
     </div>
   );
 }
