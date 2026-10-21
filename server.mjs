@@ -44,8 +44,8 @@ const server = createServer(async (req, res) => {
     if (pathname !== '/' && pathname.endsWith('/')) pathname = pathname.slice(0, -1);
     if (pathname === '/') pathname = '/mockups/index.html';
 
-    // Same-origin proxy so Suscripciones can read Admin → Planes.
-    if (pathname === '/api/public/plans') {
+    // Same-origin proxies to Nest (plans catalog + contact/demo leads).
+    if (pathname === '/api/public/plans' && req.method === 'GET') {
       try {
         const upstream = await fetch(`${NEST_API}/public/plans`, {
           headers: { Accept: 'application/json' },
@@ -59,6 +59,37 @@ const server = createServer(async (req, res) => {
       } catch {
         res.writeHead(502, { 'Content-Type': 'application/json; charset=utf-8' });
         res.end(JSON.stringify({ message: 'No pudimos cargar los planes.' }));
+      }
+      return;
+    }
+
+    if (pathname === '/api/public/leads' && req.method === 'POST') {
+      const chunks = [];
+      for await (const chunk of req) chunks.push(chunk);
+      const payload = Buffer.concat(chunks);
+      try {
+        const upstream = await fetch(`${NEST_API}/public/leads`, {
+          method: 'POST',
+          headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+          },
+          body: payload.length ? payload : undefined,
+        });
+        const body = await upstream.text();
+        res.writeHead(upstream.status, {
+          'Content-Type': 'application/json; charset=utf-8',
+          'Cache-Control': 'no-store',
+        });
+        res.end(body);
+      } catch {
+        res.writeHead(502, { 'Content-Type': 'application/json; charset=utf-8' });
+        res.end(
+          JSON.stringify({
+            message:
+              'No pudimos contactar el servidor. Intentá de nuevo en unos minutos.',
+          }),
+        );
       }
       return;
     }

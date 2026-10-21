@@ -307,15 +307,116 @@
       });
   })();
 
-  /* Contact form thanks */
-  var form = qs("[data-demo-form]");
-  if (form) {
+  /* Contact form → POST /api/public/leads (demo request) */
+  (function initContactForm() {
+    var form = qs("[data-demo-form]");
+    if (!form) return;
+
+    var card = form.closest(".form-card");
+    var submitBtn = qs("[data-form-submit]", form);
+    var errorEl = qs("[data-form-error]", form);
+    var thanksEmail = card ? qs("[data-thanks-email]", card) : null;
+    var defaultSubmitLabel = submitBtn ? submitBtn.textContent : "Enviar solicitud →";
+
+    function setError(message) {
+      if (!errorEl) return;
+      if (!message) {
+        errorEl.hidden = true;
+        errorEl.textContent = "";
+        return;
+      }
+      errorEl.hidden = false;
+      errorEl.textContent = message;
+    }
+
+    function setBusy(busy) {
+      if (!submitBtn) return;
+      submitBtn.disabled = busy;
+      submitBtn.setAttribute("aria-busy", busy ? "true" : "false");
+      submitBtn.textContent = busy ? "Enviando…" : defaultSubmitLabel;
+    }
+
     form.addEventListener("submit", function (e) {
       e.preventDefault();
-      var card = form.closest(".form-card");
-      if (card) card.classList.add("is-sent");
+      setError("");
+
+      if (typeof form.reportValidity === "function" && !form.reportValidity()) {
+        return;
+      }
+
+      var nombre = (form.nombre && form.nombre.value ? form.nombre.value : "").trim();
+      var email = (form.email && form.email.value ? form.email.value : "").trim();
+      var negocio = (form.negocio && form.negocio.value ? form.negocio.value : "").trim();
+      var mensaje = (form.mensaje && form.mensaje.value ? form.mensaje.value : "").trim();
+
+      if (!nombre || !email || !negocio) {
+        setError("Completá nombre, email y tu negocio para continuar.");
+        return;
+      }
+
+      var noteParts = [
+        "origen:demo",
+        "source=nexolia-web/contacto",
+        "nombre=" + nombre,
+      ];
+      if (mensaje) noteParts.push("mensaje=" + mensaje);
+
+      setBusy(true);
+      fetch("/api/public/leads", {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email: email,
+          orgName: negocio,
+          categoria: "",
+          servicios: [],
+          plan: null,
+          ciclo: "monthly",
+          notes: noteParts.join("; "),
+          source: "nexolia-web/contacto",
+        }),
+        cache: "no-store",
+      })
+        .then(function (res) {
+          return res.text().then(function (raw) {
+            var parsed = null;
+            if (raw) {
+              try {
+                parsed = JSON.parse(raw);
+              } catch (err) {
+                parsed = null;
+              }
+            }
+            return { ok: res.ok, status: res.status, parsed: parsed };
+          });
+        })
+        .then(function (result) {
+          if (!result.ok) {
+            var msg =
+              result.parsed && result.parsed.message
+                ? String(result.parsed.message)
+                : "No pudimos enviar tu solicitud. Intentá de nuevo en unos minutos.";
+            throw new Error(msg);
+          }
+          if (thanksEmail) thanksEmail.textContent = email;
+          if (card) card.classList.add("is-sent");
+          form.reset();
+        })
+        .catch(function (err) {
+          setError(
+            err && err.message
+              ? err.message
+              : "No pudimos enviar tu solicitud. Intentá de nuevo en unos minutos."
+          );
+        })
+        .finally(function () {
+          setBusy(false);
+        });
     });
-  }
+  })();
 
   /* FAQ tabs + search */
   var tabs = qs("[data-faq-tabs]");

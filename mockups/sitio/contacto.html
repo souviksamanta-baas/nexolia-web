@@ -11,7 +11,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,400;0,500;0,600;0,700;0,800;1,500;1,600;1,700&family=Playfair+Display:ital,wght@1,400;1,500&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="sitio.css?v=20261017d" />
+  <link rel="stylesheet" href="sitio.css?v=20261020a" />
 </head>
 <body class="sitio">
       <header class="sitio-header">
@@ -25,7 +25,7 @@
       <a class="is-active" href="/contacto">Contacto</a>
     </nav>
     <div class="sitio-actions">
-      <button class="btn btn-ghost btn-sm sitio-login" type="button" disabled aria-disabled="true">Ingresar</button>
+      <a class="btn btn-ghost btn-sm sitio-login" href="https://web.nexolia.com.ar">Ingresar</a>
       <a class="btn btn-primary btn-sm" href="/comenzar">Comenzar</a>
     </div>
       <button type="button" class="sitio-menu-toggle" aria-expanded="false" aria-controls="sitio-nav" aria-label="Abrir menú">
@@ -72,7 +72,7 @@
 
         <div class="form-card">
           <div class="form-fields">
-            <form data-demo-form>
+            <form data-demo-form novalidate>
               <div class="field">
                 <label for="nombre">Nombre</label>
                 <input id="nombre" name="nombre" type="text" placeholder="Tu nombre y apellido" required autocomplete="name" />
@@ -89,14 +89,30 @@
                 <label for="mensaje">¿Qué te gustaría conocer? (opcional)</label>
                 <textarea id="mensaje" name="mensaje" rows="4" placeholder="Contanos un poco..."></textarea>
               </div>
-              <button class="btn btn-primary" type="submit">Enviar solicitud →</button>
+              <p class="form-error" data-form-error hidden role="alert"></p>
+              <button class="btn btn-primary" type="submit" data-form-submit>Enviar solicitud →</button>
             </form>
             <p class="form-privacy">Usaremos estos datos para responder tu solicitud. <a href="/privacidad">Privacidad</a>.</p>
           </div>
           <div class="form-thanks">
-            <h2>¡Listo!</h2>
-            <p class="secondary">Recibimos tu solicitud. Te escribimos a la brevedad a <strong>hola@nexolia.com.ar</strong>.</p>
-            <a class="btn btn-primary" href="/" style="margin-top:1rem">Volver al inicio</a>
+            <div class="form-thanks-check" aria-hidden="true">✓</div>
+            <h2>¡Gracias! Recibimos tu mensaje</h2>
+            <p class="secondary">
+              Te vamos a escribir a <strong data-thanks-email>tu email</strong> a la brevedad
+              para coordinar una demo o responder tus dudas.
+            </p>
+            <p class="secondary form-thanks-note">
+              Si preferís, también podés escribirnos por WhatsApp.
+            </p>
+            <div class="form-thanks-actions">
+              <a class="btn btn-primary" href="/">Volver al inicio</a>
+              <a
+                class="btn btn-secondary"
+                href="https://wa.me/543546517096"
+                target="_blank"
+                rel="noopener noreferrer"
+              >WhatsApp</a>
+            </div>
           </div>
         </div>
       </div>
@@ -217,6 +233,6 @@
       </div>
     </div>
   </footer>
-  <script src="sitio.js?v=20261017c"></script>
+  <script src="sitio.js?v=20261020a"></script>
 </body>
 </html>

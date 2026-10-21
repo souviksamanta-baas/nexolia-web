@@ -11,15 +11,15 @@ Live apex routes rewrite to these HTML files via `middleware.ts` (`/` → `inici
 | `inicio.html` | One-page homepage (Producto = `#producto`) |
 | `copi.html` | Copi product page |
 | `suscripciones.html` | Plans (Básico / Pro / Enterprise) |
-| `contacto.html` | Demo request form (thanks state only) |
+| `contacto.html` | Demo request form (`POST /api/public/leads`) |
 | `preguntas-frecuentes.html` | FAQ with tabs + search |
 
 ## Navigation
 
-Header: **Producto**, **Copi**, **Suscripciones**, **Contacto**, **Ingresar** (disabled), **Comenzar**.
+Header: **Producto**, **Copi**, **Suscripciones**, **Contacto**, **Ingresar**, **Comenzar**.
 
 - Producto → `inicio.html#producto`
-- Ingresar is `<button disabled>` — does not open admin login
+- Ingresar → `https://web.nexolia.com.ar` (QR pairing). Staff login stays on `admin.nexolia.com.ar`
 - Comenzar → existing `/comenzar` flow (`mockups/comenzar/paso-1.html`)
 
 Footer (brand green `#08bd66`):
@@ -56,7 +56,7 @@ Annual = 11 months. Trial 15 days. Launch discount 50% off first 6 months. Start
 
 - **No** link from the marketing site into `admin.nexolia.com.ar`.
 - Suscripciones reads `GET /public/plans` (same as Comenzar). Price/name/tagline/servicios/copi updates in Admin appear on the page after refresh.
-- Contacto mockup does not POST. When implemented in Next.js, reuse `POST /public/leads` with `email`, `orgName`, and `notes` containing name + message + `origen:demo`. No new column, endpoint, or webhook.
+- Contacto posts to same-origin `POST /api/public/leads` with `email`, `orgName`, and `notes` containing `nombre`, optional `mensaje`, and `origen:demo`. No new column, endpoint, or webhook.
 
 ## Screenshots (homepage slider)
 
