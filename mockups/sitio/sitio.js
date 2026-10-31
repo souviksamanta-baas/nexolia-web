@@ -6,6 +6,11 @@
     return Array.prototype.slice.call((root || document).querySelectorAll(sel));
   }
 
+  /* Ingresar always opens the live desktop app. */
+  qsa("a.sitio-login").forEach(function (link) {
+    link.href = "https://web.nexolia.com.ar";
+  });
+
   /* Mobile header menu — toggle is in HTML; CSS hides it on desktop */
   (function () {
     var header = qs(".sitio-header");

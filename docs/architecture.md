@@ -66,7 +66,7 @@ flowchart TB
   Webapp -.-> API
 ```
 
-Commercial homepage / Copi / Suscripciones / Contacto / FAQ: see [commercial-site.md](./commercial-site.md). Apex middleware rewrites those paths to `mockups/sitio/*.html` (always public). No new Nest endpoints or webhooks for the marketing site; Suscripciones reads the same public plans catalog as Comenzar. Ingresar on the apex stays disabled (staff login remains on `admin.nexolia.com.ar` only).
+Commercial homepage / Copi / Suscripciones / Contacto / FAQ: see [commercial-site.md](./commercial-site.md). Apex middleware rewrites those paths to `mockups/sitio/*.html` (always public). No new Nest endpoints or webhooks for the marketing site; Suscripciones reads the same public plans catalog as Comenzar. Ingresar on the apex opens `https://web.nexolia.com.ar` (QR pairing). Staff login remains on `admin.nexolia.com.ar` only.
 
 ## Lead → staff convert → app attach
 

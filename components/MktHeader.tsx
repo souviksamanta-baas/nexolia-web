@@ -62,14 +62,9 @@ export function MktHeader({ active }: { active?: NavKey }) {
         ))}
       </nav>
       <div className="sitio-actions">
-        <button
-          className="btn btn-ghost btn-sm sitio-login"
-          type="button"
-          disabled
-          aria-disabled="true"
-        >
+        <a className="btn btn-ghost btn-sm sitio-login" href="https://web.nexolia.com.ar">
           Ingresar
-        </button>
+        </a>
         <Link
           className="btn btn-primary btn-sm"
           href="/comenzar"
