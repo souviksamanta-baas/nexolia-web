@@ -2084,6 +2084,29 @@ table.data a:hover {
   gap: 0.75rem;
   color: var(--text);
 }
+.guide-note {
+  margin: 0.5rem 0 0.85rem;
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+}
+.guide-access-table-wrap {
+  margin-top: 1rem;
+}
+.guide-access-table {
+  min-width: 52rem;
+}
+.guide-access-table th:first-child,
+.guide-access-table td:first-child {
+  white-space: normal;
+  width: auto;
+  min-width: 12rem;
+  font-weight: 600;
+}
+.guide-access-table th:not(:first-child),
+.guide-access-table td:not(:first-child) {
+  text-align: center;
+  white-space: nowrap;
+}
 .scroll-top-btn {
   position: fixed;
   right: max(1rem, env(safe-area-inset-right));
@@ -2176,6 +2199,14 @@ table.data a:hover {
     padding-top: 0;
     font-weight: 700;
     color: var(--navy);
+  }
+  .guide-access-table {
+    min-width: 0;
+  }
+  .guide-access-table th:not(:first-child),
+  .guide-access-table td:not(:first-child) {
+    text-align: left;
+    white-space: normal;
   }
   .guide-page td + td {
     border-top: 1px solid var(--border);

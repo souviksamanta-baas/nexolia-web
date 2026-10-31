@@ -58,6 +58,250 @@ const HEADERS: [string, string, string, string] = [
   "Resultado esperado",
 ];
 
+type AccessMark = "✓" | "—" | string;
+
+type AccessRow = {
+  page: string;
+  app: AccessMark;
+  webApp: string;
+  owner: AccessMark;
+  coOwner: AccessMark;
+  admin: AccessMark;
+  employee: AccessMark;
+};
+
+/** App access matrix from current Owner mobile gates (orgRoles + Más / Mi cuenta). */
+const ACCESS_ROWS: AccessRow[] = [
+  {
+    page: "Inicio (Home)",
+    app: "✓",
+    webApp: "",
+    owner: "✓",
+    coOwner: "✓",
+    admin: "✓",
+    employee: "✓",
+  },
+  {
+    page: "Chats (WhatsApp / Instagram)",
+    app: "✓",
+    webApp: "",
+    owner: "✓",
+    coOwner: "✓",
+    admin: "✓",
+    employee: "✓",
+  },
+  {
+    page: "Copi",
+    app: "✓",
+    webApp: "",
+    owner: "✓",
+    coOwner: "✓",
+    admin: "✓",
+    employee: "✓",
+  },
+  {
+    page: "Ventas ($)",
+    app: "✓",
+    webApp: "",
+    owner: "✓",
+    coOwner: "✓",
+    admin: "✓",
+    employee: "✓",
+  },
+  {
+    page: "Inventario y productos",
+    app: "✓",
+    webApp: "",
+    owner: "✓",
+    coOwner: "✓",
+    admin: "✓",
+    employee: "✓",
+  },
+  {
+    page: "Compras y proveedores",
+    app: "✓",
+    webApp: "",
+    owner: "✓",
+    coOwner: "✓",
+    admin: "✓",
+    employee: "✓",
+  },
+  {
+    page: "Tareas y notificaciones",
+    app: "✓",
+    webApp: "",
+    owner: "✓",
+    coOwner: "✓",
+    admin: "✓",
+    employee: "✓",
+  },
+  {
+    page: "Agenda",
+    app: "✓",
+    webApp: "",
+    owner: "✓",
+    coOwner: "✓",
+    admin: "✓",
+    employee: "✓",
+  },
+  {
+    page: "Caja y reportes",
+    app: "✓",
+    webApp: "",
+    owner: "✓",
+    coOwner: "✓",
+    admin: "✓",
+    employee: "✓",
+  },
+  {
+    page: "Multisucursal (cambiar sucursal)",
+    app: "✓",
+    webApp: "",
+    owner: "✓",
+    coOwner: "✓",
+    admin: "✓",
+    employee: "✓",
+  },
+  {
+    page: "Integraciones (ver canales)",
+    app: "✓",
+    webApp: "",
+    owner: "✓",
+    coOwner: "✓",
+    admin: "✓",
+    employee: "✓",
+  },
+  {
+    page: "Conectar WhatsApp / Instagram",
+    app: "✓",
+    webApp: "",
+    owner: "✓",
+    coOwner: "✓",
+    admin: "—",
+    employee: "—",
+  },
+  {
+    page: "Negocios (cambiar / unirse)",
+    app: "✓",
+    webApp: "",
+    owner: "✓",
+    coOwner: "✓",
+    admin: "✓",
+    employee: "✓",
+  },
+  {
+    page: "Mi cuenta / actualizar perfil",
+    app: "✓",
+    webApp: "",
+    owner: "✓",
+    coOwner: "✓",
+    admin: "✓",
+    employee: "✓",
+  },
+  {
+    page: "Invitar miembro (QR)",
+    app: "✓",
+    webApp: "",
+    owner: "✓",
+    coOwner: "✓",
+    admin: "Solo empleados",
+    employee: "—",
+  },
+  {
+    page: "Configuración del negocio",
+    app: "✓",
+    webApp: "",
+    owner: "✓",
+    coOwner: "✓",
+    admin: "—",
+    employee: "—",
+  },
+  {
+    page: "Privacidad y datos (ver)",
+    app: "✓",
+    webApp: "",
+    owner: "✓",
+    coOwner: "✓",
+    admin: "✓",
+    employee: "✓",
+  },
+  {
+    page: "Exportar / archivar / eliminar negocio",
+    app: "✓",
+    webApp: "",
+    owner: "✓",
+    coOwner: "—",
+    admin: "—",
+    employee: "—",
+  },
+  {
+    page: "Salir del negocio",
+    app: "✓",
+    webApp: "",
+    owner: "—",
+    coOwner: "✓",
+    admin: "✓",
+    employee: "✓",
+  },
+  {
+    page: "Ayuda y soporte",
+    app: "✓",
+    webApp: "",
+    owner: "✓",
+    coOwner: "✓",
+    admin: "✓",
+    employee: "✓",
+  },
+  {
+    page: "Abrir sesión en el navegador",
+    app: "✓",
+    webApp: "",
+    owner: "✓",
+    coOwner: "✓",
+    admin: "✓",
+    employee: "✓",
+  },
+];
+
+const ACCESS_HEADERS = [
+  "Página / función",
+  "App",
+  "Web-app",
+  "Dueño",
+  "Co-dueño",
+  "Administrador",
+  "Empleado",
+] as const;
+
+function AccessMatrixTable() {
+  return (
+    <div className="guide-table-wrap guide-access-table-wrap">
+      <table className="guide-access-table">
+        <thead>
+          <tr>
+            {ACCESS_HEADERS.map((h) => (
+              <th key={h}>{h}</th>
+            ))}
+          </tr>
+        </thead>
+        <tbody>
+          {ACCESS_ROWS.map((row) => (
+            <tr key={row.page}>
+              <td data-label="Página / función">{row.page}</td>
+              <td data-label="App">{row.app}</td>
+              <td data-label="Web-app">{row.webApp || "\u00A0"}</td>
+              <td data-label="Dueño">{row.owner}</td>
+              <td data-label="Co-dueño">{row.coOwner}</td>
+              <td data-label="Administrador">{row.admin}</td>
+              <td data-label="Empleado">{row.employee}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
+}
+
 export default function GuiaPage() {
   return (
     <div className="site-layout policy-page guide-page">
@@ -128,6 +372,9 @@ export default function GuiaPage() {
             </li>
             <li>
               <a href="#reportar">Cómo reportar un problema</a>
+            </li>
+            <li>
+              <a href="#accesos">Accesos por rol</a>
             </li>
           </ol>
         </nav>
@@ -896,6 +1143,25 @@ export default function GuiaPage() {
           <li>Pantalla y pasos exactos</li>
           <li>Qué esperabas vs qué pasó (captura o video corto ayuda mucho)</li>
         </ol>
+
+        <h2 id="accesos">15. Accesos por rol</h2>
+        <p>
+          Quién puede ver y usar cada pantalla o función en la app, según el rol del
+          miembro en el negocio. Roles: <strong>Dueño</strong>,{" "}
+          <strong>Co-dueño</strong>, <strong>Administrador</strong> y{" "}
+          <strong>Empleado</strong>.
+        </p>
+        <p>
+          La columna <strong>Web-app</strong> queda vacía por ahora: ese producto
+          todavía no está disponible. Cuando se lance, completaremos ahí qué se ve
+          en el navegador.
+        </p>
+        <p className="guide-note">
+          ✓ = acceso · — = sin acceso. Algunas filas dependen además de que el módulo
+          esté activo en el plan del negocio (por ejemplo Caja o Multisucursal).
+        </p>
+
+        <AccessMatrixTable />
 
         <p className="guide-cta">
           ¿Todavía no tenés negocio?{" "}
