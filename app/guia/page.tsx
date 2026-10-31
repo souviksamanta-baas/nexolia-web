@@ -163,6 +163,15 @@ const ACCESS_ROWS: AccessRow[] = [
     employee: "✓",
   },
   {
+    page: "Multisucursal (crear / editar / principal)",
+    app: "✓",
+    webApp: "",
+    owner: "✓",
+    coOwner: "✓",
+    admin: "—",
+    employee: "—",
+  },
+  {
     page: "Integraciones (ver canales)",
     app: "✓",
     webApp: "",
@@ -173,6 +182,15 @@ const ACCESS_ROWS: AccessRow[] = [
   },
   {
     page: "Conectar WhatsApp / Instagram",
+    app: "✓",
+    webApp: "",
+    owner: "✓",
+    coOwner: "✓",
+    admin: "—",
+    employee: "—",
+  },
+  {
+    page: "Quitar miembros del negocio",
     app: "✓",
     webApp: "",
     owner: "✓",
