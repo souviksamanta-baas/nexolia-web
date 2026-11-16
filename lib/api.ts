@@ -7,6 +7,7 @@
  * Admin endpoints (Supabase JWT in Authorization: Bearer <token>):
  *   GET    /admin/me
  *   GET    /admin/dashboard
+ *   GET    /admin/startup-samples
  *   GET    /admin/leads
  *   GET    /admin/organizations
  *   GET    /admin/plans
@@ -190,6 +191,18 @@ export interface DashboardResponse {
   }[];
 }
 
+export interface StartupSample {
+  id: string;
+  organizationName: string;
+  platform: string;
+  deviceModel: string | null;
+  osVersion: string | null;
+  appVersion: string | null;
+  maxStallMs: number;
+  timeToFirstTapMs: number | null;
+  createdAt: string;
+}
+
 export interface AdminLead {
   id: string;
   email: string;
@@ -293,6 +306,9 @@ export const adminApi = {
 
   dashboard: (token: string) =>
     apiFetch<DashboardResponse>("/admin/dashboard", { token, cache: "no-store" }),
+
+  startupSamples: (token: string) =>
+    apiFetch<StartupSample[]>("/admin/startup-samples", { token, cache: "no-store" }),
 
   leads: (token: string) =>
     apiFetch<AdminLead[]>("/admin/leads", { token, cache: "no-store" }),
