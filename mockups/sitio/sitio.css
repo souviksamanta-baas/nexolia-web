@@ -1,21 +1,21 @@
 /* Nexolia commercial site — Inter + runtime brand tokens */
 :root {
-  --navy: #101935;
-  --navy-soft: #1a2548;
-  --primary: #08bd66;
-  --primary-dark: #04a85a;
-  --primary-soft: #e8faf1;
-  --brand-blue: #0b4da2;
+  --navy: #0a0908;
+  --navy-soft: #22333b;
+  --primary: #2c634f;
+  --primary-dark: #22433a;
+  --primary-soft: #c6ac8f;
+  --brand-blue: #003049;
   --bg: #fbfcfb;
   --surface: #ffffff;
-  --text: #101935;
+  --text: #0a0908;
   --text-secondary: #56627b;
   --text-muted: #7b86a0;
   --border: #e4ebef;
   --mint-band: #f0faf5;
   --radius: 12px;
   --radius-lg: 18px;
-  --shadow: 0 1px 2px rgba(16, 25, 53, 0.04), 0 8px 24px rgba(16, 25, 53, 0.08);
+  --shadow: 0 1px 2px rgba(10, 9, 8, 0.04), 0 8px 24px rgba(10, 9, 8, 0.08);
   --font: "Inter", "Segoe UI", system-ui, sans-serif;
   --font-accent: "Playfair Display", Georgia, "Times New Roman", serif;
   --header-h: 72px;
@@ -141,7 +141,7 @@ img {
   width: 44px;
   height: 44px;
   padding: 0;
-  border: 1px solid rgba(16, 25, 53, 0.12);
+  border: 1px solid rgba(10, 9, 8, 0.12);
   border-radius: 10px;
   background: rgba(255, 255, 255, 0.85);
   color: var(--navy);
@@ -314,7 +314,7 @@ img {
 .btn-secondary {
   background: #fff;
   color: var(--primary-dark);
-  border-color: rgba(8, 189, 102, 0.35);
+  border-color: rgba(44, 99, 79, 0.35);
 }
 
 .btn-secondary:hover {
@@ -507,7 +507,7 @@ img {
 .industry-band {
   background: var(--mint-band);
   padding: 2.75rem 0;
-  border-block: 1px solid rgba(8, 189, 102, 0.12);
+  border-block: 1px solid rgba(44, 99, 79, 0.12);
 }
 
 .industry-band .section-title {
@@ -582,7 +582,7 @@ img {
 
 .feature-rail button.is-active {
   background: #fff;
-  border-color: rgba(8, 189, 102, 0.35);
+  border-color: rgba(44, 99, 79, 0.35);
   color: var(--navy);
   box-shadow: var(--shadow);
 }
@@ -688,7 +688,7 @@ img {
 }
 
 .audience-card:hover {
-  border-color: rgba(8, 189, 102, 0.4);
+  border-color: rgba(44, 99, 79, 0.4);
   box-shadow: var(--shadow);
   text-decoration: none;
 }
@@ -1087,7 +1087,7 @@ a.footer-icon:hover {
   font-size: 0.82rem;
   line-height: 1.45;
   background: #eef8f2;
-  border: 1px solid rgba(8, 189, 102, 0.28);
+  border: 1px solid rgba(44, 99, 79, 0.28);
   color: var(--navy);
 }
 
@@ -1238,7 +1238,7 @@ a.footer-icon:hover {
 .field textarea:focus {
   outline: none;
   border-color: var(--primary);
-  box-shadow: 0 0 0 3px rgba(8, 189, 102, 0.12);
+  box-shadow: 0 0 0 3px rgba(44, 99, 79, 0.12);
 }
 
 .form-card .btn {

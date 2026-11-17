@@ -1037,7 +1037,7 @@ export default function GuiaPage() {
             {
               id: "10.2",
               what: "Movimiento manual",
-              steps: "Cargá ingreso o egreso",
+              steps: "Cargá ingreso o gasto",
               expect: "Queda registrado",
             },
             {

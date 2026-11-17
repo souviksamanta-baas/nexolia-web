@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 
+import { nestProxyHeaders } from "@/lib/forward-client-ip";
 import { nestApiBase } from "@/lib/nest-api-base";
 
 export async function POST(req: NextRequest) {
@@ -15,10 +16,7 @@ export async function POST(req: NextRequest) {
   try {
     res = await fetch(upstream, {
       method: "POST",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
+      headers: nestProxyHeaders(req),
       body: JSON.stringify(body),
       cache: "no-store",
     });

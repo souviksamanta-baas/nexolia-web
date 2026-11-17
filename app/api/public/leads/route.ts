@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 
+import { nestProxyHeaders } from "@/lib/forward-client-ip";
 import { nestApiBase } from "@/lib/nest-api-base";
 
 /**
@@ -17,15 +18,30 @@ export async function POST(req: NextRequest) {
     );
   }
 
+  if (!body || typeof body !== "object" || Array.isArray(body)) {
+    return NextResponse.json(
+      { message: "JSON inválido." },
+      { status: 400 },
+    );
+  }
+
+  const record = body as Record<string, unknown>;
+  const email = typeof record.email === "string" ? record.email.trim() : "";
+  const orgName =
+    typeof record.orgName === "string" ? record.orgName.trim() : "";
+  if (!email || !orgName) {
+    return NextResponse.json(
+      { message: "Completá el correo y el nombre del negocio." },
+      { status: 400 },
+    );
+  }
+
   const upstream = `${nestApiBase()}/public/leads`;
   let res: Response;
   try {
     res = await fetch(upstream, {
       method: "POST",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
+      headers: nestProxyHeaders(req),
       body: JSON.stringify(body),
       cache: "no-store",
     });

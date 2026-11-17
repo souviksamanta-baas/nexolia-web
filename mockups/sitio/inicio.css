@@ -201,7 +201,7 @@ body.home {
   background: #fff;
   border: 1px solid #e4ebef;
   border-radius: 20px;
-  box-shadow: 0 16px 48px rgba(16, 25, 53, 0.12);
+  box-shadow: 0 16px 48px rgba(10, 9, 8, 0.12);
   padding: 1.15rem 1.15rem 1.25rem;
   text-align: left;
 }
@@ -248,14 +248,14 @@ body.home {
   display: block;
 }
 
-.hero-resumen-icon.is-green { color: #08bd66; }
+.hero-resumen-icon.is-green { color: #2c634f; }
 .hero-resumen-icon.is-orange { color: #ff7f2e; }
 .hero-resumen-icon.is-red { color: #ff315f; }
 .hero-resumen-icon.is-green-fill {
   width: 30px;
   height: 30px;
   border-radius: 50%;
-  background: #08bd66;
+  background: #2c634f;
   color: #fff;
   font-weight: 700;
   font-size: 1rem;
@@ -268,7 +268,7 @@ body.home {
   line-height: 1.15;
 }
 
-.hero-resumen-cell strong.is-green { color: #08bd66; }
+.hero-resumen-cell strong.is-green { color: #2c634f; }
 .hero-resumen-cell strong.is-orange { color: #ff7f2e; }
 .hero-resumen-cell strong.is-red { color: #ff315f; }
 
@@ -283,7 +283,7 @@ body.home {
   background: #fff;
   border: 1px solid #e4ebef;
   border-radius: 16px;
-  box-shadow: 0 10px 28px rgba(16, 25, 53, 0.1);
+  box-shadow: 0 10px 28px rgba(10, 9, 8, 0.1);
   padding: 0.85rem 0.95rem;
   z-index: 3;
   text-align: left;
@@ -304,7 +304,7 @@ body.home {
 .hero-float.is-dragging {
   cursor: grabbing;
   z-index: 8;
-  box-shadow: 0 18px 44px rgba(16, 25, 53, 0.18);
+  box-shadow: 0 18px 44px rgba(10, 9, 8, 0.18);
   transition: none;
 }
 
@@ -455,8 +455,8 @@ body.home {
   width: 34px;
   height: 34px;
   border-radius: 50%;
-  background: #e8faf1;
-  color: #08bd66;
+  background: #c6ac8f;
+  color: #2c634f;
   display: grid;
   place-items: center;
   flex-shrink: 0;
@@ -486,7 +486,7 @@ body.home {
   font-size: 0.88rem;
 }
 
-.hero-caja-row em.is-in { color: #08bd66; }
+.hero-caja-row em.is-in { color: #2c634f; }
 .hero-caja-row em.is-out { color: #ff315f; }
 
 .hero-caja-net {
@@ -499,8 +499,8 @@ body.home {
   width: 36px;
   height: 36px;
   border-radius: 50%;
-  background: #e8faf1;
-  color: #04a85a;
+  background: #c6ac8f;
+  color: #22433a;
   display: grid;
   place-items: center;
   font-weight: 700;
@@ -736,7 +736,7 @@ body.home {
   background: #fff;
   border: 1px solid #e4ebef;
   border-radius: 10px;
-  box-shadow: 0 6px 18px rgba(16, 25, 53, 0.06);
+  box-shadow: 0 6px 18px rgba(10, 9, 8, 0.06);
   color: var(--navy);
   font-size: 0.84rem;
   font-weight: 600;
@@ -807,7 +807,7 @@ body.home {
 .home-present-backdrop {
   position: absolute;
   inset: 0;
-  background: rgba(16, 25, 53, 0.42);
+  background: rgba(10, 9, 8, 0.42);
   backdrop-filter: blur(5px);
   -webkit-backdrop-filter: blur(5px);
   cursor: pointer;
@@ -853,8 +853,8 @@ body.home {
   /* Leave room for the floating control bar */
   padding-bottom: 2.6rem;
   box-shadow:
-    0 0 0 1px rgba(16, 25, 53, 0.06),
-    0 24px 64px rgba(16, 25, 53, 0.18);
+    0 0 0 1px rgba(10, 9, 8, 0.06),
+    0 24px 64px rgba(10, 9, 8, 0.18);
   animation: home-present-in 0.35s ease;
 }
 
@@ -924,7 +924,7 @@ body.home {
   background: #fff;
   border: 1px solid #e4ebef;
   border-radius: 12px;
-  box-shadow: 0 10px 28px rgba(16, 25, 53, 0.14);
+  box-shadow: 0 10px 28px rgba(10, 9, 8, 0.14);
   color: var(--navy);
   font-size: 1.02rem;
   font-weight: 600;
@@ -1016,7 +1016,7 @@ body.is-presenting {
   background: #fff;
   border: 1px solid #e6ebf0;
   border-radius: 20px;
-  box-shadow: 0 12px 32px rgba(16, 25, 53, 0.07);
+  box-shadow: 0 12px 32px rgba(10, 9, 8, 0.07);
   padding: 0.85rem 0.85rem 1.1rem;
   display: flex;
   flex-direction: column;
@@ -1488,12 +1488,12 @@ body.is-presenting {
   width: 18px;
   height: 18px;
   border: 1.5px solid #fff;
-  box-shadow: 0 1px 2px rgba(16, 25, 53, 0.12);
+  box-shadow: 0 1px 2px rgba(10, 9, 8, 0.12);
   overflow: hidden;
 }
 
 .slide-chats-ui-badge.slide-logo-wa {
-  border-color: #08bd66;
+  border-color: #2c634f;
 }
 
 .slide-chats-ui-badge.slide-logo-fb {
@@ -2296,7 +2296,7 @@ body.is-presenting {
 }
 
 .slide-agenda-ui-day.is-current .slide-agenda-ui-lane {
-  background-color: rgba(8, 189, 102, 0.06);
+  background-color: rgba(44, 99, 79, 0.06);
 }
 
 .slide-agenda-ui-event {
@@ -2400,7 +2400,7 @@ body.is-presenting {
   background: #fff;
   border: 1px solid #e4ebef;
   border-radius: 12px;
-  box-shadow: 0 10px 24px rgba(16, 25, 53, 0.14);
+  box-shadow: 0 10px 24px rgba(10, 9, 8, 0.14);
 }
 
 .slide-agenda-ui-popover::before {
@@ -2479,7 +2479,7 @@ body.is-presenting {
   font-size: 1.25rem;
   font-weight: 500;
   line-height: 1;
-  box-shadow: 0 6px 14px rgba(8, 189, 102, 0.35);
+  box-shadow: 0 6px 14px rgba(44, 99, 79, 0.35);
 }
 
 .slide-agenda-ui-fab em {
@@ -2656,7 +2656,7 @@ body.is-presenting {
 }
 
 .slide-caja-ui-legend i.is-pos {
-  background: #08bd66;
+  background: #2c634f;
 }
 
 .slide-caja-ui-legend i.is-neg {
@@ -3021,7 +3021,7 @@ body.is-presenting {
 .slide-pres-ui-lines {
   margin-top: 0.35rem;
   padding-top: 0.3rem;
-  border-top: 1px solid rgba(8, 189, 102, 0.18);
+  border-top: 1px solid rgba(44, 99, 79, 0.18);
   display: flex;
   flex-direction: column;
   gap: 0.2rem;
@@ -3061,7 +3061,7 @@ body.is-presenting {
   justify-content: space-between;
   margin-top: 0.3rem;
   padding-top: 0.3rem;
-  border-top: 1px solid rgba(8, 189, 102, 0.18);
+  border-top: 1px solid rgba(44, 99, 79, 0.18);
 }
 
 .slide-pres-ui-total em {
@@ -3538,7 +3538,7 @@ body.is-presenting {
   aspect-ratio: 16 / 9;
   border-radius: 22px;
   background:
-    radial-gradient(circle at 1px 1px, rgba(16, 25, 53, 0.07) 1px, transparent 0) 0 0 / 22px 22px,
+    radial-gradient(circle at 1px 1px, rgba(10, 9, 8, 0.07) 1px, transparent 0) 0 0 / 22px 22px,
     #e8ecf0;
   border: 1px solid #d8dee6;
   display: grid;
@@ -3549,7 +3549,7 @@ body.is-presenting {
 .home-producto-video-frame.is-soon {
   background:
     linear-gradient(180deg, rgba(238, 241, 244, 0.55), rgba(238, 241, 244, 0.2)),
-    radial-gradient(circle at 1px 1px, rgba(16, 25, 53, 0.045) 1px, transparent 0) 0 0 / 22px 22px,
+    radial-gradient(circle at 1px 1px, rgba(10, 9, 8, 0.045) 1px, transparent 0) 0 0 / 22px 22px,
     #f3f5f7;
   border-color: #e0e5eb;
 }
@@ -3820,7 +3820,7 @@ body.is-presenting {
     font-size: 0.68rem;
     padding: 0.5rem 0.55rem;
     border-radius: 12px;
-    box-shadow: 0 8px 20px rgba(16, 25, 53, 0.1);
+    box-shadow: 0 8px 20px rgba(10, 9, 8, 0.1);
   }
 
   .hero-float strong {

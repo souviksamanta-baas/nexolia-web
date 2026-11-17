@@ -1,12 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 
-function apiBase(): string {
-  return (
-    process.env.BAAS_API_URL ||
-    process.env.NEXT_PUBLIC_BAAS_API_URL ||
-    "https://baas-project-production.up.railway.app"
-  ).replace(/\/$/, "");
-}
+import { nestProxyHeaders } from "@/lib/forward-client-ip";
+import { nestApiBase } from "@/lib/nest-api-base";
 
 /** Same-origin proxy → Nest Spanish staff password-reset email. */
 export async function POST(req: NextRequest) {
@@ -17,15 +12,12 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ message: "JSON inválido." }, { status: 400 });
   }
 
-  const upstream = `${apiBase()}/public/admin/password-reset`;
+  const upstream = `${nestApiBase()}/public/admin/password-reset`;
   let res: Response;
   try {
     res = await fetch(upstream, {
       method: "POST",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
+      headers: nestProxyHeaders(req),
       body: JSON.stringify(body),
       cache: "no-store",
     });

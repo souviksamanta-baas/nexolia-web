@@ -106,7 +106,7 @@ export const FEATURE_SERVICE_OPTIONS: FeatureServiceOption[] = [
   {
     key: "billing_cash",
     title: "Caja",
-    description: "Gestioná ingresos y egresos",
+    description: "Gestioná ingresos y gastos",
     group: "Facturación",
   },
   {
